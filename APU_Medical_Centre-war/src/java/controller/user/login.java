@@ -47,6 +47,7 @@ public class login extends HttpServlet {
                 out.println("<br>ID: " + user.getId());
                 out.println("<br>Username: " + user.getUsername());
                 out.println("<br>User Account's Creation Datetime: " + user.getCreationDatetime());
+                out.println("<br>Role: " + user.getRole().getCode());
             } else {
                 out.println("Login Unsuccessfully");
             }

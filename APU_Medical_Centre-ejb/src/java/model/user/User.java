@@ -10,7 +10,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -21,6 +23,7 @@ import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
+import model.codevalue.CodeValue;
 
 /**
  *
@@ -85,6 +88,9 @@ public class User implements Serializable {
     @Column(name = "LAST_LOGIN_DATETIME")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginDatetime;
+    @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private CodeValue role;
 
     public User() {
     }
@@ -174,6 +180,14 @@ public class User implements Serializable {
 
     public void setLastLoginDatetime(Date lastLoginDatetime) {
         this.lastLoginDatetime = lastLoginDatetime;
+    }
+
+    public CodeValue getRole() {
+        return role;
+    }
+
+    public void setRole(CodeValue role) {
+        this.role = role;
     }
 
     @Override
