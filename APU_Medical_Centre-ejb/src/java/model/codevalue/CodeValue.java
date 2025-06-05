@@ -105,7 +105,7 @@ public class CodeValue implements Serializable {
     private String maintainable;
     @JoinColumn(name = "CODE_SET_ID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
-    private CodeSet codeSetId;
+    private CodeSet codeSet;
 
     public CodeValue() {
     }
@@ -223,12 +223,12 @@ public class CodeValue implements Serializable {
         this.maintainable = maintainable;
     }
 
-    public CodeSet getCodeSetId() {
-        return codeSetId;
+    public CodeSet getCodeSet() {
+        return codeSet;
     }
 
-    public void setCodeSetId(CodeSet codeSetId) {
-        this.codeSetId = codeSetId;
+    public void setCodeSet(CodeSet codeSet) {
+        this.codeSet = codeSet;
     }
 
     @Override
