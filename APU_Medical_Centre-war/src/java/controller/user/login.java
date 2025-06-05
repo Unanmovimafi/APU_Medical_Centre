@@ -4,18 +4,24 @@
  */
 package controller.user;
 
+import facade.user.UserFacade;
+import jakarta.ejb.EJB;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.user.User;
 
 /**
  *
  * @author zihao
  */
 public class login extends HttpServlet {
+    
+    @EJB
+    private UserFacade userFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,11 +36,17 @@ public class login extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             
-            if ("user".equals(username) && "password".equals(password)){
+            User user = userFacade.findUserByUsername(username);
+            
+            if (username.equals(user.getUsername()) && password.equals(user.getPassword())){
                 out.println("Login Successfully");
+                out.println("<br>ID: " + user.getId());
+                out.println("<br>Username: " + user.getUsername());
+                out.println("<br>User Account's Creation Datetime: " + user.getCreationDatetime());
             } else {
                 out.println("Login Unsuccessfully");
             }
