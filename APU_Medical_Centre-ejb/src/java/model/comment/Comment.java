@@ -10,7 +10,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -21,6 +23,7 @@ import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
+import model.user.User;
 
 /**
  *
@@ -78,6 +81,12 @@ public class Comment implements Serializable {
     @Size(max = 16777215)
     @Column(name = "CONTENT")
     private String content;
+    @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private User customer;
+    @JoinColumn(name = "TARGET_USER_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private User targetUser;
 
     public Comment() {
     }
@@ -159,6 +168,23 @@ public class Comment implements Serializable {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public User getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(User customer) {
+        this.customer = customer;
+    }
+
+    public User getTargetUser() {
+        return targetUser;
+    }
+
+    public void setTargetUser(User targetUser) {
+        this.targetUser = targetUser;
+    }
+
 
     @Override
     public int hashCode() {

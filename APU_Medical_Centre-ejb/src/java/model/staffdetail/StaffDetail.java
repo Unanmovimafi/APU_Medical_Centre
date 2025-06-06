@@ -10,9 +10,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -21,6 +23,7 @@ import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
+import model.user.User;
 
 /**
  *
@@ -35,7 +38,7 @@ import java.util.Date;
     @NamedQuery(name = "StaffDetail.findByVersionTime", query = "SELECT s FROM StaffDetail s WHERE s.versionTime = :versionTime"),
     @NamedQuery(name = "StaffDetail.findByCreationDatetime", query = "SELECT s FROM StaffDetail s WHERE s.creationDatetime = :creationDatetime"),
     @NamedQuery(name = "StaffDetail.findByCreateBy", query = "SELECT s FROM StaffDetail s WHERE s.createBy = :createBy"),
-    @NamedQuery(name = "StaffDetail.findByLastUpadteDatetime", query = "SELECT s FROM StaffDetail s WHERE s.lastUpadteDatetime = :lastUpadteDatetime"),
+    @NamedQuery(name = "StaffDetail.findByLastUpdateDatetime", query = "SELECT s FROM StaffDetail s WHERE s.lastUpdateDatetime = :lastUpdateDatetime"),
     @NamedQuery(name = "StaffDetail.findByLastUpdateBy", query = "SELECT s FROM StaffDetail s WHERE s.lastUpdateBy = :lastUpdateBy"),
     @NamedQuery(name = "StaffDetail.findByEmail", query = "SELECT s FROM StaffDetail s WHERE s.email = :email"),
     @NamedQuery(name = "StaffDetail.findByName", query = "SELECT s FROM StaffDetail s WHERE s.name = :name"),
@@ -65,9 +68,9 @@ public class StaffDetail implements Serializable {
     private String createBy;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "LAST_UPADTE_DATETIME")
+    @Column(name = "LAST_UPDATE_DATETIME")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpadteDatetime;
+    private Date lastUpdateDatetime;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -90,6 +93,9 @@ public class StaffDetail implements Serializable {
     @Size(max = 16777215)
     @Column(name = "PROFILE_PICTURE")
     private String profilePicture;
+    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
+    @OneToOne(optional = false)
+    private User user;
 
     public StaffDetail() {
     }
@@ -98,12 +104,12 @@ public class StaffDetail implements Serializable {
         this.id = id;
     }
 
-    public StaffDetail(Integer id, int versionTime, Date creationDatetime, String createBy, Date lastUpadteDatetime, String lastUpdateBy) {
+    public StaffDetail(Integer id, int versionTime, Date creationDatetime, String createBy, Date lastUpdateDatetime, String lastUpdateBy) {
         this.id = id;
         this.versionTime = versionTime;
         this.creationDatetime = creationDatetime;
         this.createBy = createBy;
-        this.lastUpadteDatetime = lastUpadteDatetime;
+        this.lastUpdateDatetime = lastUpdateDatetime;
         this.lastUpdateBy = lastUpdateBy;
     }
 
@@ -139,12 +145,12 @@ public class StaffDetail implements Serializable {
         this.createBy = createBy;
     }
 
-    public Date getLastUpadteDatetime() {
-        return lastUpadteDatetime;
+    public Date getLastUpdateDatetime() {
+        return lastUpdateDatetime;
     }
 
-    public void setLastUpadteDatetime(Date lastUpadteDatetime) {
-        this.lastUpadteDatetime = lastUpadteDatetime;
+    public void setLastUpdateDatetime(Date lastUpdateDatetime) {
+        this.lastUpdateDatetime = lastUpdateDatetime;
     }
 
     public String getLastUpdateBy() {
@@ -193,6 +199,14 @@ public class StaffDetail implements Serializable {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

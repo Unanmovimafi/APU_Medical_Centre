@@ -4,6 +4,7 @@
  */
 package facade.user;
 
+import facade.AbstractFacade;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;

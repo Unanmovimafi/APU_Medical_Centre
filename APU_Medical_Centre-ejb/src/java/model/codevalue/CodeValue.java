@@ -44,7 +44,8 @@ import model.codeset.CodeSet;
     @NamedQuery(name = "CodeValue.findByStatus", query = "SELECT c FROM CodeValue c WHERE c.status = :status"),
     @NamedQuery(name = "CodeValue.findByName", query = "SELECT c FROM CodeValue c WHERE c.name = :name"),
     @NamedQuery(name = "CodeValue.findByDisplayOrder", query = "SELECT c FROM CodeValue c WHERE c.displayOrder = :displayOrder"),
-    @NamedQuery(name = "CodeValue.findByMaintainable", query = "SELECT c FROM CodeValue c WHERE c.maintainable = :maintainable")})
+    @NamedQuery(name = "CodeValue.findByMaintainable", query = "SELECT c FROM CodeValue c WHERE c.maintainable = :maintainable"),
+    @NamedQuery(name = "CodeValue.findByCodeAndStatus", query = "SELECT c FROM CodeValue c WHERE c.code = :code AND c.status = :status"),})
 public class CodeValue implements Serializable {
 
     private static final long serialVersionUID = 1L;
