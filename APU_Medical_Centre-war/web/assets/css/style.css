@@ -1,0 +1,138 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 7 Jun 2025, 1:22:08 am
+    Author     : khong
+*/
+
+:root {
+  --primary-aqua: #00BFFF;
+  --accent-cyan: #20C997;
+  --background: #E0F7FA;
+  --text: #1C1C1C;
+  --success: #28A745;
+  --warning: #FFC107;
+  --error: #DC3545;
+  --nav-dark: #00ACC1;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+  font-family: 'Segoe UI', sans-serif;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background-color: white;
+  color: var(--nav-dark);
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.layout {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+}
+
+#sidebar {
+  background-color: var(--primary-aqua);
+  color: white;
+  width: 250px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+#sidebar.collapsed {
+  width: 70px;
+  padding: 20px 10px;
+}
+
+#sidebar .profile-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid white;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+#sidebar h3 {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+#sidebar.collapsed h3,
+#sidebar.collapsed a,
+#sidebar.collapsed details > summary {
+  display: none;
+}
+
+#sidebar a,
+#sidebar summary {
+  display: block;
+  padding: 8px 12px;
+  margin-top: 6px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+}
+
+#sidebar a:hover,
+#sidebar summary:hover {
+  background-color: var(--accent-cyan);
+}
+
+.toggle-btn {
+  background-color: var(--accent-cyan);
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+main {
+  flex-grow: 1;
+  padding: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  background-color: #fff;
+  padding: 10px;
+  text-align: center;
+  color: gray;
+  border-top: 1px solid #ccc;
+  margin-top: auto;
+}
