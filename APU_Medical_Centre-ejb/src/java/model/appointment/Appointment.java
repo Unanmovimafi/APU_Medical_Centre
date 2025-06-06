@@ -10,6 +10,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -20,6 +22,7 @@ import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
+import model.user.User;
 
 /**
  *
@@ -79,6 +82,12 @@ public class Appointment implements Serializable {
     private Date appointmentEndDatetime;
     @Column(name = "CHARGE")
     private Long charge;
+    @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private User customer;
+    @JoinColumn(name = "DOCTOR_ID", referencedColumnName = "ID")
+    @ManyToOne
+    private User doctor;
 
     public Appointment() {
     }
@@ -166,6 +175,22 @@ public class Appointment implements Serializable {
 
     public void setCharge(Long charge) {
         this.charge = charge;
+    }
+
+    public User getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(User customer) {
+        this.customer = customer;
+    }
+
+    public User getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(User doctor) {
+        this.doctor = doctor;
     }
 
     @Override

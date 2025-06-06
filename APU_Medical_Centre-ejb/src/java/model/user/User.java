@@ -5,22 +5,34 @@
 package model.user;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
+import model.appointment.Appointment;
+import model.codevalue.CodeValue;
+import model.comment.Comment;
+import model.customerdetail.CustomerDetail;
+import model.staffdetail.StaffDetail;
 
 /**
  *
@@ -85,6 +97,24 @@ public class User implements Serializable {
     @Column(name = "LAST_LOGIN_DATETIME")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginDatetime;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private CustomerDetail customerDetail;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private StaffDetail staffDetail;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    private Collection<Appointment> appointmentCollection;
+    @OneToMany(mappedBy = "doctor")
+    private Collection<Appointment> appointmentCollection1;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    private Collection<Comment> commentCustomerCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "targetUser")
+    private Collection<Comment> commentTargetUserCollection;
+    @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private CodeValue role;
+    @JoinColumn(name = "USER_STATUS_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private CodeValue userStatus;
 
     public User() {
     }
@@ -174,6 +204,75 @@ public class User implements Serializable {
 
     public void setLastLoginDatetime(Date lastLoginDatetime) {
         this.lastLoginDatetime = lastLoginDatetime;
+    }
+
+    
+    public CustomerDetail getCustomerDetail() {
+        return customerDetail;
+    }
+
+    public void setCustomerDetail(CustomerDetail customerDetail) {
+        this.customerDetail = customerDetail;
+    }
+
+    public StaffDetail getStaffDetail() {
+        return staffDetail;
+    }
+
+    public void setStaffDetail(StaffDetail staffDetail) {
+        this.staffDetail = staffDetail;
+    }
+
+    @XmlTransient
+    public Collection<Appointment> getAppointmentCollection() {
+        return appointmentCollection;
+    }
+
+    public void setAppointmentCollection(Collection<Appointment> appointmentCollection) {
+        this.appointmentCollection = appointmentCollection;
+    }
+
+    @XmlTransient
+    public Collection<Appointment> getAppointmentCollection1() {
+        return appointmentCollection1;
+    }
+
+    public void setAppointmentCollection1(Collection<Appointment> appointmentCollection1) {
+        this.appointmentCollection1 = appointmentCollection1;
+    }
+
+    @XmlTransient
+    public Collection<Comment> getCommentCustomerCollection() {
+        return commentCustomerCollection;
+    }
+
+    public void setCommentCustomerCollection(Collection<Comment> commentCustomerCollection) {
+        this.commentCustomerCollection = commentCustomerCollection;
+    }
+
+    @XmlTransient
+    public Collection<Comment> getCommentTargetUserCollection() {
+        return commentTargetUserCollection;
+    }
+
+    public void setCommentCollection(Collection<Comment> commentTargetUserCollection) {
+        this.commentTargetUserCollection = commentTargetUserCollection;
+    }
+
+    public CodeValue getRole() {
+        return role;
+    }
+
+    public void setRole(CodeValue role) {
+        this.role = role;
+    }
+    
+    public CodeValue getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(CodeValue userStatus) {
+        this.userStatus = userStatus;
     }
 
     @Override

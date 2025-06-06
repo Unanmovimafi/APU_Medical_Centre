@@ -10,9 +10,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -21,6 +23,7 @@ import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
+import model.user.User;
 
 /**
  *
@@ -98,6 +101,9 @@ public class CustomerDetail implements Serializable {
     @Size(max = 255)
     @Column(name = "BLOOD_TYPE")
     private String bloodType;
+    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
+    @OneToOne(optional = false)
+    private User user;
 
     public CustomerDetail() {
     }
@@ -217,6 +223,14 @@ public class CustomerDetail implements Serializable {
 
     public void setBloodType(String bloodType) {
         this.bloodType = bloodType;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

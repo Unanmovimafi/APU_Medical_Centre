@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package model.staffdetail;
+package model.codevalue;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
@@ -12,9 +12,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -23,28 +23,30 @@ import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
-import model.user.User;
+import model.codeset.CodeSet;
 
 /**
  *
- * @author khong
+ * @author zihao
  */
 @Entity
-@Table(name = "staff_detail")
+@Table(name = "code_value")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "StaffDetail.findAll", query = "SELECT s FROM StaffDetail s"),
-    @NamedQuery(name = "StaffDetail.findById", query = "SELECT s FROM StaffDetail s WHERE s.id = :id"),
-    @NamedQuery(name = "StaffDetail.findByVersionTime", query = "SELECT s FROM StaffDetail s WHERE s.versionTime = :versionTime"),
-    @NamedQuery(name = "StaffDetail.findByCreationDatetime", query = "SELECT s FROM StaffDetail s WHERE s.creationDatetime = :creationDatetime"),
-    @NamedQuery(name = "StaffDetail.findByCreateBy", query = "SELECT s FROM StaffDetail s WHERE s.createBy = :createBy"),
-    @NamedQuery(name = "StaffDetail.findByLastUpdateDatetime", query = "SELECT s FROM StaffDetail s WHERE s.lastUpdateDatetime = :lastUpdateDatetime"),
-    @NamedQuery(name = "StaffDetail.findByLastUpdateBy", query = "SELECT s FROM StaffDetail s WHERE s.lastUpdateBy = :lastUpdateBy"),
-    @NamedQuery(name = "StaffDetail.findByEmail", query = "SELECT s FROM StaffDetail s WHERE s.email = :email"),
-    @NamedQuery(name = "StaffDetail.findByName", query = "SELECT s FROM StaffDetail s WHERE s.name = :name"),
-    @NamedQuery(name = "StaffDetail.findByDateOfBirth", query = "SELECT s FROM StaffDetail s WHERE s.dateOfBirth = :dateOfBirth"),
-    @NamedQuery(name = "StaffDetail.findByPhoneNumber", query = "SELECT s FROM StaffDetail s WHERE s.phoneNumber = :phoneNumber")})
-public class StaffDetail implements Serializable {
+    @NamedQuery(name = "CodeValue.findAll", query = "SELECT c FROM CodeValue c"),
+    @NamedQuery(name = "CodeValue.findById", query = "SELECT c FROM CodeValue c WHERE c.id = :id"),
+    @NamedQuery(name = "CodeValue.findByVersionTime", query = "SELECT c FROM CodeValue c WHERE c.versionTime = :versionTime"),
+    @NamedQuery(name = "CodeValue.findByCreationDatetime", query = "SELECT c FROM CodeValue c WHERE c.creationDatetime = :creationDatetime"),
+    @NamedQuery(name = "CodeValue.findByCreateBy", query = "SELECT c FROM CodeValue c WHERE c.createBy = :createBy"),
+    @NamedQuery(name = "CodeValue.findByLastUpdateDatetime", query = "SELECT c FROM CodeValue c WHERE c.lastUpdateDatetime = :lastUpdateDatetime"),
+    @NamedQuery(name = "CodeValue.findByLastUpdateBy", query = "SELECT c FROM CodeValue c WHERE c.lastUpdateBy = :lastUpdateBy"),
+    @NamedQuery(name = "CodeValue.findByCode", query = "SELECT c FROM CodeValue c WHERE c.code = :code"),
+    @NamedQuery(name = "CodeValue.findByStatus", query = "SELECT c FROM CodeValue c WHERE c.status = :status"),
+    @NamedQuery(name = "CodeValue.findByName", query = "SELECT c FROM CodeValue c WHERE c.name = :name"),
+    @NamedQuery(name = "CodeValue.findByDisplayOrder", query = "SELECT c FROM CodeValue c WHERE c.displayOrder = :displayOrder"),
+    @NamedQuery(name = "CodeValue.findByMaintainable", query = "SELECT c FROM CodeValue c WHERE c.maintainable = :maintainable"),
+    @NamedQuery(name = "CodeValue.findByCodeAndStatus", query = "SELECT c FROM CodeValue c WHERE c.code = :code AND c.status = :status"),})
+public class CodeValue implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -76,41 +78,54 @@ public class StaffDetail implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "LAST_UPDATE_BY")
     private String lastUpdateBy;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-    @Size(max = 255)
-    @Column(name = "EMAIL")
-    private String email;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "CODE")
+    private String code;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "STATUS")
+    private String status;
     @Size(max = 255)
     @Column(name = "NAME")
     private String name;
-    @Column(name = "DATE_OF_BIRTH")
-    @Temporal(TemporalType.DATE)
-    private Date dateOfBirth;
-    @Size(max = 255)
-    @Column(name = "PHONE_NUMBER")
-    private String phoneNumber;
     @Lob
     @Size(max = 16777215)
-    @Column(name = "PROFILE_PICTURE")
-    private String profilePicture;
-    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
-    @OneToOne(optional = false)
-    private User user;
+    @Column(name = "DESCRIPTION")
+    private String description;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "DISPLAY_ORDER")
+    private int displayOrder;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "MAINTAINABLE")
+    private String maintainable;
+    @JoinColumn(name = "CODE_SET_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private CodeSet codeSet;
 
-    public StaffDetail() {
+    public CodeValue() {
     }
 
-    public StaffDetail(Integer id) {
+    public CodeValue(Integer id) {
         this.id = id;
     }
 
-    public StaffDetail(Integer id, int versionTime, Date creationDatetime, String createBy, Date lastUpdateDatetime, String lastUpdateBy) {
+    public CodeValue(Integer id, int versionTime, Date creationDatetime, String createBy, Date lastUpdateDatetime, String lastUpdateBy, String code, String status, int displayOrder, String maintainable) {
         this.id = id;
         this.versionTime = versionTime;
         this.creationDatetime = creationDatetime;
         this.createBy = createBy;
         this.lastUpdateDatetime = lastUpdateDatetime;
         this.lastUpdateBy = lastUpdateBy;
+        this.code = code;
+        this.status = status;
+        this.displayOrder = displayOrder;
+        this.maintainable = maintainable;
     }
 
     public Integer getId() {
@@ -161,12 +176,20 @@ public class StaffDetail implements Serializable {
         this.lastUpdateBy = lastUpdateBy;
     }
 
-    public String getEmail() {
-        return email;
+    public String getCode() {
+        return code;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getName() {
@@ -177,36 +200,36 @@ public class StaffDetail implements Serializable {
         this.name = name;
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public int getDisplayOrder() {
+        return displayOrder;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
     }
 
-    public String getProfilePicture() {
-        return profilePicture;
+    public String getMaintainable() {
+        return maintainable;
     }
 
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
+    public void setMaintainable(String maintainable) {
+        this.maintainable = maintainable;
     }
 
-    public User getUser() {
-        return user;
+    public CodeSet getCodeSet() {
+        return codeSet;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCodeSet(CodeSet codeSet) {
+        this.codeSet = codeSet;
     }
 
     @Override
@@ -219,10 +242,10 @@ public class StaffDetail implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof StaffDetail)) {
+        if (!(object instanceof CodeValue)) {
             return false;
         }
-        StaffDetail other = (StaffDetail) object;
+        CodeValue other = (CodeValue) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -231,7 +254,7 @@ public class StaffDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "model.staffdetail.StaffDetail[ id=" + id + " ]";
+        return "model.codevalue.CodeValue[ id=" + id + " ]";
     }
     
 }
