@@ -1,0 +1,60 @@
+Public:
+- Dashboard / Home (Main Page)
+- Login Page
+- About
+
+Manager:
+- Dashboard/Home
+- Staff
+	- Staff List (View, Delete)
+	- Register New Staff
+	- Modify Staff
+- Appointments
+	- Appointments Calendar
+	- Appointment Request List
+	- Comment (BUT not sure how u nak do this)
+- Reports
+	- Report list (see u nak or not)
+	- Generate monthly report
+
+
+Counter Staff:
+- Dashboard/Home
+- Edit Profile
+- Customer
+	- Customer List
+	- Register customer
+	- Modify
+- Appointment
+	- Add appointment
+	- Appointment Calendar
+	- Approve / Reject (Recommend Other Time see you)
+- Payment
+	- Generate Receipt based on appointment
+	- Check payments
+- Medicine
+	- Add Medicine
+	- Medicine List
+	- Modify
+
+Doctor:
+- Dashboard
+- Edit Profile
+- Appointment 
+	- Appointment Calendar
+	- Appointment Details
+- Current appointment
+	- Add Feedback
+	- Entry Charge
+- Medical History
+	- Appointment Details
+
+Customer:
+- Dashboard
+- Edit Profile
+- Appointment
+	- Appointment Request
+	- Appointment 
+	- Appointment History
+- Comment
+	- comment to staff or doctors
