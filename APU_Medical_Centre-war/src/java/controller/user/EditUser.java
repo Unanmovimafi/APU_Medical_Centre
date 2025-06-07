@@ -8,23 +8,21 @@ import facade.user.UserFacade;
 import jakarta.ejb.EJB;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.stream.Collectors;
 import model.user.User;
 
 /**
  *
  * @author zihao
  */
-public class ListUser extends HttpServlet {
-    
+public class EditUser extends HttpServlet {
+
     @EJB
     private UserFacade userFacade;
-
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -37,26 +35,25 @@ public class ListUser extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        List<User> listUser = userFacade.findAll();
-        //FILTER for MANAGER
-        listUser = listUser.stream()
-                .filter(user ->  !("DELETE".equals(user.getUserStatus().getCode())) && "COUNTER_STAFF".equals(user.getRole().getCode()))
-                .collect(Collectors.toList());
-                
-        request.setAttribute("listUser", listUser);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/manager/list_user.jsp");
+        String id = request.getParameter("id");
+
+        User user = userFacade.find(Integer.parseInt(id));
+
+        request.setAttribute("user", user);
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/manager/edit_user.jsp");
         dispatcher.forward(request, response);
-        
+
 //        try (PrintWriter out = response.getWriter()) {
+//            /* TODO output your page here. You may use following sample code. */
 //            out.println("<!DOCTYPE html>");
 //            out.println("<html>");
 //            out.println("<head>");
-//            out.println("<title>Servlet ListUser</title>");
+//            out.println("<title>Servlet EditUser</title>");
 //            out.println("</head>");
 //            out.println("<body>");
-//            out.println("<h1>Servlet ListUser at " + request.getContextPath() + "</h1>");
+//            out.println("<h1>Servlet EditUser at " + request.getContextPath() + "</h1>");
 //            out.println("</body>");
 //            out.println("</html>");
 //        }
