@@ -57,7 +57,7 @@
         <input type="password" id="password" name="password" required><br><br>
         
         <label for="role">Role:</label>
-        <select id="role" name="role" onchange="toggleFieldsByRole()" required>
+        <select id="role" name="role" onchange="javascript:toggleFieldsByRole()" required>
             <option value="" disabled selected>Please Select</option>
             <option value="MANAGER">Manager</option>
             <option value="COUNTER_STAFF">Counter Staff</option>
