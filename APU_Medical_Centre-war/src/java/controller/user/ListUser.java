@@ -41,7 +41,8 @@ public class ListUser extends HttpServlet {
         List<User> listUser = userFacade.findAll();
         //FILTER for MANAGER
         listUser = listUser.stream()
-                .filter(user ->  !("DELETE".equals(user.getUserStatus().getCode())) && "COUNTER_STAFF".equals(user.getRole().getCode()))
+                .filter(user ->  !("DELETE".equals(user.getUserStatus().getCode())) && ("MANAGER".equals(user.getRole().getCode())
+                        || "COUNTER_STAFF".equals(user.getRole().getCode()) || "DOCTOR".equals(user.getRole().getCode())))
                 .collect(Collectors.toList());
                 
         request.setAttribute("listUser", listUser);
