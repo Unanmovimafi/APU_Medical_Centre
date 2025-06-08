@@ -9,11 +9,11 @@ import facade.user.UserFacade;
 import helper.DateTimeHelper;
 import jakarta.ejb.EJB;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.codevalue.CodeValue;
 import model.user.User;
 
@@ -42,10 +42,12 @@ public class DeleteUser extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-         String[] selectedUserIds = request.getParameterValues("selectedUsers");
+        String[] selectedUserIds = request.getParameterValues("selectedUsers");
+        HttpSession session = request.getSession(false);
 
          //Sofe delete approach
-        if (selectedUserIds != null) {
+        if (selectedUserIds != null && session != null && session.getAttribute("userSession") != null) {
+            User userSession = (User) session.getAttribute("userSession");
             for (String userId : selectedUserIds) {
                 User user = userFacade.find(Integer.parseInt(userId));
                 CodeValue deleteStatusCodeValue = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("USER_STATUS", "DELETE");
@@ -53,25 +55,13 @@ public class DeleteUser extends HttpServlet {
 
                 user.setVersionTime(user.getVersionTime() + 1);
                 user.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
-                user.setLastUpdateBy("TEST DELETE");
+                user.setLastUpdateBy(userSession.getUsername());
 
                 userFacade.edit(user);
             }
         }
         response.sendRedirect("ListUser");
 
-//        try (PrintWriter out = response.getWriter()) {
-//            /* TODO output your page here. You may use following sample code. */
-//            out.println("<!DOCTYPE html>");
-//            out.println("<html>");
-//            out.println("<head>");
-//            out.println("<title>Servlet DeleteUser</title>");
-//            out.println("</head>");
-//            out.println("<body>");
-//            out.println("<h1>Servlet DeleteUser at " + request.getContextPath() + "</h1>");
-//            out.println("</body>");
-//            out.println("</html>");
-//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

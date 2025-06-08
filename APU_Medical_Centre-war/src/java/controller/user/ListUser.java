@@ -49,18 +49,6 @@ public class ListUser extends HttpServlet {
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/manager/list_user.jsp");
         dispatcher.forward(request, response);
-        
-//        try (PrintWriter out = response.getWriter()) {
-//            out.println("<!DOCTYPE html>");
-//            out.println("<html>");
-//            out.println("<head>");
-//            out.println("<title>Servlet ListUser</title>");
-//            out.println("</head>");
-//            out.println("<body>");
-//            out.println("<h1>Servlet ListUser at " + request.getContextPath() + "</h1>");
-//            out.println("</body>");
-//            out.println("</html>");
-//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

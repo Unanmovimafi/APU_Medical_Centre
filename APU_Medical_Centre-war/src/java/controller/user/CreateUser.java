@@ -6,18 +6,16 @@ package controller.user;
 
 import facade.codevalue.CodeValueFacade;
 import facade.user.UserFacade;
+import helper.DateTimeHelper;
 import jakarta.ejb.EJB;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import model.codevalue.CodeValue;
 import model.customerdetail.CustomerDetail;
 import model.staffdetail.StaffDetail;
@@ -61,91 +59,75 @@ public class CreateUser extends HttpServlet {
         String bloodType = request.getParameter("bloodType");
 //        String gender = request.getParameter("gender");
 
-        User newUser = new User();
+        HttpSession session = request.getSession(false);
 
-        LocalDateTime localDateTime = LocalDateTime.now();  // Get the current date and time
-        Instant instantLocalDateTime = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
-        Date nowDate = Date.from(instantLocalDateTime);
+        if (session != null && session.getAttribute("userSession") != null) {
+            User newUser = new User();
+            User userSession = (User) session.getAttribute("userSession");
+            newUser.setVersionTime(1);
+            newUser.setCreationDatetime(DateTimeHelper.getCurrentDateTime());
+            newUser.setCreateBy(userSession.getUsername());
+            newUser.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
+            newUser.setLastUpdateBy(userSession.getUsername());
 
-        newUser.setVersionTime(1);
-        newUser.setCreationDatetime(nowDate);
-        newUser.setCreateBy("TEST");
-        newUser.setLastUpdateDatetime(nowDate);
-        newUser.setLastUpdateBy("TEST");
+            newUser.setUsername(username);
+            newUser.setPassword(password);
 
-        newUser.setUsername(username);
-        newUser.setPassword(password);
+            CodeValue cvRole = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("USER_ROLE", role);
+            CodeValue cvUserStatus = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("USER_STATUS", "ACTIVE");
+            newUser.setRole(cvRole);
+            newUser.setUserStatus(cvUserStatus);
 
-        CodeValue cvRole = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("USER_ROLE", role);
-        CodeValue cvUserStatus = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("USER_STATUS", "ACTIVE");
-        newUser.setRole(cvRole);
-        newUser.setUserStatus(cvUserStatus);
-        
-        if ("MANAGER".equals(role) || "COUNTER_STAFF".equals(role) || "DOCTOR".equals(role)){
-            StaffDetail newStaffDetail = new StaffDetail();
-            
-            newStaffDetail.setUser(newUser);
-            
-            newStaffDetail.setVersionTime(1);
-            newStaffDetail.setCreationDatetime(nowDate);
-            newStaffDetail.setCreateBy("TEST");
-            newStaffDetail.setLastUpdateDatetime(nowDate);
-            newStaffDetail.setLastUpdateBy("TEST");
-            
-            newStaffDetail.setName(name);
-            newStaffDetail.setEmail(email);
-            try {
-                newStaffDetail.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth));
-            } catch (ParseException ex) {
-                System.getLogger(CreateUser.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            if ("MANAGER".equals(role) || "COUNTER_STAFF".equals(role) || "DOCTOR".equals(role)) {
+                StaffDetail newStaffDetail = new StaffDetail();
+
+                newStaffDetail.setUser(newUser);
+
+                newStaffDetail.setVersionTime(1);
+                newStaffDetail.setCreationDatetime(DateTimeHelper.getCurrentDateTime());
+                newStaffDetail.setCreateBy(userSession.getUsername());
+                newStaffDetail.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
+                newStaffDetail.setLastUpdateBy(userSession.getUsername());
+
+                newStaffDetail.setName(name);
+                newStaffDetail.setEmail(email);
+                try {
+                    newStaffDetail.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth));
+                } catch (ParseException ex) {
+                    System.getLogger(CreateUser.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
+                newStaffDetail.setPhoneNumber(phoneNumber);
+
+                newUser.setStaffDetail(newStaffDetail);
+
+            } else if ("CUSTOMER".equals(role)) {
+                CustomerDetail newCustomerDetail = new CustomerDetail();
+
+                newCustomerDetail.setUser(newUser);
+
+                newCustomerDetail.setVersionTime(1);
+                newCustomerDetail.setCreationDatetime(DateTimeHelper.getCurrentDateTime());
+                newCustomerDetail.setCreateBy(userSession.getUsername());
+                newCustomerDetail.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
+                newCustomerDetail.setLastUpdateBy(userSession.getUsername());
+
+                newCustomerDetail.setName(name);
+                newCustomerDetail.setEmail(email);
+
+                try {
+                    newCustomerDetail.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth));
+                } catch (ParseException ex) {
+                    System.getLogger(CreateUser.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
+                newCustomerDetail.setPhoneNumber(phoneNumber);
+
+                newCustomerDetail.setAllergic(allergy);
+                newCustomerDetail.setBloodType(bloodType);
+
+                newUser.setCustomerDetail(newCustomerDetail);
             }
-            newStaffDetail.setPhoneNumber(phoneNumber);
-
-            newUser.setStaffDetail(newStaffDetail);
-
-        } else if ("CUSTOMER".equals(role)){
-            CustomerDetail newCustomerDetail = new CustomerDetail();
-            
-            newCustomerDetail.setUser(newUser);
-            
-            newCustomerDetail.setVersionTime(1);
-            newCustomerDetail.setCreationDatetime(nowDate);
-            newCustomerDetail.setCreateBy("TEST");
-            newCustomerDetail.setLastUpdateDatetime(nowDate);
-            newCustomerDetail.setLastUpdateBy("TEST");
-
-            newCustomerDetail.setName(name);
-            newCustomerDetail.setEmail(email);
-            
-            try {
-                newCustomerDetail.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth));
-            } catch (ParseException ex) {
-                System.getLogger(CreateUser.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            }
-            newCustomerDetail.setPhoneNumber(phoneNumber);
-
-            newCustomerDetail.setAllergic(allergy);
-            newCustomerDetail.setBloodType(bloodType);
-
-            newUser.setCustomerDetail(newCustomerDetail);
-
+            userFacade.create(newUser);
         }
-        
-
-        userFacade.create(newUser);
-
-//        try (PrintWriter out = response.getWriter()) {
-//            /* TODO output your page here. You may use following sample code. */
-//            out.println("<!DOCTYPE html>");
-//            out.println("<html>");
-//            out.println("<head>");
-//            out.println("<title>Servlet CreateUser</title>");
-//            out.println("</head>");
-//            out.println("<body>");
-//            out.println("<h1>Servlet CreateUser at " + request.getContextPath() + "</h1>");
-//            out.println("</body>");
-//            out.println("</html>");
-//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -5,13 +5,16 @@
 package controller.user;
 
 import facade.user.UserFacade;
+import helper.DateTimeHelper;
 import jakarta.ejb.EJB;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.user.User;
 
 /**
@@ -42,25 +45,21 @@ public class Login extends HttpServlet {
             
             User user = userFacade.findUserByUsername(username);
             
-            if (username.equals(user.getUsername()) && password.equals(user.getPassword())){
-                out.println("Login Successfully");
-                out.println("<br>ID: " + user.getId());
-                out.println("<br>Username: " + user.getUsername());
-                out.println("<br>User Account's Creation Datetime: " + user.getCreationDatetime());
-                out.println("<br>Role: " + user.getRole().getCode());
+            if (user != null && username.equals(user.getUsername()) && password.equals(user.getPassword())) {
+                String role = user.getRole().getCode();
+                
+                // Store user information in session
+                HttpSession session = request.getSession(true);
+                session.setAttribute("userSession", user);
+                switch (role) {
+                    case "MANAGER":
+                    case "COUNTER_STAFF":
+                        user.setLastLoginDatetime(DateTimeHelper.getCurrentDateTime());
+                        response.sendRedirect("ListUser");
+                }
             } else {
                 out.println("Login Unsuccessfully");
             }
-            /* TODO output your page here. You may use following sample code. */
-//            out.println("<!DOCTYPE html>");
-//            out.println("<html>");
-//            out.println("<head>");
-//            out.println("<title>Servlet Login</title>");
-//            out.println("</head>");
-//            out.println("<body>");
-//            out.println("<h1>Servlet Login at " + request.getContextPath() + "</h1>");
-//            out.println("</body>");
-//            out.println("</html>");
         }
     }
 

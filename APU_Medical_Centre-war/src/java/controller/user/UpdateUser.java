@@ -13,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.user.User;
 
 /**
@@ -40,34 +41,23 @@ public class UpdateUser extends HttpServlet {
         String id = request.getParameter("id");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-
-        if (username != null && password != null) {
-
+        HttpSession session = request.getSession(false);
+        if (id != null && session != null && session.getAttribute("userSession") != null) {
+            User userSession = (User) session.getAttribute("userSession");
             User user = userFacade.find(Integer.parseInt(id));
-            user.setUsername(username);
-            user.setPassword(password);
+            if (user != null) {
+                user.setUsername(username);
+                user.setPassword(password);
 
-            user.setVersionTime(user.getVersionTime() + 1);
-            user.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
-            user.setLastUpdateBy("TEST DELETE");
+                user.setVersionTime(user.getVersionTime() + 1);
+                user.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
+                user.setLastUpdateBy(userSession.getUsername());
 
-            userFacade.edit(user);
+                userFacade.edit(user);
+            }
         }
         
         response.sendRedirect("ListUser");
-
-//        try (PrintWriter out = response.getWriter()) {
-//            /* TODO output your page here. You may use following sample code. */
-//            out.println("<!DOCTYPE html>");
-//            out.println("<html>");
-//            out.println("<head>");
-//            out.println("<title>Servlet UpdateUser</title>");
-//            out.println("</head>");
-//            out.println("<body>");
-//            out.println("<h1>Servlet UpdateUser at " + request.getContextPath() + "</h1>");
-//            out.println("</body>");
-//            out.println("</html>");
-//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
