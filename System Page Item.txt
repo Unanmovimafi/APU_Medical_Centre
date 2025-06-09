@@ -1,0 +1,107 @@
+Public:
+- Dashboard / Home (Main Page)
+- Login Page
+- About
+
+Manager:
+- Dashboard/Home
+- Staff
+	- Staff List (View, Delete)
+	- Register New Staff
+	- Modify Staff
+- Appointments
+	- Appointments Calendar
+	- Appointment Request List
+	- Comment (BUT not sure how u nak do this)
+- Reports
+	- Report list (see u nak or not)
+	- Generate monthly report
+
+
+Counter Staff:
+- Dashboard/Home
+- Edit Profile
+- Customer
+	- Customer List
+	- Register customer
+	- Modify
+- Appointment
+	- Add appointment
+	- Appointment Calendar
+	- Approve / Reject (Recommend Other Time see you)
+- Payment
+	- Generate Receipt based on appointment
+	- Check payments
+- Medicine
+	- Add Medicine
+	- Medicine List
+	- Modify
+
+Doctor:
+- Dashboard
+- Edit Profile
+- Appointment 
+	- Appointment Calendar
+	- Appointment Details
+- Current appointment
+	- Add Feedback
+	- Entry Charge
+- Medical History
+	- Appointment Details
+
+Customer:
+- Dashboard
+- Edit Profile
+- Appointment
+	- Appointment Request
+	- Appointment 
+	- Appointment History
+- Comment
+	- comment to staff or doctors
+
+
+Theme
+🎨 Color Palette:
+- Primary Aqua:        #00BFFF (Freshness, alertness)
+- Accent Cyan:         #20C997 (Modern, light health tone)
+- Background:          #E0F7FA (Soft and clean background)
+- Text:                #1C1C1C (Readable contrast)
+- Success Green:       #28A745 (Indicates success/healthy)
+- Warning Orange:      #FFC107 (Vaccination alert or missing info)
+- Error Red:           #DC3545 (Critical health issues)
+
+🩺 System Features (for school context):
+- Student Medical Records
+  (allergies, chronic conditions, immunizations)
+- Appointment Booking
+  (for check-ups or emergencies)
+- Health Alerts
+  (school-wide notifications for outbreaks or vaccine reminders)
+- Medicine Inventory
+  (track stock, expiration dates)
+- Doctor/Nurse Notes
+  (linked to student profiles)
+- Parental Notifications
+  (via email/SMS)
+
+💻 UI Style Guide:
+- Use rounded corners (e.g. border-radius: 12px)
+- Minimalistic cards with soft shadows
+  (box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1))
+- Consistent top navigation bar in cyan (#00ACC1)
+- Clear icons with blue/aqua outlines
+  (Lucide or Material Icons recommended)
+- Hover effects with lighter cyan background
+- Responsive layout for web and mobile views
+
+🧑‍💼 User Roles:
+- Admin
+  (Full access, manage users and data)
+- School Nurse / Doctor
+  (Access all student health records and logs)
+- Teacher
+  (View limited student health info)
+- Parent
+  (View own child’s records and notifications)
+- Student
+  (View dashboard and request appointments)
