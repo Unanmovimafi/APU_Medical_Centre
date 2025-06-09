@@ -5,23 +5,23 @@
 package controller.user;
 
 import facade.user.UserFacade;
+import helper.DateTimeHelper;
 import jakarta.ejb.EJB;
-import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.stream.Collectors;
+import jakarta.servlet.http.HttpSession;
 import model.user.User;
 
 /**
  *
  * @author zihao
  */
-public class ListUser extends HttpServlet {
-    
+public class UpdateUser extends HttpServlet {
+
     @EJB
     private UserFacade userFacade;
 
@@ -37,18 +37,27 @@ public class ListUser extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        List<User> listUser = userFacade.findAll();
-        //FILTER for MANAGER
-        listUser = listUser.stream()
-                .filter(user ->  !("DELETE".equals(user.getUserStatus().getCode())) && ("MANAGER".equals(user.getRole().getCode())
-                        || "COUNTER_STAFF".equals(user.getRole().getCode()) || "DOCTOR".equals(user.getRole().getCode())))
-                .collect(Collectors.toList());
-                
-        request.setAttribute("listUser", listUser);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/manager/list_user.jsp");
-        dispatcher.forward(request, response);
+        String id = request.getParameter("id");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        HttpSession session = request.getSession(false);
+        if (id != null && session != null && session.getAttribute("userSession") != null) {
+            User userSession = (User) session.getAttribute("userSession");
+            User user = userFacade.find(Integer.parseInt(id));
+            if (user != null) {
+                user.setUsername(username);
+                user.setPassword(password);
+
+                user.setVersionTime(user.getVersionTime() + 1);
+                user.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
+                user.setLastUpdateBy(userSession.getUsername());
+
+                userFacade.edit(user);
+            }
+        }
+        
+        response.sendRedirect("ListUser");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

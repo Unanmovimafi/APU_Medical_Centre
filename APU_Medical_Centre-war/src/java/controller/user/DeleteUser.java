@@ -4,26 +4,30 @@
  */
 package controller.user;
 
+import facade.codevalue.CodeValueFacade;
 import facade.user.UserFacade;
+import helper.DateTimeHelper;
 import jakarta.ejb.EJB;
-import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.stream.Collectors;
+import jakarta.servlet.http.HttpSession;
+import model.codevalue.CodeValue;
 import model.user.User;
 
 /**
  *
  * @author zihao
  */
-public class ListUser extends HttpServlet {
-    
+public class DeleteUser extends HttpServlet {
+
     @EJB
     private UserFacade userFacade;
+    
+    @EJB
+    private CodeValueFacade codeValueFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,17 +42,26 @@ public class ListUser extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        List<User> listUser = userFacade.findAll();
-        //FILTER for MANAGER
-        listUser = listUser.stream()
-                .filter(user ->  !("DELETE".equals(user.getUserStatus().getCode())) && ("MANAGER".equals(user.getRole().getCode())
-                        || "COUNTER_STAFF".equals(user.getRole().getCode()) || "DOCTOR".equals(user.getRole().getCode())))
-                .collect(Collectors.toList());
-                
-        request.setAttribute("listUser", listUser);
+        String[] selectedUserIds = request.getParameterValues("selectedUsers");
+        HttpSession session = request.getSession(false);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/manager/list_user.jsp");
-        dispatcher.forward(request, response);
+         //Sofe delete approach
+        if (selectedUserIds != null && session != null && session.getAttribute("userSession") != null) {
+            User userSession = (User) session.getAttribute("userSession");
+            for (String userId : selectedUserIds) {
+                User user = userFacade.find(Integer.parseInt(userId));
+                CodeValue deleteStatusCodeValue = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("USER_STATUS", "DELETE");
+                user.setUserStatus(deleteStatusCodeValue);
+
+                user.setVersionTime(user.getVersionTime() + 1);
+                user.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
+                user.setLastUpdateBy(userSession.getUsername());
+
+                userFacade.edit(user);
+            }
+        }
+        response.sendRedirect("ListUser");
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
