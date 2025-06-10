@@ -4,7 +4,6 @@
  */
 package controller.user;
 
-import facade.user.UserFacade;
 import jakarta.ejb.EJB;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -15,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import model.user.User;
+import model.user.UserFacade;
 
 /**
  *
