@@ -4,8 +4,6 @@
  */
 package controller.user;
 
-import facade.codevalue.CodeValueFacade;
-import facade.user.UserFacade;
 import helper.DateTimeHelper;
 import jakarta.ejb.EJB;
 import java.io.IOException;
@@ -17,9 +15,11 @@ import jakarta.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import model.codevalue.CodeValue;
+import model.codevalue.CodeValueFacade;
 import model.customerdetail.CustomerDetail;
 import model.staffdetail.StaffDetail;
 import model.user.User;
+import model.user.UserFacade;
 
 /**
  *

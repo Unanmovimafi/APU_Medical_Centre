@@ -4,16 +4,15 @@
  */
 package controller.user;
 
-import facade.user.UserFacade;
 import jakarta.ejb.EJB;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.user.User;
+import model.user.UserFacade;
 
 /**
  *

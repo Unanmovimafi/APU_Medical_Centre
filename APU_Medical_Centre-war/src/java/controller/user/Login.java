@@ -4,10 +4,8 @@
  */
 package controller.user;
 
-import facade.user.UserFacade;
 import helper.DateTimeHelper;
 import jakarta.ejb.EJB;
-import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.user.User;
+import model.user.UserFacade;
 
 /**
  *
