@@ -19,8 +19,8 @@ Manager:
 
 
 Counter Staff:
-- Dashboard/Home
-- Edit Profile
+- Dashboard/Home ?
+- Edit Profile 
 - Customer
 	- Customer List
 	- Register customer
