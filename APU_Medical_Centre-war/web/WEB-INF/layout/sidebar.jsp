@@ -2,7 +2,7 @@
   <button class="toggle-btn" onclick="toggleSidebar()">?</button>
   <img src="../assets/img/default-profile.png" alt="Profile" class="profile-img" />
   <h3>John Doe</h3>
-  <a href="../profile/editProfile.jsp">Edit Profile</a>
+  <a href="/APU_Medical_Centre-war/edit-profile">Edit Profile</a>
   <a href="../dashboard/dashboard.jsp">Dashboard</a>
 
   <details>
