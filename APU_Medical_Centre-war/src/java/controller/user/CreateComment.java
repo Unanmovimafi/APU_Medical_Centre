@@ -9,10 +9,15 @@ import jakarta.ejb.EJB;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.codevalue.CodeValue;
+import model.codevalue.CodeValueFacade;
+import model.comment.Comment;
+import model.comment.CommentFacade;
 import model.user.User;
 import model.user.UserFacade;
 
@@ -20,10 +25,17 @@ import model.user.UserFacade;
  *
  * @author zihao
  */
-public class Login extends HttpServlet {
-    
+@WebServlet(name = "CreateComment", urlPatterns = {"/CreateComment"})
+public class CreateComment extends HttpServlet {
+
     @EJB
     private UserFacade userFacade;
+    
+    @EJB
+    private CodeValueFacade codeValueFacade;
+
+    @EJB
+    private CommentFacade commentFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,31 +49,18 @@ public class Login extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            
-            String username = request.getParameter("username");
-            String password = request.getParameter("password");
-            
-            User user = userFacade.findUserByUsername(username);
-            
-            if (user != null && username.equals(user.getUsername()) && password.equals(user.getPassword())) {
-                String role = user.getRole().getCode();
-                
-                // Store user information in session
-                HttpSession session = request.getSession(true);
-                session.setAttribute("userSession", user);
-                user.setLastLoginDatetime(DateTimeHelper.getCurrentDateTime());
-                switch (role) {
-                    case "MANAGER":
-                    case "COUNTER_STAFF":
-                        response.sendRedirect("ListUser");
-                    case "CUSTOMER":
-                        response.sendRedirect("GetStaffList");
-                }
-            } else {
-                out.println("Login Unsuccessfully");
-            }
-        }
+//        try (PrintWriter out = response.getWriter()) {
+//            /* TODO output your page here. You may use following sample code. */
+//            out.println("<!DOCTYPE html>");
+//            out.println("<html>");
+//            out.println("<head>");
+//            out.println("<title>Servlet CreateComment</title>");
+//            out.println("</head>");
+//            out.println("<body>");
+//            out.println("<h1>Servlet CreateComment at " + request.getContextPath() + "</h1>");
+//            out.println("</body>");
+//            out.println("</html>");
+//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -76,7 +75,7 @@ public class Login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+//        processRequest(request, response);
     }
 
     /**
@@ -90,7 +89,32 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+//        processRequest(request, response);
+        String targetUserId = request.getParameter("selectedUserId");
+        String rating = request.getParameter("rating");
+        String content = request.getParameter("content");
+
+        HttpSession session = request.getSession(false);
+
+        if (session != null && session.getAttribute("userSession") != null) {
+            Comment comment = new Comment();
+            User userSession = (User) session.getAttribute("userSession");
+            CodeValue cvCommentStatus = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("COMMENT_STATUS", "ACTIVE");
+            
+            comment.setVersionTime(1);
+            comment.setCreationDatetime(DateTimeHelper.getCurrentDateTime());
+            comment.setCreateBy(userSession.getUsername());
+            comment.setLastUpdateBy(userSession.getUsername());
+            comment.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
+
+            comment.setCustomer(userSession);
+            comment.setTargetUser(userFacade.find(Integer.parseInt(targetUserId)));
+            comment.setRating(Integer.parseInt(rating));
+            comment.setContent(content);
+            comment.setCommentStatus(cvCommentStatus);
+            
+            commentFacade.create(comment);
+        }
     }
 
     /**

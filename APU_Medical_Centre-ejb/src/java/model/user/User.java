@@ -50,7 +50,8 @@ import model.staffdetail.StaffDetail;
     @NamedQuery(name = "User.findByLastUpdateDatetime", query = "SELECT u FROM User u WHERE u.lastUpdateDatetime = :lastUpdateDatetime"),
     @NamedQuery(name = "User.findByLastUpdateBy", query = "SELECT u FROM User u WHERE u.lastUpdateBy = :lastUpdateBy"),
     @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
-    @NamedQuery(name = "User.findByLastLoginDatetime", query = "SELECT u FROM User u WHERE u.lastLoginDatetime = :lastLoginDatetime")})
+    @NamedQuery(name = "User.findByLastLoginDatetime", query = "SELECT u FROM User u WHERE u.lastLoginDatetime = :lastLoginDatetime"),
+    @NamedQuery(name = "User.findByRoles", query = "SELECT u FROM User u WHERE u.role.code IN :roles AND u.role.status = 'ACTIVE' AND u.role.codeSet.code = :codeSet AND u.role.codeSet.status = 'ACTIVE'")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;

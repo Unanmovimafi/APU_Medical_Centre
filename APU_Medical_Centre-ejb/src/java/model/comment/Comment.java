@@ -23,6 +23,7 @@ import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
+import model.codevalue.CodeValue;
 import model.user.User;
 
 /**
@@ -81,6 +82,9 @@ public class Comment implements Serializable {
     @Size(max = 16777215)
     @Column(name = "CONTENT")
     private String content;
+    @JoinColumn(name = "COMMENT_STATUS_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private CodeValue commentStatus;
     @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private User customer;
@@ -167,6 +171,14 @@ public class Comment implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public CodeValue getCommentStatus() {
+        return commentStatus;
+    }
+
+    public void setCommentStatus(CodeValue commentStatus) {
+        this.commentStatus = commentStatus;
     }
 
     public User getCustomer() {

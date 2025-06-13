@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import java.util.List;
 import model.AbstractFacade;
 
 /**
@@ -42,4 +43,10 @@ public class UserFacade extends AbstractFacade<User> {
         }
     }
     
+    public List<User> findUserListByRoles(List<String> roles, String codeSet) {
+        TypedQuery<User> user = em.createNamedQuery("User.findByRoles", User.class);
+        user.setParameter("roles", roles);
+        user.setParameter("codeSet", codeSet);
+        return user.getResultList();
+    }
 }
