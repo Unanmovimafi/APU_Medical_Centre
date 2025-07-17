@@ -2,10 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package model.user;
+package model.doctor;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +16,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -31,27 +29,29 @@ import java.util.Date;
 import model.appointment.Appointment;
 import model.codevalue.CodeValue;
 import model.comment.Comment;
-import model.customerdetail.CustomerDetail;
-import model.staffdetail.StaffDetail;
 
 /**
  *
- * @author khong
+ * @author zihao
  */
 @Entity
-@Table(name = "user")
+@Table(name = "doctor")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
-    @NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.id = :id"),
-    @NamedQuery(name = "User.findByVersionTime", query = "SELECT u FROM User u WHERE u.versionTime = :versionTime"),
-    @NamedQuery(name = "User.findByCreationDatetime", query = "SELECT u FROM User u WHERE u.creationDatetime = :creationDatetime"),
-    @NamedQuery(name = "User.findByCreateBy", query = "SELECT u FROM User u WHERE u.createBy = :createBy"),
-    @NamedQuery(name = "User.findByLastUpdateDatetime", query = "SELECT u FROM User u WHERE u.lastUpdateDatetime = :lastUpdateDatetime"),
-    @NamedQuery(name = "User.findByLastUpdateBy", query = "SELECT u FROM User u WHERE u.lastUpdateBy = :lastUpdateBy"),
-    @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
-    @NamedQuery(name = "User.findByLastLoginDatetime", query = "SELECT u FROM User u WHERE u.lastLoginDatetime = :lastLoginDatetime")})
-public class User implements Serializable {
+    @NamedQuery(name = "Doctor.findAll", query = "SELECT d FROM Doctor d"),
+    @NamedQuery(name = "Doctor.findById", query = "SELECT d FROM Doctor d WHERE d.id = :id"),
+    @NamedQuery(name = "Doctor.findByVersionTime", query = "SELECT d FROM Doctor d WHERE d.versionTime = :versionTime"),
+    @NamedQuery(name = "Doctor.findByCreationDatetime", query = "SELECT d FROM Doctor d WHERE d.creationDatetime = :creationDatetime"),
+    @NamedQuery(name = "Doctor.findByCreateBy", query = "SELECT d FROM Doctor d WHERE d.createBy = :createBy"),
+    @NamedQuery(name = "Doctor.findByLastUpdateDatetime", query = "SELECT d FROM Doctor d WHERE d.lastUpdateDatetime = :lastUpdateDatetime"),
+    @NamedQuery(name = "Doctor.findByLastUpdateBy", query = "SELECT d FROM Doctor d WHERE d.lastUpdateBy = :lastUpdateBy"),
+    @NamedQuery(name = "Doctor.findByUsername", query = "SELECT d FROM Doctor d WHERE d.username = :username"),
+    @NamedQuery(name = "Doctor.findByLastLoginDatetime", query = "SELECT d FROM Doctor d WHERE d.lastLoginDatetime = :lastLoginDatetime"),
+    @NamedQuery(name = "Doctor.findByEmail", query = "SELECT d FROM Doctor d WHERE d.email = :email"),
+    @NamedQuery(name = "Doctor.findByName", query = "SELECT d FROM Doctor d WHERE d.name = :name"),
+    @NamedQuery(name = "Doctor.findByDateOfBirth", query = "SELECT d FROM Doctor d WHERE d.dateOfBirth = :dateOfBirth"),
+    @NamedQuery(name = "Doctor.findByPhoneNumber", query = "SELECT d FROM Doctor d WHERE d.phoneNumber = :phoneNumber")})
+public class Doctor implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -97,33 +97,39 @@ public class User implements Serializable {
     @Column(name = "LAST_LOGIN_DATETIME")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginDatetime;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-    private CustomerDetail customerDetail;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-    private StaffDetail staffDetail;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Size(max = 255)
+    @Column(name = "EMAIL")
+    private String email;
+    @Size(max = 255)
+    @Column(name = "NAME")
+    private String name;
+    @Column(name = "DATE_OF_BIRTH")
+    @Temporal(TemporalType.DATE)
+    private Date dateOfBirth;
+    @Size(max = 255)
+    @Column(name = "PHONE_NUMBER")
+    private String phoneNumber;
+    @Lob
+    @Size(max = 16777215)
+    @Column(name = "PROFILE_PICTURE")
+    private String profilePicture;
+    @JoinColumn(name = "STATUS_ID", referencedColumnName = "ID")
+    @ManyToOne
+    private CodeValue status;
+    @OneToMany(mappedBy = "doctor")
     private Collection<Appointment> appointmentCollection;
     @OneToMany(mappedBy = "doctor")
-    private Collection<Appointment> appointmentCollection1;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-    private Collection<Comment> commentCustomerCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "targetUser")
-    private Collection<Comment> commentTargetUserCollection;
-    @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")
-    @ManyToOne(optional = false)
-    private CodeValue role;
-    @JoinColumn(name = "USER_STATUS_ID", referencedColumnName = "ID")
-    @ManyToOne(optional = false)
-    private CodeValue userStatus;
+    private Collection<Comment> commentCollection;
 
-    public User() {
+    public Doctor() {
     }
 
-    public User(Integer id) {
+    public Doctor(Integer id) {
         this.id = id;
     }
 
-    public User(Integer id, int versionTime, Date creationDatetime, String createBy, Date lastUpdateDatetime, String lastUpdateBy, String username, String password) {
+    public Doctor(Integer id, int versionTime, Date creationDatetime, String createBy, Date lastUpdateDatetime, String lastUpdateBy, String username, String password) {
         this.id = id;
         this.versionTime = versionTime;
         this.creationDatetime = creationDatetime;
@@ -206,21 +212,52 @@ public class User implements Serializable {
         this.lastLoginDatetime = lastLoginDatetime;
     }
 
-    
-    public CustomerDetail getCustomerDetail() {
-        return customerDetail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCustomerDetail(CustomerDetail customerDetail) {
-        this.customerDetail = customerDetail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public StaffDetail getStaffDetail() {
-        return staffDetail;
+    public String getName() {
+        return name;
     }
 
-    public void setStaffDetail(StaffDetail staffDetail) {
-        this.staffDetail = staffDetail;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public CodeValue getStatus() {
+        return status;
+    }
+
+    public void setStatus(CodeValue status) {
+        this.status = status;
     }
 
     @XmlTransient
@@ -233,46 +270,12 @@ public class User implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Appointment> getAppointmentCollection1() {
-        return appointmentCollection1;
+    public Collection<Comment> getCommentCollection() {
+        return commentCollection;
     }
 
-    public void setAppointmentCollection1(Collection<Appointment> appointmentCollection1) {
-        this.appointmentCollection1 = appointmentCollection1;
-    }
-
-    @XmlTransient
-    public Collection<Comment> getCommentCustomerCollection() {
-        return commentCustomerCollection;
-    }
-
-    public void setCommentCustomerCollection(Collection<Comment> commentCustomerCollection) {
-        this.commentCustomerCollection = commentCustomerCollection;
-    }
-
-    @XmlTransient
-    public Collection<Comment> getCommentTargetUserCollection() {
-        return commentTargetUserCollection;
-    }
-
-    public void setCommentCollection(Collection<Comment> commentTargetUserCollection) {
-        this.commentTargetUserCollection = commentTargetUserCollection;
-    }
-
-    public CodeValue getRole() {
-        return role;
-    }
-
-    public void setRole(CodeValue role) {
-        this.role = role;
-    }
-    
-    public CodeValue getUserStatus() {
-        return userStatus;
-    }
-
-    public void setUserStatus(CodeValue userStatus) {
-        this.userStatus = userStatus;
+    public void setCommentCollection(Collection<Comment> commentCollection) {
+        this.commentCollection = commentCollection;
     }
 
     @Override
@@ -285,10 +288,10 @@ public class User implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof User)) {
+        if (!(object instanceof Doctor)) {
             return false;
         }
-        User other = (User) object;
+        Doctor other = (Doctor) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -297,7 +300,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "model.user.User[ id=" + id + " ]";
+        return "module.Doctor[ id=" + id + " ]";
     }
     
 }

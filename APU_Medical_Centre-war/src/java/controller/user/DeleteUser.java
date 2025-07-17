@@ -14,8 +14,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.codevalue.CodeValue;
 import model.codevalue.CodeValueFacade;
-import model.user.User;
-import model.user.UserFacade;
+//import model.user.User;
+//import model.user.UserFacade;
 
 /**
  *
@@ -23,8 +23,8 @@ import model.user.UserFacade;
  */
 public class DeleteUser extends HttpServlet {
 
-    @EJB
-    private UserFacade userFacade;
+//    @EJB
+//    private UserFacade userFacade;
     
     @EJB
     private CodeValueFacade codeValueFacade;
@@ -47,18 +47,18 @@ public class DeleteUser extends HttpServlet {
 
          //Sofe delete approach
         if (selectedUserIds != null && session != null && session.getAttribute("userSession") != null) {
-            User userSession = (User) session.getAttribute("userSession");
-            for (String userId : selectedUserIds) {
-                User user = userFacade.find(Integer.parseInt(userId));
-                CodeValue deleteStatusCodeValue = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("USER_STATUS", "DELETE");
-                user.setUserStatus(deleteStatusCodeValue);
-
-                user.setVersionTime(user.getVersionTime() + 1);
-                user.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
-                user.setLastUpdateBy(userSession.getUsername());
-
-                userFacade.edit(user);
-            }
+//            User userSession = (User) session.getAttribute("userSession");
+//            for (String userId : selectedUserIds) {
+//                User user = userFacade.find(Integer.parseInt(userId));
+//                CodeValue deleteStatusCodeValue = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("USER_STATUS", "DELETE");
+//                user.setUserStatus(deleteStatusCodeValue);
+//
+//                user.setVersionTime(user.getVersionTime() + 1);
+//                user.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
+//                user.setLastUpdateBy(userSession.getUsername());
+//
+//                userFacade.edit(user);
+//            }
         }
         response.sendRedirect("ListUser");
 

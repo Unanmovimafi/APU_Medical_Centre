@@ -22,7 +22,8 @@ import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
-import model.user.User;
+import model.customer.Customer;
+import model.doctor.Doctor;
 
 /**
  *
@@ -84,10 +85,10 @@ public class Appointment implements Serializable {
     private Long charge;
     @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
-    private User customer;
+    private Customer customer;
     @JoinColumn(name = "DOCTOR_ID", referencedColumnName = "ID")
     @ManyToOne
-    private User doctor;
+    private Doctor doctor;
 
     public Appointment() {
     }
@@ -177,19 +178,19 @@ public class Appointment implements Serializable {
         this.charge = charge;
     }
 
-    public User getCustomer() {
+    public Customer getCustomer() {
         return customer;
     }
 
-    public void setCustomer(User customer) {
+    public void setCustomer(Customer customer) {
         this.customer = customer;
     }
 
-    public User getDoctor() {
+    public Doctor getDoctor() {
         return doctor;
     }
 
-    public void setDoctor(User doctor) {
+    public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
     }
 

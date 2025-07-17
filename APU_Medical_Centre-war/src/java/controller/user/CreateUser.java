@@ -16,10 +16,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import model.codevalue.CodeValue;
 import model.codevalue.CodeValueFacade;
-import model.customerdetail.CustomerDetail;
-import model.staffdetail.StaffDetail;
-import model.user.User;
-import model.user.UserFacade;
+import model.counterstaff.CounterStaff;
+import model.counterstaff.CounterStaffFacade;
+import model.doctor.Doctor;
+import model.doctor.DoctorFacade;
+import model.manager.Manager;
+import model.manager.ManagerFacade;
 
 /**
  *
@@ -28,7 +30,13 @@ import model.user.UserFacade;
 public class CreateUser extends HttpServlet {
 
     @EJB
-    private UserFacade userFacade;
+    private ManagerFacade managerFacade;
+
+    @EJB
+    private CounterStaffFacade counterStaffFacade;
+
+    @EJB
+    private DoctorFacade doctorFacade;
 
     @EJB
     private CodeValueFacade codeValueFacade;
@@ -54,79 +62,88 @@ public class CreateUser extends HttpServlet {
         String email = request.getParameter("email");
         String dateOfBirth = request.getParameter("dateOfBirth");
         String phoneNumber = request.getParameter("phoneNumber");
-        
-        String allergy = request.getParameter("allergy");
-        String bloodType = request.getParameter("bloodType");
 //        String gender = request.getParameter("gender");
 
         HttpSession session = request.getSession(false);
 
         if (session != null && session.getAttribute("userSession") != null) {
-            User newUser = new User();
-            User userSession = (User) session.getAttribute("userSession");
-            newUser.setVersionTime(1);
-            newUser.setCreationDatetime(DateTimeHelper.getCurrentDateTime());
-            newUser.setCreateBy(userSession.getUsername());
-            newUser.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
-            newUser.setLastUpdateBy(userSession.getUsername());
+            if ("MANAGER".equals(role)) {
+                Manager newManager = new Manager();
 
-            newUser.setUsername(username);
-            newUser.setPassword(password);
+                Manager managerSession = (Manager) session.getAttribute("managerSession");
+                newManager.setVersionTime(1);
+                newManager.setCreationDatetime(DateTimeHelper.getCurrentDateTime());
+                newManager.setCreateBy(managerSession.getUsername());
+                newManager.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
+                newManager.setLastUpdateBy(managerSession.getUsername());
 
-            CodeValue cvRole = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("USER_ROLE", role);
-            CodeValue cvUserStatus = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("USER_STATUS", "ACTIVE");
-            newUser.setRole(cvRole);
-            newUser.setUserStatus(cvUserStatus);
+                newManager.setUsername(username);
+                newManager.setPassword(password);
 
-            if ("MANAGER".equals(role) || "COUNTER_STAFF".equals(role) || "DOCTOR".equals(role)) {
-                StaffDetail newStaffDetail = new StaffDetail();
-
-                newStaffDetail.setUser(newUser);
-
-                newStaffDetail.setVersionTime(1);
-                newStaffDetail.setCreationDatetime(DateTimeHelper.getCurrentDateTime());
-                newStaffDetail.setCreateBy(userSession.getUsername());
-                newStaffDetail.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
-                newStaffDetail.setLastUpdateBy(userSession.getUsername());
-
-                newStaffDetail.setName(name);
-                newStaffDetail.setEmail(email);
+                CodeValue cvUserStatus = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("MANAGER_STATUS", "ACTIVE");
+                newManager.setStatus(cvUserStatus);
+                newManager.setName(name);
+                newManager.setEmail(email);
                 try {
-                    newStaffDetail.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth));
+                    newManager.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth));
                 } catch (ParseException ex) {
                     System.getLogger(CreateUser.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
-                newStaffDetail.setPhoneNumber(phoneNumber);
+                newManager.setPhoneNumber(phoneNumber);
+                managerFacade.create(newManager);
 
-                newUser.setStaffDetail(newStaffDetail);
+            } 
+            else if ("COUNTER_STAFF".equals(role)) {
+                CounterStaff newCounterStaff = new CounterStaff();
 
-            } else if ("CUSTOMER".equals(role)) {
-                CustomerDetail newCustomerDetail = new CustomerDetail();
+                Manager managerSession = (Manager) session.getAttribute("managerSession");
+                newCounterStaff.setVersionTime(1);
+                newCounterStaff.setCreationDatetime(DateTimeHelper.getCurrentDateTime());
+                newCounterStaff.setCreateBy(managerSession.getUsername());
+                newCounterStaff.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
+                newCounterStaff.setLastUpdateBy(managerSession.getUsername());
 
-                newCustomerDetail.setUser(newUser);
+                newCounterStaff.setUsername(username);
+                newCounterStaff.setPassword(password);
 
-                newCustomerDetail.setVersionTime(1);
-                newCustomerDetail.setCreationDatetime(DateTimeHelper.getCurrentDateTime());
-                newCustomerDetail.setCreateBy(userSession.getUsername());
-                newCustomerDetail.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
-                newCustomerDetail.setLastUpdateBy(userSession.getUsername());
-
-                newCustomerDetail.setName(name);
-                newCustomerDetail.setEmail(email);
-
+                CodeValue cvUserStatus = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("MANAGER_STATUS", "ACTIVE");
+                newCounterStaff.setStatus(cvUserStatus);
+                newCounterStaff.setName(name);
+                newCounterStaff.setEmail(email);
                 try {
-                    newCustomerDetail.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth));
+                    newCounterStaff.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth));
                 } catch (ParseException ex) {
                     System.getLogger(CreateUser.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
-                newCustomerDetail.setPhoneNumber(phoneNumber);
+                newCounterStaff.setPhoneNumber(phoneNumber);
+                counterStaffFacade.create(newCounterStaff);
 
-                newCustomerDetail.setAllergic(allergy);
-                newCustomerDetail.setBloodType(bloodType);
-
-                newUser.setCustomerDetail(newCustomerDetail);
             }
-            userFacade.create(newUser);
+            else if ("DOCTOR".equals(role)) {
+                Doctor newDoctor = new Doctor();
+
+                Manager managerSession = (Manager) session.getAttribute("managerSession");
+                newDoctor.setVersionTime(1);
+                newDoctor.setCreationDatetime(DateTimeHelper.getCurrentDateTime());
+                newDoctor.setCreateBy(managerSession.getUsername());
+                newDoctor.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
+                newDoctor.setLastUpdateBy(managerSession.getUsername());
+
+                newDoctor.setUsername(username);
+                newDoctor.setPassword(password);
+
+                CodeValue cvUserStatus = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("DOCTOR_STATUS", "ACTIVE");
+                newDoctor.setStatus(cvUserStatus);
+                newDoctor.setName(name);
+                newDoctor.setEmail(email);
+                try {
+                    newDoctor.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth));
+                } catch (ParseException ex) {
+                    System.getLogger(CreateUser.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
+                newDoctor.setPhoneNumber(phoneNumber);
+                doctorFacade.create(newDoctor);
+            }
         }
     }
 

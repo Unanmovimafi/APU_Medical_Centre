@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package model.customerdetail;
+package model.customer;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -11,10 +11,10 @@ import model.AbstractFacade;
 
 /**
  *
- * @author khong
+ * @author zihao
  */
 @Stateless
-public class CustomerDetailFacade extends AbstractFacade<CustomerDetail> {
+public class CustomerFacade extends AbstractFacade<Customer> {
 
     @PersistenceContext(unitName = "APU_Medical_Centre-ejbPU")
     private EntityManager em;
@@ -24,8 +24,8 @@ public class CustomerDetailFacade extends AbstractFacade<CustomerDetail> {
         return em;
     }
 
-    public CustomerDetailFacade() {
-        super(CustomerDetail.class);
+    public CustomerFacade() {
+        super(Customer.class);
     }
     
 }

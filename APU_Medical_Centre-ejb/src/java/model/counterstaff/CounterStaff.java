@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package model.customerdetail;
+package model.counterstaff;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
@@ -12,40 +12,45 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
-import model.user.User;
+import model.codevalue.CodeValue;
+import model.comment.Comment;
 
 /**
  *
- * @author khong
+ * @author zihao
  */
 @Entity
-@Table(name = "customer_detail")
+@Table(name = "counter_staff")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "CustomerDetail.findAll", query = "SELECT c FROM CustomerDetail c"),
-    @NamedQuery(name = "CustomerDetail.findById", query = "SELECT c FROM CustomerDetail c WHERE c.id = :id"),
-    @NamedQuery(name = "CustomerDetail.findByVersionTime", query = "SELECT c FROM CustomerDetail c WHERE c.versionTime = :versionTime"),
-    @NamedQuery(name = "CustomerDetail.findByCreationDatetime", query = "SELECT c FROM CustomerDetail c WHERE c.creationDatetime = :creationDatetime"),
-    @NamedQuery(name = "CustomerDetail.findByCreateBy", query = "SELECT c FROM CustomerDetail c WHERE c.createBy = :createBy"),
-    @NamedQuery(name = "CustomerDetail.findByLastUpdateDatetime", query = "SELECT c FROM CustomerDetail c WHERE c.lastUpdateDatetime = :lastUpdateDatetime"),
-    @NamedQuery(name = "CustomerDetail.findByLastUpdateBy", query = "SELECT c FROM CustomerDetail c WHERE c.lastUpdateBy = :lastUpdateBy"),
-    @NamedQuery(name = "CustomerDetail.findByEmail", query = "SELECT c FROM CustomerDetail c WHERE c.email = :email"),
-    @NamedQuery(name = "CustomerDetail.findByName", query = "SELECT c FROM CustomerDetail c WHERE c.name = :name"),
-    @NamedQuery(name = "CustomerDetail.findByDateOfBirth", query = "SELECT c FROM CustomerDetail c WHERE c.dateOfBirth = :dateOfBirth"),
-    @NamedQuery(name = "CustomerDetail.findByPhoneNumber", query = "SELECT c FROM CustomerDetail c WHERE c.phoneNumber = :phoneNumber"),
-    @NamedQuery(name = "CustomerDetail.findByBloodType", query = "SELECT c FROM CustomerDetail c WHERE c.bloodType = :bloodType")})
-public class CustomerDetail implements Serializable {
+    @NamedQuery(name = "CounterStaff.findAll", query = "SELECT c FROM CounterStaff c"),
+    @NamedQuery(name = "CounterStaff.findById", query = "SELECT c FROM CounterStaff c WHERE c.id = :id"),
+    @NamedQuery(name = "CounterStaff.findByVersionTime", query = "SELECT c FROM CounterStaff c WHERE c.versionTime = :versionTime"),
+    @NamedQuery(name = "CounterStaff.findByCreationDatetime", query = "SELECT c FROM CounterStaff c WHERE c.creationDatetime = :creationDatetime"),
+    @NamedQuery(name = "CounterStaff.findByCreateBy", query = "SELECT c FROM CounterStaff c WHERE c.createBy = :createBy"),
+    @NamedQuery(name = "CounterStaff.findByLastUpdateDatetime", query = "SELECT c FROM CounterStaff c WHERE c.lastUpdateDatetime = :lastUpdateDatetime"),
+    @NamedQuery(name = "CounterStaff.findByLastUpdateBy", query = "SELECT c FROM CounterStaff c WHERE c.lastUpdateBy = :lastUpdateBy"),
+    @NamedQuery(name = "CounterStaff.findByUsername", query = "SELECT c FROM CounterStaff c WHERE c.username = :username"),
+    @NamedQuery(name = "CounterStaff.findByLastLoginDatetime", query = "SELECT c FROM CounterStaff c WHERE c.lastLoginDatetime = :lastLoginDatetime"),
+    @NamedQuery(name = "CounterStaff.findByEmail", query = "SELECT c FROM CounterStaff c WHERE c.email = :email"),
+    @NamedQuery(name = "CounterStaff.findByName", query = "SELECT c FROM CounterStaff c WHERE c.name = :name"),
+    @NamedQuery(name = "CounterStaff.findByDateOfBirth", query = "SELECT c FROM CounterStaff c WHERE c.dateOfBirth = :dateOfBirth"),
+    @NamedQuery(name = "CounterStaff.findByPhoneNumber", query = "SELECT c FROM CounterStaff c WHERE c.phoneNumber = :phoneNumber")})
+public class CounterStaff implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -77,6 +82,20 @@ public class CustomerDetail implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "LAST_UPDATE_BY")
     private String lastUpdateBy;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "USERNAME")
+    private String username;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Size(min = 1, max = 16777215)
+    @Column(name = "PASSWORD")
+    private String password;
+    @Column(name = "LAST_LOGIN_DATETIME")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLoginDatetime;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 255)
     @Column(name = "EMAIL")
@@ -94,31 +113,28 @@ public class CustomerDetail implements Serializable {
     @Size(max = 16777215)
     @Column(name = "PROFILE_PICTURE")
     private String profilePicture;
-    @Lob
-    @Size(max = 16777215)
-    @Column(name = "ALLERGIC")
-    private String allergic;
-    @Size(max = 255)
-    @Column(name = "BLOOD_TYPE")
-    private String bloodType;
-    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
-    @OneToOne(optional = false)
-    private User user;
+    @JoinColumn(name = "STATUS_ID", referencedColumnName = "ID")
+    @ManyToOne
+    private CodeValue status;
+    @OneToMany(mappedBy = "counterStaff")
+    private Collection<Comment> commentCollection;
 
-    public CustomerDetail() {
+    public CounterStaff() {
     }
 
-    public CustomerDetail(Integer id) {
+    public CounterStaff(Integer id) {
         this.id = id;
     }
 
-    public CustomerDetail(Integer id, int versionTime, Date creationDatetime, String createBy, Date lastUpdateDatetime, String lastUpdateBy) {
+    public CounterStaff(Integer id, int versionTime, Date creationDatetime, String createBy, Date lastUpdateDatetime, String lastUpdateBy, String username, String password) {
         this.id = id;
         this.versionTime = versionTime;
         this.creationDatetime = creationDatetime;
         this.createBy = createBy;
         this.lastUpdateDatetime = lastUpdateDatetime;
         this.lastUpdateBy = lastUpdateBy;
+        this.username = username;
+        this.password = password;
     }
 
     public Integer getId() {
@@ -169,6 +185,30 @@ public class CustomerDetail implements Serializable {
         this.lastUpdateBy = lastUpdateBy;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Date getLastLoginDatetime() {
+        return lastLoginDatetime;
+    }
+
+    public void setLastLoginDatetime(Date lastLoginDatetime) {
+        this.lastLoginDatetime = lastLoginDatetime;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -209,28 +249,21 @@ public class CustomerDetail implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-    public String getAllergic() {
-        return allergic;
+    public CodeValue getStatus() {
+        return status;
     }
 
-    public void setAllergic(String allergic) {
-        this.allergic = allergic;
+    public void setStatus(CodeValue status) {
+        this.status = status;
     }
 
-    public String getBloodType() {
-        return bloodType;
+    @XmlTransient
+    public Collection<Comment> getCommentCollection() {
+        return commentCollection;
     }
 
-    public void setBloodType(String bloodType) {
-        this.bloodType = bloodType;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setCommentCollection(Collection<Comment> commentCollection) {
+        this.commentCollection = commentCollection;
     }
 
     @Override
@@ -243,10 +276,10 @@ public class CustomerDetail implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CustomerDetail)) {
+        if (!(object instanceof CounterStaff)) {
             return false;
         }
-        CustomerDetail other = (CustomerDetail) object;
+        CounterStaff other = (CounterStaff) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -255,7 +288,7 @@ public class CustomerDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "model.customerdetail.CustomerDetail[ id=" + id + " ]";
+        return "module.CounterStaff[ id=" + id + " ]";
     }
     
 }
