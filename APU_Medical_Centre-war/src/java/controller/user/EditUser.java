@@ -11,8 +11,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.user.User;
-import model.user.UserFacade;
+//import model.user.User;
+//import model.user.UserFacade;
 
 /**
  *
@@ -20,8 +20,8 @@ import model.user.UserFacade;
  */
 public class EditUser extends HttpServlet {
 
-    @EJB
-    private UserFacade userFacade;
+//    @EJB
+//    private UserFacade userFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -37,9 +37,9 @@ public class EditUser extends HttpServlet {
 
         String id = request.getParameter("id");
 
-        User user = userFacade.find(Integer.parseInt(id));
+//        User user = userFacade.find(Integer.parseInt(id));
 
-        request.setAttribute("user", user);
+//        request.setAttribute("user", user);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/manager/edit_user.jsp");
         dispatcher.forward(request, response);

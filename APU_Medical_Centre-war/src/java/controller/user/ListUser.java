@@ -13,8 +13,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
-import model.user.User;
-import model.user.UserFacade;
+//import model.user.User;
+//import model.user.UserFacade;
 
 /**
  *
@@ -22,8 +22,8 @@ import model.user.UserFacade;
  */
 public class ListUser extends HttpServlet {
     
-    @EJB
-    private UserFacade userFacade;
+//    @EJB
+//    private UserFacade userFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,17 +38,17 @@ public class ListUser extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        List<User> listUser = userFacade.findAll();
-        //FILTER for MANAGER
-        listUser = listUser.stream()
-                .filter(user ->  !("DELETE".equals(user.getUserStatus().getCode())) && ("MANAGER".equals(user.getRole().getCode())
-                        || "COUNTER_STAFF".equals(user.getRole().getCode()) || "DOCTOR".equals(user.getRole().getCode())))
-                .collect(Collectors.toList());
-                
-        request.setAttribute("listUser", listUser);
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/manager/list_user.jsp");
-        dispatcher.forward(request, response);
+//        List<User> listUser = userFacade.findAll();
+//        //FILTER for MANAGER
+//        listUser = listUser.stream()
+//                .filter(user ->  !("DELETE".equals(user.getUserStatus().getCode())) && ("MANAGER".equals(user.getRole().getCode())
+//                        || "COUNTER_STAFF".equals(user.getRole().getCode()) || "DOCTOR".equals(user.getRole().getCode())))
+//                .collect(Collectors.toList());
+//                
+//        request.setAttribute("listUser", listUser);
+//
+//        RequestDispatcher dispatcher = request.getRequestDispatcher("/manager/list_user.jsp");
+//        dispatcher.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

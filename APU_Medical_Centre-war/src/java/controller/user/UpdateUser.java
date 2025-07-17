@@ -12,8 +12,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.user.User;
-import model.user.UserFacade;
+//import model.user.User;
+//import model.user.UserFacade;
 
 /**
  *
@@ -21,8 +21,8 @@ import model.user.UserFacade;
  */
 public class UpdateUser extends HttpServlet {
 
-    @EJB
-    private UserFacade userFacade;
+//    @EJB
+//    private UserFacade userFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,21 +42,21 @@ public class UpdateUser extends HttpServlet {
         String password = request.getParameter("password");
         HttpSession session = request.getSession(false);
         if (id != null && session != null && session.getAttribute("userSession") != null) {
-            User userSession = (User) session.getAttribute("userSession");
-            User user = userFacade.find(Integer.parseInt(id));
-            if (user != null) {
-                user.setUsername(username);
-                user.setPassword(password);
-
-                user.setVersionTime(user.getVersionTime() + 1);
-                user.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
-                user.setLastUpdateBy(userSession.getUsername());
-
-                userFacade.edit(user);
-            }
+//            User userSession = (User) session.getAttribute("userSession");
+//            User user = userFacade.find(Integer.parseInt(id));
+//            if (user != null) {
+//                user.setUsername(username);
+//                user.setPassword(password);
+//
+//                user.setVersionTime(user.getVersionTime() + 1);
+//                user.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
+//                user.setLastUpdateBy(userSession.getUsername());
+//
+//                userFacade.edit(user);
+//            }
         }
         
-        response.sendRedirect("ListUser");
+//        response.sendRedirect("ListUser");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

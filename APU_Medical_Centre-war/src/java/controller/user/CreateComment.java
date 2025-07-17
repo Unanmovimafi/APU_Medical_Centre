@@ -18,8 +18,10 @@ import model.codevalue.CodeValue;
 import model.codevalue.CodeValueFacade;
 import model.comment.Comment;
 import model.comment.CommentFacade;
-import model.user.User;
-import model.user.UserFacade;
+import model.counterstaff.CounterStaffFacade;
+import model.customer.Customer;
+import model.doctor.DoctorFacade;
+import model.manager.ManagerFacade;
 
 /**
  *
@@ -29,8 +31,14 @@ import model.user.UserFacade;
 public class CreateComment extends HttpServlet {
 
     @EJB
-    private UserFacade userFacade;
-    
+    private CounterStaffFacade counterStaffFacade;
+
+    @EJB
+    private ManagerFacade managerFacade;
+
+    @EJB
+    private DoctorFacade doctorFacade;
+
     @EJB
     private CodeValueFacade codeValueFacade;
 
@@ -90,7 +98,8 @@ public class CreateComment extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 //        processRequest(request, response);
-        String targetUserId = request.getParameter("selectedUserId");
+        String targetStaffId = request.getParameter("selectedUserId");
+        String targetStaffRole = request.getParameter("selectedStaffRole");
         String rating = request.getParameter("rating");
         String content = request.getParameter("content");
 
@@ -98,20 +107,30 @@ public class CreateComment extends HttpServlet {
 
         if (session != null && session.getAttribute("userSession") != null) {
             Comment comment = new Comment();
-            User userSession = (User) session.getAttribute("userSession");
+            Customer customerSession = (Customer) session.getAttribute("customerSession");
             CodeValue cvCommentStatus = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("COMMENT_STATUS", "ACTIVE");
             
             comment.setVersionTime(1);
             comment.setCreationDatetime(DateTimeHelper.getCurrentDateTime());
-            comment.setCreateBy(userSession.getUsername());
-            comment.setLastUpdateBy(userSession.getUsername());
+            comment.setCreateBy(customerSession.getUsername());
+            comment.setLastUpdateBy(customerSession.getUsername());
             comment.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
 
-            comment.setCustomer(userSession);
-            comment.setTargetUser(userFacade.find(Integer.parseInt(targetUserId)));
+            comment.setCustomer(customerSession);
+            if ("MANAGER".equals(targetStaffRole)){
+                comment.setManager(managerFacade.find(targetStaffId));
+                
+            }
+            else if ("COUNTER_STAFF".equals(targetStaffRole)){
+                comment.setCounterStaff(counterStaffFacade.find(targetStaffId));
+            }
+            else if ("DOCTOR".equals(targetStaffRole)){
+                comment.setDoctor(doctorFacade.find(targetStaffId));
+            }
+            
             comment.setRating(Integer.parseInt(rating));
             comment.setContent(content);
-            comment.setCommentStatus(cvCommentStatus);
+            comment.setStatus(cvCommentStatus);
             
             commentFacade.create(comment);
         }

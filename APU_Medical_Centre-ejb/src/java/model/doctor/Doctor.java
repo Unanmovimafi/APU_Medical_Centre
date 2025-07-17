@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package model.customerdetail;
+package model.doctor;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
@@ -12,40 +12,46 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
-import model.user.User;
+import model.appointment.Appointment;
+import model.codevalue.CodeValue;
+import model.comment.Comment;
 
 /**
  *
- * @author khong
+ * @author zihao
  */
 @Entity
-@Table(name = "customer_detail")
+@Table(name = "doctor")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "CustomerDetail.findAll", query = "SELECT c FROM CustomerDetail c"),
-    @NamedQuery(name = "CustomerDetail.findById", query = "SELECT c FROM CustomerDetail c WHERE c.id = :id"),
-    @NamedQuery(name = "CustomerDetail.findByVersionTime", query = "SELECT c FROM CustomerDetail c WHERE c.versionTime = :versionTime"),
-    @NamedQuery(name = "CustomerDetail.findByCreationDatetime", query = "SELECT c FROM CustomerDetail c WHERE c.creationDatetime = :creationDatetime"),
-    @NamedQuery(name = "CustomerDetail.findByCreateBy", query = "SELECT c FROM CustomerDetail c WHERE c.createBy = :createBy"),
-    @NamedQuery(name = "CustomerDetail.findByLastUpdateDatetime", query = "SELECT c FROM CustomerDetail c WHERE c.lastUpdateDatetime = :lastUpdateDatetime"),
-    @NamedQuery(name = "CustomerDetail.findByLastUpdateBy", query = "SELECT c FROM CustomerDetail c WHERE c.lastUpdateBy = :lastUpdateBy"),
-    @NamedQuery(name = "CustomerDetail.findByEmail", query = "SELECT c FROM CustomerDetail c WHERE c.email = :email"),
-    @NamedQuery(name = "CustomerDetail.findByName", query = "SELECT c FROM CustomerDetail c WHERE c.name = :name"),
-    @NamedQuery(name = "CustomerDetail.findByDateOfBirth", query = "SELECT c FROM CustomerDetail c WHERE c.dateOfBirth = :dateOfBirth"),
-    @NamedQuery(name = "CustomerDetail.findByPhoneNumber", query = "SELECT c FROM CustomerDetail c WHERE c.phoneNumber = :phoneNumber"),
-    @NamedQuery(name = "CustomerDetail.findByBloodType", query = "SELECT c FROM CustomerDetail c WHERE c.bloodType = :bloodType")})
-public class CustomerDetail implements Serializable {
+    @NamedQuery(name = "Doctor.findAll", query = "SELECT d FROM Doctor d"),
+    @NamedQuery(name = "Doctor.findById", query = "SELECT d FROM Doctor d WHERE d.id = :id"),
+    @NamedQuery(name = "Doctor.findByVersionTime", query = "SELECT d FROM Doctor d WHERE d.versionTime = :versionTime"),
+    @NamedQuery(name = "Doctor.findByCreationDatetime", query = "SELECT d FROM Doctor d WHERE d.creationDatetime = :creationDatetime"),
+    @NamedQuery(name = "Doctor.findByCreateBy", query = "SELECT d FROM Doctor d WHERE d.createBy = :createBy"),
+    @NamedQuery(name = "Doctor.findByLastUpdateDatetime", query = "SELECT d FROM Doctor d WHERE d.lastUpdateDatetime = :lastUpdateDatetime"),
+    @NamedQuery(name = "Doctor.findByLastUpdateBy", query = "SELECT d FROM Doctor d WHERE d.lastUpdateBy = :lastUpdateBy"),
+    @NamedQuery(name = "Doctor.findByUsername", query = "SELECT d FROM Doctor d WHERE d.username = :username"),
+    @NamedQuery(name = "Doctor.findByLastLoginDatetime", query = "SELECT d FROM Doctor d WHERE d.lastLoginDatetime = :lastLoginDatetime"),
+    @NamedQuery(name = "Doctor.findByEmail", query = "SELECT d FROM Doctor d WHERE d.email = :email"),
+    @NamedQuery(name = "Doctor.findByName", query = "SELECT d FROM Doctor d WHERE d.name = :name"),
+    @NamedQuery(name = "Doctor.findByDateOfBirth", query = "SELECT d FROM Doctor d WHERE d.dateOfBirth = :dateOfBirth"),
+    @NamedQuery(name = "Doctor.findByPhoneNumber", query = "SELECT d FROM Doctor d WHERE d.phoneNumber = :phoneNumber")})
+public class Doctor implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -77,6 +83,20 @@ public class CustomerDetail implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "LAST_UPDATE_BY")
     private String lastUpdateBy;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "USERNAME")
+    private String username;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Size(min = 1, max = 16777215)
+    @Column(name = "PASSWORD")
+    private String password;
+    @Column(name = "LAST_LOGIN_DATETIME")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLoginDatetime;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 255)
     @Column(name = "EMAIL")
@@ -94,31 +114,30 @@ public class CustomerDetail implements Serializable {
     @Size(max = 16777215)
     @Column(name = "PROFILE_PICTURE")
     private String profilePicture;
-    @Lob
-    @Size(max = 16777215)
-    @Column(name = "ALLERGIC")
-    private String allergic;
-    @Size(max = 255)
-    @Column(name = "BLOOD_TYPE")
-    private String bloodType;
-    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
-    @OneToOne(optional = false)
-    private User user;
+    @JoinColumn(name = "STATUS_ID", referencedColumnName = "ID")
+    @ManyToOne
+    private CodeValue status;
+    @OneToMany(mappedBy = "doctor")
+    private Collection<Appointment> appointmentCollection;
+    @OneToMany(mappedBy = "doctor")
+    private Collection<Comment> commentCollection;
 
-    public CustomerDetail() {
+    public Doctor() {
     }
 
-    public CustomerDetail(Integer id) {
+    public Doctor(Integer id) {
         this.id = id;
     }
 
-    public CustomerDetail(Integer id, int versionTime, Date creationDatetime, String createBy, Date lastUpdateDatetime, String lastUpdateBy) {
+    public Doctor(Integer id, int versionTime, Date creationDatetime, String createBy, Date lastUpdateDatetime, String lastUpdateBy, String username, String password) {
         this.id = id;
         this.versionTime = versionTime;
         this.creationDatetime = creationDatetime;
         this.createBy = createBy;
         this.lastUpdateDatetime = lastUpdateDatetime;
         this.lastUpdateBy = lastUpdateBy;
+        this.username = username;
+        this.password = password;
     }
 
     public Integer getId() {
@@ -169,6 +188,30 @@ public class CustomerDetail implements Serializable {
         this.lastUpdateBy = lastUpdateBy;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Date getLastLoginDatetime() {
+        return lastLoginDatetime;
+    }
+
+    public void setLastLoginDatetime(Date lastLoginDatetime) {
+        this.lastLoginDatetime = lastLoginDatetime;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -209,28 +252,30 @@ public class CustomerDetail implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-    public String getAllergic() {
-        return allergic;
+    public CodeValue getStatus() {
+        return status;
     }
 
-    public void setAllergic(String allergic) {
-        this.allergic = allergic;
+    public void setStatus(CodeValue status) {
+        this.status = status;
     }
 
-    public String getBloodType() {
-        return bloodType;
+    @XmlTransient
+    public Collection<Appointment> getAppointmentCollection() {
+        return appointmentCollection;
     }
 
-    public void setBloodType(String bloodType) {
-        this.bloodType = bloodType;
+    public void setAppointmentCollection(Collection<Appointment> appointmentCollection) {
+        this.appointmentCollection = appointmentCollection;
     }
 
-    public User getUser() {
-        return user;
+    @XmlTransient
+    public Collection<Comment> getCommentCollection() {
+        return commentCollection;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCommentCollection(Collection<Comment> commentCollection) {
+        this.commentCollection = commentCollection;
     }
 
     @Override
@@ -243,10 +288,10 @@ public class CustomerDetail implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CustomerDetail)) {
+        if (!(object instanceof Doctor)) {
             return false;
         }
-        CustomerDetail other = (CustomerDetail) object;
+        Doctor other = (Doctor) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -255,7 +300,7 @@ public class CustomerDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "model.customerdetail.CustomerDetail[ id=" + id + " ]";
+        return "module.Doctor[ id=" + id + " ]";
     }
     
 }

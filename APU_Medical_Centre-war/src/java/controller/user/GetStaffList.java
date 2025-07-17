@@ -15,8 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import model.user.User;
-import model.user.UserFacade;
+//import model.user.User;
+//import model.user.UserFacade;
 
 /**
  *
@@ -24,8 +24,8 @@ import model.user.UserFacade;
  */
 public class GetStaffList extends HttpServlet {
     
-    @EJB
-    UserFacade userFacade;
+//    @EJB
+//    UserFacade userFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -67,17 +67,17 @@ public class GetStaffList extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<String> roles = Arrays.asList("MANAGER", "COUNTER_STAFF", "DOCTOR");
-        List<User> userList = userFacade.findUserListByRoles(roles, "USER_ROLE");
-
-        userList = userList.stream().filter(user ->  !("DELETE".equals(user.getUserStatus().getCode()))).collect(Collectors.toList());
-        
-        
-        
-        request.setAttribute("userList", userList);
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/create_comment.jsp");
-        dispatcher.forward(request, response);
+//        List<String> roles = Arrays.asList("MANAGER", "COUNTER_STAFF", "DOCTOR");
+//        List<User> userList = userFacade.findUserListByRoles(roles, "USER_ROLE");
+//
+//        userList = userList.stream().filter(user ->  !("DELETE".equals(user.getUserStatus().getCode()))).collect(Collectors.toList());
+//        
+//        
+//        
+//        request.setAttribute("userList", userList);
+//
+//        RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/create_comment.jsp");
+//        dispatcher.forward(request, response);
 
 //        processRequest(request, response);
     }

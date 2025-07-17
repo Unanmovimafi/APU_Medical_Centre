@@ -13,8 +13,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.user.User;
-import model.user.UserFacade;
 
 /**
  *
@@ -22,8 +20,8 @@ import model.user.UserFacade;
  */
 public class Login extends HttpServlet {
     
-    @EJB
-    private UserFacade userFacade;
+//    @EJB
+//    private UserFacade userFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,25 +40,25 @@ public class Login extends HttpServlet {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             
-            User user = userFacade.findUserByUsername(username);
-            
-            if (user != null && username.equals(user.getUsername()) && password.equals(user.getPassword())) {
-                String role = user.getRole().getCode();
-                
-                // Store user information in session
-                HttpSession session = request.getSession(true);
-                session.setAttribute("userSession", user);
-                user.setLastLoginDatetime(DateTimeHelper.getCurrentDateTime());
-                switch (role) {
-                    case "MANAGER":
-                    case "COUNTER_STAFF":
-                        response.sendRedirect("ListUser");
-                    case "CUSTOMER":
-                        response.sendRedirect("GetStaffList");
-                }
-            } else {
-                out.println("Login Unsuccessfully");
-            }
+//            User user = userFacade.findUserByUsername(username);
+//            
+//            if (user != null && username.equals(user.getUsername()) && password.equals(user.getPassword())) {
+//                String role = user.getRole().getCode();
+//                
+//                // Store user information in session
+//                HttpSession session = request.getSession(true);
+//                session.setAttribute("userSession", user);
+//                user.setLastLoginDatetime(DateTimeHelper.getCurrentDateTime());
+//                switch (role) {
+//                    case "MANAGER":
+//                    case "COUNTER_STAFF":
+//                        response.sendRedirect("ListUser");
+//                    case "CUSTOMER":
+//                        response.sendRedirect("GetStaffList");
+//                }
+//            } else {
+//                out.println("Login Unsuccessfully");
+//            }
         }
     }
 

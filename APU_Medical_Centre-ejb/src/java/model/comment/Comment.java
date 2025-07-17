@@ -24,7 +24,10 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
 import model.codevalue.CodeValue;
-import model.user.User;
+import model.counterstaff.CounterStaff;
+import model.customer.Customer;
+import model.doctor.Doctor;
+import model.manager.Manager;
 
 /**
  *
@@ -82,15 +85,21 @@ public class Comment implements Serializable {
     @Size(max = 16777215)
     @Column(name = "CONTENT")
     private String content;
-    @JoinColumn(name = "COMMENT_STATUS_ID", referencedColumnName = "ID")
+    @JoinColumn(name = "STATUS_ID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
-    private CodeValue commentStatus;
+    private CodeValue status;
     @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
-    private User customer;
-    @JoinColumn(name = "TARGET_USER_ID", referencedColumnName = "ID")
-    @ManyToOne(optional = false)
-    private User targetUser;
+    private Customer customer;
+    @JoinColumn(name = "MANAGER_ID", referencedColumnName = "ID")
+    @ManyToOne
+    private Manager manager;
+    @JoinColumn(name = "COUNTER_STAFF_ID", referencedColumnName = "ID")
+    @ManyToOne
+    private CounterStaff counterStaff;
+    @JoinColumn(name = "DOCTOR_ID", referencedColumnName = "ID")
+    @ManyToOne
+    private Doctor doctor;
 
     public Comment() {
     }
@@ -173,28 +182,44 @@ public class Comment implements Serializable {
         this.content = content;
     }
 
-    public CodeValue getCommentStatus() {
-        return commentStatus;
+    public CodeValue status() {
+        return status;
     }
 
-    public void setCommentStatus(CodeValue commentStatus) {
-        this.commentStatus = commentStatus;
+    public void setStatus(CodeValue status) {
+        this.status = status;
     }
 
-    public User getCustomer() {
+    public Customer getCustomer() {
         return customer;
     }
 
-    public void setCustomer(User customer) {
+    public void setCustomer(Customer customer) {
         this.customer = customer;
     }
 
-    public User getTargetUser() {
-        return targetUser;
+    public Manager getManager() {
+        return manager;
     }
 
-    public void setTargetUser(User targetUser) {
-        this.targetUser = targetUser;
+    public void setManager(Manager manager) {
+        this.manager = manager;
+    }
+
+    public CounterStaff getCounterStaff() {
+        return counterStaff;
+    }
+
+    public void setCounterStaff(CounterStaff counterStaff) {
+        this.counterStaff = counterStaff;
+    }
+
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
     }
 
 
