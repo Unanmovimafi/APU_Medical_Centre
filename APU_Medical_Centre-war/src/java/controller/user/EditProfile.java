@@ -16,11 +16,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.customerdetail.CustomerDetail;
-import model.customerdetail.CustomerDetailFacade;
-import model.staffdetail.StaffDetail;
-import model.user.User;
-import model.user.UserFacade;
+//import model.customerdetail.CustomerDetail;
+//import model.customerdetail.CustomerDetailFacade;
+//import model.staffdetail.StaffDetail;
+//import model.user.User;
+//import model.user.UserFacade;
 
 /**
  *
@@ -31,8 +31,8 @@ public class EditProfile extends HttpServlet {
     
     private static final Logger LOGGER = Logger.getLogger(EditProfile.class.getName());
 
-    @EJB
-    private UserFacade userFacade;
+//    @EJB
+//    private UserFacade userFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -73,17 +73,17 @@ public class EditProfile extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute("userSession");
-        String role = user.getRole().getCode();
-        request.setAttribute("user", user);
-        request.setAttribute("role", role);
-        request.setAttribute("pageContent", "/WEB-INF/doctor/edit-profile.jsp");
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/layout/layout.jsp");
-        dispatcher.forward(request, response);
-
-        LOGGER.info("Exiting doGet method."+ role);
-        LOGGER.info("Name"+ user.getStaffDetail().getName());
+//        HttpSession session = request.getSession(false);
+//        User user = (User) session.getAttribute("userSession");
+//        String role = user.getRole().getCode();
+//        request.setAttribute("user", user);
+//        request.setAttribute("role", role);
+//        request.setAttribute("pageContent", "/WEB-INF/doctor/edit-profile.jsp");
+//        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/layout/layout.jsp");
+//        dispatcher.forward(request, response);
+//
+//        LOGGER.info("Exiting doGet method."+ role);
+//        LOGGER.info("Name"+ user.getStaffDetail().getName());
     }
 
 
@@ -99,53 +99,53 @@ public class EditProfile extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try {
-
-            String name = request.getParameter("name");
-            String email = request.getParameter("email");
-            String phoneNumber = request.getParameter("phoneNumber");
-            String dateOfBirthStr = request.getParameter("dateOfJoining");
-
-            // Convert date string to java.sql.Date
-            java.sql.Date dateOfBirth = null;
-            if (dateOfBirthStr != null && !dateOfBirthStr.isEmpty()) {
-                dateOfBirth = java.sql.Date.valueOf(dateOfBirthStr);
-            }
-
-            // Assuming user session holds the logged-in user object
-            HttpSession session = request.getSession();
-            User userSession = (User) session.getAttribute("userSession");
-
-            if (userSession == null) {
-                request.setAttribute("errorMessage", "User not logged in.");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-                return;
-            } else {
-                int id = userSession.getId();
-                User user = userFacade.find(id);
-                if (user != null) {
-                    user.getStaffDetail().setName(name);
-                    user.getStaffDetail().setEmail(email);
-                    user.getStaffDetail().setPhoneNumber(phoneNumber);
-//                    user.getStaffDetail().setDateOfBirth(dateOfBirth);
-
-                    user.getStaffDetail().setVersionTime(user.getVersionTime() + 1);
-                    user.getStaffDetail().setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
-                    user.getStaffDetail().setLastUpdateBy(userSession.getUsername());
-
-                    userFacade.edit(user);
-                    session.setAttribute("userSession", user);
-                }
-                LOGGER.info("Run do post");
-                
-            }
-            response.sendRedirect(request.getContextPath() + "/edit-profile");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Error updating profile: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/edit-profile.jsp").forward(request, response);
-        }
+//        try {
+//
+//            String name = request.getParameter("name");
+//            String email = request.getParameter("email");
+//            String phoneNumber = request.getParameter("phoneNumber");
+//            String dateOfBirthStr = request.getParameter("dateOfJoining");
+//
+//            // Convert date string to java.sql.Date
+//            java.sql.Date dateOfBirth = null;
+//            if (dateOfBirthStr != null && !dateOfBirthStr.isEmpty()) {
+//                dateOfBirth = java.sql.Date.valueOf(dateOfBirthStr);
+//            }
+//
+//            // Assuming user session holds the logged-in user object
+//            HttpSession session = request.getSession();
+//            User userSession = (User) session.getAttribute("userSession");
+//
+//            if (userSession == null) {
+//                request.setAttribute("errorMessage", "User not logged in.");
+//                request.getRequestDispatcher("login.jsp").forward(request, response);
+//                return;
+//            } else {
+//                int id = userSession.getId();
+//                User user = userFacade.find(id);
+//                if (user != null) {
+//                    user.getStaffDetail().setName(name);
+//                    user.getStaffDetail().setEmail(email);
+//                    user.getStaffDetail().setPhoneNumber(phoneNumber);
+////                    user.getStaffDetail().setDateOfBirth(dateOfBirth);
+//
+//                    user.getStaffDetail().setVersionTime(user.getVersionTime() + 1);
+//                    user.getStaffDetail().setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
+//                    user.getStaffDetail().setLastUpdateBy(userSession.getUsername());
+//
+//                    userFacade.edit(user);
+//                    session.setAttribute("userSession", user);
+//                }
+//                LOGGER.info("Run do post");
+//                
+//            }
+//            response.sendRedirect(request.getContextPath() + "/edit-profile");
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            request.setAttribute("errorMessage", "Error updating profile: " + e.getMessage());
+//            request.getRequestDispatcher("/WEB-INF/views/edit-profile.jsp").forward(request, response);
+//        }
     }
 
     /**
