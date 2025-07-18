@@ -13,15 +13,28 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.counterstaff.CounterStaff;
+import model.counterstaff.CounterStaffFacade;
+import model.customer.Customer;
+import model.customer.CustomerFacade;
+import model.manager.Manager;
+import model.manager.ManagerFacade;
 
 /**
  *
  * @author zihao
  */
+
 public class Login extends HttpServlet {
     
-//    @EJB
-//    private UserFacade userFacade;
+    @EJB
+    private CustomerFacade customerFacade;
+
+    @EJB
+    private ManagerFacade managerFacade;
+
+    @EJB
+    private CounterStaffFacade counterStaffFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,6 +52,63 @@ public class Login extends HttpServlet {
             
             String username = request.getParameter("username");
             String password = request.getParameter("password");
+            String role = request.getParameter("role");
+            switch (role) {
+                case "CUSTOMER":
+                    Customer customer = customerFacade.findCustomerByUsername(username);
+                    if (customer != null && username.equals(customer.getUsername()) && password.equals(customer.getPassword())) {
+                        HttpSession session = request.getSession(true);
+                        session.setAttribute("customerSession", customer);
+                        session.setAttribute("customerSession", customer);
+                        customer.setLastLoginDatetime(DateTimeHelper.getCurrentDateTime());
+                        customerFacade.edit(customer);
+                        request.getRequestDispatcher("/WEB-INF/views/customer/create_comment.jsp")
+                                .forward(request, response);
+                    } else {
+                        out.println("Login Unsuccessfully");
+                    }
+                case "MANAGER":
+                Manager manager = managerFacade.findManagerByUsername(username);
+                    if (manager != null && username.equals(manager.getUsername()) && password.equals(manager.getPassword())) {
+                        HttpSession session = request.getSession(true);
+                        session.setAttribute("managerSession", manager);
+                        session.setAttribute("managerSession", manager);
+                        manager.setLastLoginDatetime(DateTimeHelper.getCurrentDateTime());
+                        managerFacade.edit(manager);
+                        request.getRequestDispatcher("/WEB-INF/views/manager/create_comment.jsp")
+                                .forward(request, response);
+                    } else {
+                        out.println("Login Unsuccessfully");
+                    }
+                case "COUNTER_STAFF":
+                    CounterStaff counterStaff = counterStaffFacade.findCounterStaffByUsername(username);
+                    if (counterStaff != null && username.equals(counterStaff.getUsername()) && password.equals(counterStaff.getPassword())) {
+                        HttpSession session = request.getSession(true);
+                        session.setAttribute("counterStaffSession", counterStaff);
+                        session.setAttribute("counterStaffSession", counterStaff);
+                        counterStaff.setLastLoginDatetime(DateTimeHelper.getCurrentDateTime());
+                        counterStaffFacade.edit(counterStaff);
+                        request.getRequestDispatcher("/WEB-INF/views/counterStaff/create_comment.jsp")
+                                .forward(request, response);
+                    } else {
+                        out.println("Login Unsuccessfully");
+                    }
+                    case "DOCTOR":
+//                    CounterStaff counterStaff = counterStaffFacade.findCounterStaffByUsername(username);
+//                    if (counterStaff != null && username.equals(counterStaff.getUsername()) && password.equals(counterStaff.getPassword())) {
+//                        HttpSession session = request.getSession(true);
+//                        session.setAttribute("counterStaffSession", counterStaff);
+//                        session.setAttribute("counterStaffSession", counterStaff);
+//                        counterStaff.setLastLoginDatetime(DateTimeHelper.getCurrentDateTime());
+//                        counterStaffFacade.edit(counterStaff);
+//                        request.getRequestDispatcher("/WEB-INF/views/counterStaff/create_comment.jsp")
+//                                .forward(request, response);
+//                    } else {
+//                        out.println("Login Unsuccessfully");
+//                    }
+            }
+        }
+
             
 //            User user = userFacade.findUserByUsername(username);
 //            
@@ -59,7 +129,7 @@ public class Login extends HttpServlet {
 //            } else {
 //                out.println("Login Unsuccessfully");
 //            }
-        }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

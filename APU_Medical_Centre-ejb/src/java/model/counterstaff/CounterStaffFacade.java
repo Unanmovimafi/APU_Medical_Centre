@@ -6,8 +6,11 @@ package model.counterstaff;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import model.AbstractFacade;
+import model.customer.Customer;
 
 /**
  *
@@ -27,5 +30,14 @@ public class CounterStaffFacade extends AbstractFacade<CounterStaff> {
     public CounterStaffFacade() {
         super(CounterStaff.class);
     }
-    
+
+    public CounterStaff findCounterStaffByUsername(String username) {
+        try {
+            TypedQuery<CounterStaff> counterStaff = em.createNamedQuery("CounterStaff.findByUsername", CounterStaff.class);
+            counterStaff.setParameter("username", username);
+            return counterStaff.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 }

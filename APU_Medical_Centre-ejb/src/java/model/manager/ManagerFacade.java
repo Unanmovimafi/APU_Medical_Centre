@@ -6,8 +6,11 @@ package model.manager;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import model.AbstractFacade;
+import model.counterstaff.CounterStaff;
 
 /**
  *
@@ -27,5 +30,14 @@ public class ManagerFacade extends AbstractFacade<Manager> {
     public ManagerFacade() {
         super(Manager.class);
     }
-    
+
+    public Manager findManagerByUsername(String username) {
+        try {
+            TypedQuery<Manager> manager = em.createNamedQuery("Manager.findByUsername", Manager.class);
+            manager.setParameter("username", username);
+            return manager.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 }
