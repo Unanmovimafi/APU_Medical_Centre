@@ -14,8 +14,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import model.codevalue.CodeValue;
-import model.codevalue.CodeValueFacade;
 import model.counterstaff.CounterStaff;
 import model.counterstaff.CounterStaffFacade;
 import model.doctor.Doctor;
@@ -37,9 +35,6 @@ public class CreateUser extends HttpServlet {
 
     @EJB
     private DoctorFacade doctorFacade;
-
-    @EJB
-    private CodeValueFacade codeValueFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -80,8 +75,7 @@ public class CreateUser extends HttpServlet {
                 newManager.setUsername(username);
                 newManager.setPassword(password);
 
-                CodeValue cvUserStatus = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("MANAGER_STATUS", "ACTIVE");
-                newManager.setStatus(cvUserStatus);
+                newManager.setStatus("ACTTIVE");
                 newManager.setName(name);
                 newManager.setEmail(email);
                 try {
@@ -106,8 +100,7 @@ public class CreateUser extends HttpServlet {
                 newCounterStaff.setUsername(username);
                 newCounterStaff.setPassword(password);
 
-                CodeValue cvUserStatus = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("MANAGER_STATUS", "ACTIVE");
-                newCounterStaff.setStatus(cvUserStatus);
+                newCounterStaff.setStatus("ACTIVE");
                 newCounterStaff.setName(name);
                 newCounterStaff.setEmail(email);
                 try {
@@ -132,8 +125,7 @@ public class CreateUser extends HttpServlet {
                 newDoctor.setUsername(username);
                 newDoctor.setPassword(password);
 
-                CodeValue cvUserStatus = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("DOCTOR_STATUS", "ACTIVE");
-                newDoctor.setStatus(cvUserStatus);
+                newDoctor.setStatus("ACTIVE");
                 newDoctor.setName(name);
                 newDoctor.setEmail(email);
                 try {

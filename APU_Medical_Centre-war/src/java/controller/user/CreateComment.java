@@ -14,8 +14,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.codevalue.CodeValue;
-import model.codevalue.CodeValueFacade;
 import model.comment.Comment;
 import model.comment.CommentFacade;
 import model.counterstaff.CounterStaffFacade;
@@ -38,9 +36,6 @@ public class CreateComment extends HttpServlet {
 
     @EJB
     private DoctorFacade doctorFacade;
-
-    @EJB
-    private CodeValueFacade codeValueFacade;
 
     @EJB
     private CommentFacade commentFacade;
@@ -108,7 +103,6 @@ public class CreateComment extends HttpServlet {
         if (session != null && session.getAttribute("userSession") != null) {
             Comment comment = new Comment();
             Customer customerSession = (Customer) session.getAttribute("customerSession");
-            CodeValue cvCommentStatus = codeValueFacade.findActiveCodeValueByCodeSetAndCodeValue("COMMENT_STATUS", "ACTIVE");
             
             comment.setVersionTime(1);
             comment.setCreationDatetime(DateTimeHelper.getCurrentDateTime());
@@ -130,7 +124,7 @@ public class CreateComment extends HttpServlet {
             
             comment.setRating(Integer.parseInt(rating));
             comment.setContent(content);
-            comment.setStatus(cvCommentStatus);
+            comment.setStatus("ACTIVE");
             
             commentFacade.create(comment);
         }

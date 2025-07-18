@@ -23,7 +23,6 @@ import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
-import model.codevalue.CodeValue;
 import model.counterstaff.CounterStaff;
 import model.customer.Customer;
 import model.doctor.Doctor;
@@ -85,9 +84,11 @@ public class Comment implements Serializable {
     @Size(max = 16777215)
     @Column(name = "CONTENT")
     private String content;
-    @JoinColumn(name = "STATUS_ID", referencedColumnName = "ID")
-    @ManyToOne(optional = false)
-    private CodeValue status;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "STATUS")
+    private String status;
     @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Customer customer;
@@ -182,11 +183,11 @@ public class Comment implements Serializable {
         this.content = content;
     }
 
-    public CodeValue status() {
+    public String status() {
         return status;
     }
 
-    public void setStatus(CodeValue status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
