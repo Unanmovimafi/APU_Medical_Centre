@@ -8,6 +8,8 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import model.AbstractFacade;
+import model.appointment.Appointment;
+import model.manager.Manager;
 
 /**
  *
@@ -28,4 +30,26 @@ public class DoctorFacade extends AbstractFacade<Doctor> {
         super(Doctor.class);
     }
     
+//    public Doctor approveAppointment(Doctor doctor, Integer appointmentId, String newCustomerName) {
+//        // Find the appointment using the appointmentId
+//        Appointment appointmentToUpdate = null;
+//
+//        for (Appointment appointment : doctor.getAppointmentCollection()) {
+//            if (appointment.getId().equals(appointmentId)) {
+//                appointmentToUpdate = appointment;
+//                break;
+//            }
+//        }
+//
+//        // If the appointment is found, update the customerName
+//        if (appointmentToUpdate != null) {]''
+//            appointmentToUpdate.setCustomer(Customer customer); // Assuming Appointment has a setCustomerName method
+//            edit(appointmentToUpdate); // Call the edit method to save changes for the appointment
+//        }
+//
+//        // Save the manager's state if any changes were made to the manager itself
+//        edit(doctor);  // This is optional, depending on whether you modify anything on the manager itself
+//
+//        return doctor;  // Return the updated manager
+//    }
 }

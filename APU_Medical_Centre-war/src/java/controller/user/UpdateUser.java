@@ -12,6 +12,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.appointment.Appointment;
+import model.doctor.Doctor;
+import model.manager.Manager;
+import model.manager.ManagerFacade;
 //import model.user.User;
 //import model.user.UserFacade;
 
@@ -20,6 +24,8 @@ import jakarta.servlet.http.HttpSession;
  * @author zihao
  */
 public class UpdateUser extends HttpServlet {
+    
+    ManagerFacade managerFacade;
 
 //    @EJB
 //    private UserFacade userFacade;
@@ -57,6 +63,15 @@ public class UpdateUser extends HttpServlet {
         }
         
 //        response.sendRedirect("ListUser");
+
+//        Doctor doctor = () session.getAttribute("userSession");
+//            Appointment appointment = doctor.getApoointmentCollection;
+//
+//            doctor.approveAppointment(appointment);
+//            
+//            doctorFacade.edit(doctor);
+                    
+            
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
