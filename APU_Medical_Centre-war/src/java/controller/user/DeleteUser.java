@@ -12,10 +12,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.codevalue.CodeValue;
-import model.codevalue.CodeValueFacade;
-//import model.user.User;
-//import model.user.UserFacade;
 
 /**
  *
@@ -25,9 +21,6 @@ public class DeleteUser extends HttpServlet {
 
 //    @EJB
 //    private UserFacade userFacade;
-    
-    @EJB
-    private CodeValueFacade codeValueFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

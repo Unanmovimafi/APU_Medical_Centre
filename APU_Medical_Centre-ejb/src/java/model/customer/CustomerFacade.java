@@ -6,7 +6,9 @@ package model.customer;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import model.AbstractFacade;
 
 /**
@@ -27,5 +29,15 @@ public class CustomerFacade extends AbstractFacade<Customer> {
     public CustomerFacade() {
         super(Customer.class);
     }
-    
+
+    public Customer findCustomerByUsername(String username) {
+        try {
+            TypedQuery<Customer> customer = em.createNamedQuery("Customer.findByUsername", Customer.class);
+            customer.setParameter("username", username);
+            return customer.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
 }

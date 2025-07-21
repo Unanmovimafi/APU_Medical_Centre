@@ -27,7 +27,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import model.appointment.Appointment;
-import model.codevalue.CodeValue;
 import model.comment.Comment;
 
 /**
@@ -114,9 +113,11 @@ public class Doctor implements Serializable {
     @Size(max = 16777215)
     @Column(name = "PROFILE_PICTURE")
     private String profilePicture;
-    @JoinColumn(name = "STATUS_ID", referencedColumnName = "ID")
-    @ManyToOne
-    private CodeValue status;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "STATUS")
+    private String status;
     @OneToMany(mappedBy = "doctor")
     private Collection<Appointment> appointmentCollection;
     @OneToMany(mappedBy = "doctor")
@@ -252,11 +253,11 @@ public class Doctor implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-    public CodeValue getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(CodeValue status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

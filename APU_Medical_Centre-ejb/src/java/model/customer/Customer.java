@@ -28,7 +28,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import model.appointment.Appointment;
-import model.codevalue.CodeValue;
 import model.comment.Comment;
 
 /**
@@ -127,9 +126,11 @@ public class Customer implements Serializable {
     private Collection<Appointment> appointmentCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private Collection<Comment> commentCollection;
-    @JoinColumn(name = "STATUS_ID", referencedColumnName = "ID")
-    @ManyToOne
-    private CodeValue status;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "STATUS")
+    private String status;
 
     public Customer() {
     }
@@ -295,11 +296,11 @@ public class Customer implements Serializable {
         this.commentCollection = commentCollection;
     }
 
-    public CodeValue getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(CodeValue status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
