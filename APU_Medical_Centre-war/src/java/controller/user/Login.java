@@ -9,6 +9,7 @@ import jakarta.ejb.EJB;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,6 +18,8 @@ import model.counterstaff.CounterStaff;
 import model.counterstaff.CounterStaffFacade;
 import model.customer.Customer;
 import model.customer.CustomerFacade;
+import model.doctor.Doctor;
+import model.doctor.DoctorFacade;
 import model.manager.Manager;
 import model.manager.ManagerFacade;
 
@@ -25,6 +28,7 @@ import model.manager.ManagerFacade;
  * @author zihao
  */
 
+//@WebServlet(name = "Login", urlPatterns = {"/login"})
 public class Login extends HttpServlet {
     
     @EJB
@@ -35,6 +39,9 @@ public class Login extends HttpServlet {
 
     @EJB
     private CounterStaffFacade counterStaffFacade;
+    
+    @EJB
+    private DoctorFacade doctorFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -85,27 +92,25 @@ public class Login extends HttpServlet {
                     if (counterStaff != null && username.equals(counterStaff.getUsername()) && password.equals(counterStaff.getPassword())) {
                         HttpSession session = request.getSession(true);
                         session.setAttribute("counterStaffSession", counterStaff);
-                        session.setAttribute("counterStaffSession", counterStaff);
                         counterStaff.setLastLoginDatetime(DateTimeHelper.getCurrentDateTime());
                         counterStaffFacade.edit(counterStaff);
-                        request.getRequestDispatcher("/WEB-INF/views/counterStaff/create_comment.jsp")
-                                .forward(request, response);
+                        response.sendRedirect("staff/dashboard");
+//                        request.getRequestDispatcher("/WEB-INF/views/staff/dashboard.jsp")
+//                                .forward(request, response);
                     } else {
                         out.println("Login Unsuccessfully");
                     }
-                    case "DOCTOR":
-//                    CounterStaff counterStaff = counterStaffFacade.findCounterStaffByUsername(username);
-//                    if (counterStaff != null && username.equals(counterStaff.getUsername()) && password.equals(counterStaff.getPassword())) {
-//                        HttpSession session = request.getSession(true);
-//                        session.setAttribute("counterStaffSession", counterStaff);
-//                        session.setAttribute("counterStaffSession", counterStaff);
-//                        counterStaff.setLastLoginDatetime(DateTimeHelper.getCurrentDateTime());
-//                        counterStaffFacade.edit(counterStaff);
-//                        request.getRequestDispatcher("/WEB-INF/views/counterStaff/create_comment.jsp")
-//                                .forward(request, response);
-//                    } else {
-//                        out.println("Login Unsuccessfully");
-//                    }
+                case "DOCTOR":
+                    Doctor doctor = doctorFacade.findDoctorByUsername(username);
+                    if (doctor != null && username.equals(doctor.getUsername()) && password.equals(doctor.getPassword())) {
+                        HttpSession session = request.getSession(true);
+                        session.setAttribute("doctorSession", doctor);
+                        doctor.setLastLoginDatetime(DateTimeHelper.getCurrentDateTime());
+                        doctorFacade.edit(doctor);
+                        response.sendRedirect("doctor/dashboard");
+                    } else {
+                        out.println("Login Unsuccessfully");
+                    }
             }
         }
 
