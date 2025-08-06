@@ -42,7 +42,14 @@ import model.doctor.Doctor;
     @NamedQuery(name = "Appointment.findByLastUpdateBy", query = "SELECT a FROM Appointment a WHERE a.lastUpdateBy = :lastUpdateBy"),
     @NamedQuery(name = "Appointment.findByAppointmentStartDatetime", query = "SELECT a FROM Appointment a WHERE a.appointmentStartDatetime = :appointmentStartDatetime"),
     @NamedQuery(name = "Appointment.findByAppointmentEndDatetime", query = "SELECT a FROM Appointment a WHERE a.appointmentEndDatetime = :appointmentEndDatetime"),
-    @NamedQuery(name = "Appointment.findByCharge", query = "SELECT a FROM Appointment a WHERE a.charge = :charge")})
+    @NamedQuery(name = "Appointment.findByCharge", query = "SELECT a FROM Appointment a WHERE a.charge = :charge"),
+    @NamedQuery(name = "Appointment.findByStatus", query = "SELECT a FROM Appointment a WHERE a.status = :status"),
+    @NamedQuery(name = "Appointment.findByMultipleStatus", query = "SELECT a FROM Appointment a WHERE a.status IN :statuses"),
+    @NamedQuery(name = "Appointment.findByDoctor", query = "SELECT a FROM Appointment a WHERE a.doctor = :doctor"),
+    @NamedQuery(name = "Appointment.findCustomersByDoctor", query = "SELECT DISTINCT a.customer FROM Appointment a WHERE a.doctor = :doctor"),
+    @NamedQuery(name = "Appointment.findByCustomer", query = "SELECT a FROM Appointment a WHERE a.customer = :customer ORDER BY a.appointmentStartDatetime DESC")
+})
+
 public class Appointment implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -81,6 +88,10 @@ public class Appointment implements Serializable {
     @Column(name = "APPOINTMENT_END_DATETIME")
     @Temporal(TemporalType.TIMESTAMP)
     private Date appointmentEndDatetime;
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "STATUS")
+    private String status;
     @Column(name = "CHARGE")
     private Long charge;
     @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
@@ -192,6 +203,14 @@ public class Appointment implements Serializable {
 
     public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override

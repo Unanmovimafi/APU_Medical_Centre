@@ -11,6 +11,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import model.AbstractFacade;
 import model.customer.Customer;
+import model.doctor.Doctor;
 
 /**
  *
@@ -26,7 +27,7 @@ public class CounterStaffFacade extends AbstractFacade<CounterStaff> {
     protected EntityManager getEntityManager() {
         return em;
     }
-
+    
     public CounterStaffFacade() {
         super(CounterStaff.class);
     }
