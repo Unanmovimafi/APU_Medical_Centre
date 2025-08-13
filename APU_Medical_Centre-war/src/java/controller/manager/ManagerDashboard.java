@@ -2,28 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.user;
+package controller.manager;
 
-import jakarta.ejb.EJB;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.stream.Collectors;
-//import model.user.User;
-//import model.user.UserFacade;
+import jakarta.servlet.http.HttpSession;
+import model.manager.Manager;
 
 /**
  *
- * @author zihao
+ * @author khong
  */
-public class ListUser extends HttpServlet {
-    
-//    @EJB
-//    private UserFacade userFacade;
+@WebServlet(name = "ManagerDashboard", urlPatterns = {"/manager/dashboard"})
+public class ManagerDashboard extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,18 +33,13 @@ public class ListUser extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-//        List<User> listUser = userFacade.findAll();
-//        //FILTER for MANAGER
-//        listUser = listUser.stream()
-//                .filter(user ->  !("DELETE".equals(user.getUserStatus().getCode())) && ("MANAGER".equals(user.getRole().getCode())
-//                        || "COUNTER_STAFF".equals(user.getRole().getCode()) || "DOCTOR".equals(user.getRole().getCode())))
-//                .collect(Collectors.toList());
-//                
-//        request.setAttribute("listUser", listUser);
-//
-//        RequestDispatcher dispatcher = request.getRequestDispatcher("/manager/list_user.jsp");
-//        dispatcher.forward(request, response);
+        HttpSession session = request.getSession(false);
+        Manager manager = (Manager) session.getAttribute("managerSession");
+        request.setAttribute("user", manager);
+        request.setAttribute("role", "MANAGER");
+        request.setAttribute("pageContent", "/WEB-INF/views/manager/dashboard.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/layout/layout.jsp");
+        dispatcher.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

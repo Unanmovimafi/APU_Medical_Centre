@@ -37,11 +37,10 @@
 
     <a href="../manager/dashboard.jsp">Dashboard</a>
     <details>
-      <summary>Staff</summary>
+      <summary>Manager</summary>
       <div style="margin-left: 10px;">
-        <a href="../manager/staffList.jsp">Staff List</a>
+        <a href="${pageContext.request.contextPath}/manager/staff/list">Staff List</a>
         <a href="../manager/registerStaff.jsp">Register New Staff</a>
-        <a href="../manager/modifyStaff.jsp">Modify Staff</a>
       </div>
     </details>
     <details>
