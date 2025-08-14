@@ -72,15 +72,10 @@ displayName = doctorSession.getName(); } %>
         </a>
       </div>
     </details>
-    <details class="nav-dropdown">
+    <details>
       <summary><i class="fas fa-chart-bar"></i>Reports</summary>
-      <div class="nav-dropdown-content">
-        <a href="../reports/reportList.jsp" class="nav-item">
-          <i class="fas fa-file-alt"></i>Report List
-        </a>
-        <a href="../reports/generateReport.jsp" class="nav-item">
-          <i class="fas fa-file-download"></i>Generate Monthly Report
-        </a>
+      <div style="margin-left: 10px;">
+        <a href="${pageContext.request.contextPath}/manager/customer/report">Customer Report</a>
       </div>
     </details>
 
