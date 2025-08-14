@@ -54,8 +54,7 @@
     <details>
       <summary>Reports</summary>
       <div style="margin-left: 10px;">
-        <a href="../reports/reportList.jsp">Report List</a>
-        <a href="../reports/generateReport.jsp">Generate Monthly Report</a>
+        <a href="${pageContext.request.contextPath}/manager/customer/report">Customer Report</a>
       </div>
     </details>
 
