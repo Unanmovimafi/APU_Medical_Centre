@@ -7,6 +7,7 @@ package controller.customer;
 import controller.user.*;
 import helper.DateTimeHelper;
 import jakarta.ejb.EJB;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -26,7 +27,7 @@ import model.manager.ManagerFacade;
  *
  * @author zihao
  */
-@WebServlet(name = "CreateComment", urlPatterns = {"/CreateComment"})
+@WebServlet(name = "CustomerCreateComment", urlPatterns = {"/customer/CustomerCreateComment"})
 public class CustomerCreateComment extends HttpServlet {
 
     @EJB
@@ -129,6 +130,12 @@ public class CustomerCreateComment extends HttpServlet {
             
             commentFacade.create(comment);
         }
+        
+        request.setAttribute("pageContent", "/WEB-INF/views/customer/dashboard.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/layout/layout.jsp");
+        dispatcher.forward(request, response);
+
+        
     }
 
     /**

@@ -50,7 +50,7 @@
     </head>
     <body>
         <h1>Hello World!</h1>
-        <form action="CreateComment" method="POST">
+        <form action="CustomerCreateComment" method="POST">
             
             <input type="hidden" name="selectedUserId" id="selectedUserId" value="">
             
@@ -85,22 +85,16 @@
                             <tr>
                                 <th>Select</th>
                                 <th>ID</th>
-                                <th>Creation Date Time</th>
-                                <th>Username</th>
-                                <th>Role</th>
-                                <th>Status</th>
+                                <th>Name</th>
                             </tr>
                         </thead>
                         <tbody>
 
-                            <c:forEach var="user" items="${userList}">
+                            <c:forEach var="staff" items="${counterStaffList}">
                                 <tr>
-                                    <td><input type="radio" name="selectedUser" value="${user.id}"></td>
-                                    <td>${user.id}</td>
-                                    <td>${user.creationDatetime}</td>
-                                    <td>${user.username}</td>
-                                    <td>${user.role.code}</td>
-                                    <td>${user.userStatus.code}</td>
+                                    <td><input type="radio" name="selectedUser" value="${staff.id}"></td>
+                                    <td>${staff.id}</td>
+                                    <td>${staff.name}</td>
                                 </tr>
                             </c:forEach>
                         </tbody>

@@ -12,7 +12,6 @@
         <title>Edit User Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
         <form action="UpdateUser" method="POST">
             <input type="hidden" id="id" name="id" value="${user.id}" />
 

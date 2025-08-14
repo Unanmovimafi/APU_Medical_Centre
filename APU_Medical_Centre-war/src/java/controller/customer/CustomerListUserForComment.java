@@ -4,16 +4,18 @@
  */
 package controller.customer;
 
-import jakarta.servlet.RequestDispatcher;
+import jakarta.ejb.EJB;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.customer.Customer;
+import java.util.List;
+import model.counterstaff.CounterStaff;
+import model.counterstaff.CounterStaffFacade;
+import model.doctor.Doctor;
+import model.doctor.DoctorFacade;
 
 /**
  *
@@ -21,6 +23,12 @@ import model.customer.Customer;
  */
 @WebServlet(name = "CustomerListUserForComment", urlPatterns = {"/customer/create-comment"})
 public class CustomerListUserForComment extends HttpServlet {
+    
+    @EJB
+    private CounterStaffFacade counterStaffFacade;
+    
+    @EJB
+    private DoctorFacade doctorFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,12 +42,18 @@ public class CustomerListUserForComment extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-        response.setContentType("text/html;charset=UTF-8");
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/customer/create_comment.jsp");
-        dispatcher.forward(request, response);
-        }
+        /* TODO output your page here. You may use following sample code. */
+
+        
+        
+        List<CounterStaff> counterStaffList = counterStaffFacade.findAll();
+        List<Doctor> doctorList = doctorFacade.findAll();
+        
+        
+        request.setAttribute("counterStaffList", counterStaffList);
+        request.setAttribute("doctorList", doctorList);
+        request.setAttribute("pageContent", "/WEB-INF/views/customer/create_comment.jsp");
+        request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
