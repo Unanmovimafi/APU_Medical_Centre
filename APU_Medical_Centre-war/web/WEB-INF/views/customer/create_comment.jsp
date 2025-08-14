@@ -139,24 +139,26 @@
             };
             
             function saveUser() {
-                // Check if a user is selected (i.e., a radio button is checked)
-                var selectedUserId = document.querySelector("input[name='selectedUser']:checked");
+                var selectedRadio = document.querySelector("input[name='selectedUser']:checked");
 
-                if (!selectedUserId) {
-                    // If no user is selected, alert the user
+                if (!selectedRadio) {
                     alert("Please select a user to save.");
                 } else {
-                    // If a user is selected, update the hidden field and submit the form
-                    var userId = selectedUserId.value;
+                    var userId = selectedRadio.value;
+                    var row = selectedRadio.closest("tr"); // Get the table row
+                    var userName = row.cells[2].textContent; // Assuming Name is in the 3rd column (index 2)
+
+                    // Store the ID in the hidden field for form submission
                     document.getElementById("selectedUserId").value = userId;
-                    
-                     var userModals = document.getElementById('staffList');
-                    userModals.style.display = "none";
-                    
-                    var targetUser = document.getElementById('target_user');
-                    targetUser.value = userId;
+
+                    // Close modal
+                    document.getElementById('staffList').style.display = "none";
+
+                    // Show name instead of ID in the text field
+                    document.getElementById('target_user').value = userName;
                 }
             }
+
             
         </script>
         
