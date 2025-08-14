@@ -58,9 +58,6 @@
         <a href="../reports/generateReport.jsp">Generate Monthly Report</a>
       </div>
     </details>
-    <details>
-      <summary><a href="../logout">Reports</a></summary>
-    </details>
 
   <% } else if ("COUNTER_STAFF".equalsIgnoreCase(role)) { %>
 

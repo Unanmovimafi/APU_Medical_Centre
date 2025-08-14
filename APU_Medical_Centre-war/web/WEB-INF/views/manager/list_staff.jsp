@@ -83,26 +83,66 @@
                 </c:if>
                 <c:forEach var="m" items="${managerList}">
                     <tr>
-                        <td>${m.id}</td>
-                        <td>${m.name}</td>
-                        <td>${m.status}</td>
-                        <td><a href="javascript:viewStaff('MANAGER', ${m.id});">View</a></td>
-                        <td><input type="checkbox" name="selectedIds" value="${m.id}" /></td>
-                    </tr>
+  <td>${m.id}</td>
+  <td>${m.name}</td>
+  <td>${m.status}</td>
+  <td><a href="javascript:viewStaff('MANAGER', ${m.id});">View</a></td>
+  <td><input type="checkbox" name="selectedIds" value="${m.id}" /></td>
+</tr>
 
-                    <!-- Modal -->
-                    <div class="modal" data-type="MANAGER" data-id="${m.id}" style="display:none;">
-                        <div class="modal-content">
-                            <a class="close" href="javascript:closeModal();">&times;</a>
-                            <h3>Manager Details</h3>
-                            <a href="EditManager?id=${m.id}">Edit</a>
-                            <div class="staffDetails">
-                                ID: <input type="text" value="${m.id}" disabled />
-                                Name: <input type="text" value="${m.name}" disabled />
-                                Status: <input type="text" value="${m.status}" disabled />
-                            </div>
-                        </div>
-                    </div>
+<!-- Modal -->
+<div class="modal" data-type="MANAGER" data-id="${m.id}" style="display:none;">
+  <div class="modal-content">
+    <a class="close" href="javascript:closeModal();">&times;</a>
+
+    <header class="modal-header">
+      <h3>Manager Details</h3>
+      <a class="edit-link" href="EditManager?id=${m.id}">Edit</a>
+    </header>
+
+    <!-- Optional profile picture if stored as Base64 in profilePicture -->
+    <div class="profile-picture" style="margin: 8px 0;">
+      <img 
+        src="${empty m.profilePicture ? '': 'data:image/*;base64,' += m.profilePicture}" 
+        alt="Profile picture of ${m.name}" 
+        onerror="this.style.display='none';" 
+        style="max-width:120px; max-height:120px; border-radius:8px;"
+      />
+    </div>
+
+    <div class="staffDetails" style="display:grid; grid-template-columns: 1fr 2fr; gap:8px 12px;">
+      <label>ID:</label>
+      <input type="text" value="${m.id}" disabled />
+
+      <label>Status:</label>
+      <input type="text" value="${m.status}" disabled />
+
+      <label>Username:</label>
+      <input type="text" value="${m.username}" disabled />
+
+      <label>Name:</label>
+      <input type="text" value="${m.name}" disabled />
+
+      <label>Email:</label>
+      <input type="text" value="${m.email}" disabled />
+
+      <label>Phone Number:</label>
+      <input type="text" value="${m.phoneNumber}" disabled />
+
+      <label>Date of Birth:</label>
+      <input type="text" value="${m.dateOfBirth}" disabled />
+
+      <label>Last Login:</label>
+      <input type="text" value="${m.lastLoginDatetime}" disabled />
+
+    <!-- If you’d like to surface related comments count -->
+    <div class="meta" style="margin-top:12px;">
+      <small>
+        Comments: ${empty m.commentCollection ? 0 : m.commentCollection.size()}
+      </small>
+    </div>
+  </div>
+</div>
                 </c:forEach>
             </tbody>
         </table>
@@ -133,26 +173,68 @@
                 </c:if>
                 <c:forEach var="cst" items="${counterStaffList}">
                     <tr>
-                        <td>${cst.id}</td>
-                        <td>${cst.name}</td>
-                        <td>${cst.status}</td>
-                        <td><a href="javascript:viewStaff('COUNTER_STAFF', ${cst.id});">View</a></td>
-                        <td><input type="checkbox" name="selectedIds" value="${cst.id}" /></td>
-                    </tr>
+  <td>${cst.id}</td>
+  <td>${cst.name}</td>
+  <td>${cst.status}</td>
+  <td><a href="javascript:viewStaff('COUNTER_STAFF', ${cst.id});">View</a></td>
+  <td><input type="checkbox" name="selectedIds" value="${cst.id}" /></td>
+</tr>
 
-                    <!-- Modal -->
-                    <div class="modal" data-type="COUNTER_STAFF" data-id="${cst.id}" style="display:none;">
-                        <div class="modal-content">
-                            <a class="close" href="javascript:closeModal();">&times;</a>
-                            <h3>Counter Staff Details</h3>
-                            <a href="EditCounterStaff?id=${cst.id}">Edit</a>
-                            <div class="staffDetails">
-                                ID: <input type="text" value="${cst.id}" disabled />
-                                Name: <input type="text" value="${cst.name}" disabled />
-                                Status: <input type="text" value="${cst.status}" disabled />
-                            </div>
-                        </div>
-                    </div>
+<!-- Modal -->
+<div class="modal" data-type="COUNTER_STAFF" data-id="${cst.id}" style="display:none;">
+  <div class="modal-content">
+    <a class="close" href="javascript:closeModal();">&times;</a>
+
+    <header class="modal-header">
+      <h3>Counter Staff Details</h3>
+      <a class="edit-link" href="EditCounterStaff?id=${cst.id}">Edit</a>
+    </header>
+
+    <!-- Optional profile picture -->
+    <div class="profile-picture" style="margin: 8px 0;">
+      <img 
+        src="${empty cst.profilePicture ? '' : 'data:image/*;base64,' += cst.profilePicture}" 
+        alt="Profile picture of ${cst.name}" 
+        onerror="this.style.display='none';" 
+        style="max-width:120px; max-height:120px; border-radius:8px;"
+      />
+    </div>
+
+    <div class="staffDetails" style="display:grid; grid-template-columns: 1fr 2fr; gap:8px 12px;">
+      <label>ID:</label>
+      <input type="text" value="${cst.id}" disabled />
+
+      <label>Status:</label>
+      <input type="text" value="${cst.status}" disabled />
+
+      <label>Username:</label>
+      <input type="text" value="${cst.username}" disabled />
+
+      <label>Name:</label>
+      <input type="text" value="${cst.name}" disabled />
+
+      <label>Email:</label>
+      <input type="text" value="${cst.email}" disabled />
+
+      <label>Phone Number:</label>
+      <input type="text" value="${cst.phoneNumber}" disabled />
+
+      <label>Date of Birth:</label>
+      <input type="text" value="${cst.dateOfBirth}" disabled />
+
+      <label>Last Login:</label>
+      <input type="text" value="${cst.lastLoginDatetime}" disabled />
+    </div>
+
+    <!-- Related comments count -->
+    <div class="meta" style="margin-top:12px;">
+      <small>
+        Comments: ${empty cst.commentCollection ? 0 : cst.commentCollection.size()}
+      </small>
+    </div>
+  </div>
+</div>
+
                 </c:forEach>
             </tbody>
         </table>
@@ -182,27 +264,69 @@
                     <tr><td colspan="5"><em>No doctors found.</em></td></tr>
                 </c:if>
                 <c:forEach var="d" items="${doctorList}">
-                    <tr>
-                        <td>${d.id}</td>
-                        <td>${d.name}</td>
-                        <td>${d.status}</td>
-                        <td><a href="javascript:viewStaff('DOCTOR', ${d.id});">View</a></td>
-                        <td><input type="checkbox" name="selectedIds" value="${d.id}" /></td>
-                    </tr>
+                   <tr>
+  <td>${d.id}</td>
+  <td>${d.name}</td>
+  <td>${d.status}</td>
+  <td><a href="javascript:viewStaff('DOCTOR', ${d.id});">View</a></td>
+  <td><input type="checkbox" name="selectedIds" value="${d.id}" /></td>
+</tr>
 
-                    <!-- Modal -->
-                    <div class="modal" data-type="DOCTOR" data-id="${d.id}" style="display:none;">
-                        <div class="modal-content">
-                            <a class="close" href="javascript:closeModal();">&times;</a>
-                            <h3>Doctor Details</h3>
-                            <a href="EditDoctor?id=${d.id}">Edit</a>
-                            <div class="staffDetails">
-                                ID: <input type="text" value="${d.id}" disabled />
-                                Name: <input type="text" value="${d.name}" disabled />
-                                Status: <input type="text" value="${d.status}" disabled />
-                            </div>
-                        </div>
-                    </div>
+<!-- Modal -->
+<div class="modal" data-type="DOCTOR" data-id="${d.id}" style="display:none;">
+  <div class="modal-content">
+    <a class="close" href="javascript:closeModal();">&times;</a>
+
+    <header class="modal-header">
+      <h3>Doctor Details</h3>
+      <a class="edit-link" href="EditDoctor?id=${d.id}">Edit</a>
+    </header>
+
+    <!-- Optional profile picture (Base64) -->
+    <div class="profile-picture" style="margin: 8px 0;">
+      <img
+        src="${empty d.profilePicture ? '' : 'data:image/*;base64,' += d.profilePicture}"
+        alt="Profile picture of ${d.name}"
+        onerror="this.style.display='none';"
+        style="max-width:120px; max-height:120px; border-radius:8px;"
+      />
+    </div>
+
+    <div class="staffDetails" style="display:grid; grid-template-columns: 1fr 2fr; gap:8px 12px;">
+      <!-- Core fields -->
+      <label>ID:</label>
+      <input type="text" value="${d.id}" disabled />
+
+      <label>Status:</label>
+      <input type="text" value="${d.status}" disabled />
+
+      <label>Username:</label>
+      <input type="text" value="${d.username}" disabled />
+
+      <label>Name:</label>
+      <input type="text" value="${d.name}" disabled />
+
+      <label>Email:</label>
+      <input type="text" value="${d.email}" disabled />
+
+      <label>Phone Number:</label>
+      <input type="text" value="${d.phoneNumber}" disabled />
+
+      <label>Date of Birth:</label>
+      <input type="text" value="${d.dateOfBirth}" disabled />
+
+      <label>Last Login:</label>
+      <input type="text" value="${d.lastLoginDatetime}" disabled />
+
+    <!-- Related comments count -->
+    <div class="meta" style="margin-top:12px;">
+      <small>
+        Comments: ${empty d.commentCollection ? 0 : d.commentCollection.size()}
+      </small>
+    </div>
+  </div>
+</div>
+
                 </c:forEach>
             </tbody>
         </table>
