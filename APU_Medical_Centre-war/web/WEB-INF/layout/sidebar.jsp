@@ -237,7 +237,7 @@ displayName = doctorSession.getName(); } %>
     <details class="nav-dropdown">
       <summary><i class="fas fa-comments"></i>Feedback</summary>
       <div class="nav-dropdown-content">
-        <a href="../comments/comment.jsp" class="nav-item">
+        <a href="${pageContext.request.contextPath}/customer/create-comment" class="nav-item">
           <i class="fas fa-comment-dots"></i>Comment to Staff/Doctor
         </a>
       </div>

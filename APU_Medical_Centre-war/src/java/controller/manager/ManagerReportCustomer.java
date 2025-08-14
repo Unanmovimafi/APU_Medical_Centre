@@ -43,9 +43,9 @@ public class ManagerReportCustomer extends HttpServlet {
         int male = 0, female = 0;
         for (Customer c : allCustomer) {
             String g = (c.getGender() == null) ? "" : c.getGender().trim().toLowerCase();
-            if ("m".equals(g)) {
+            if ("male".equals(g)) {
                 male++;
-            } else if ("f".equals(g)) {
+            } else if ("female".equals(g)) {
                 female++;
             }
         }
