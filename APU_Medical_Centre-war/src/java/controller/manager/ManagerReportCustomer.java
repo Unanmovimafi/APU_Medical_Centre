@@ -83,7 +83,7 @@ public class ManagerReportCustomer extends HttpServlet {
     // Groups: <18, 18–24, 25–34, 35–44, 45–54, 55–64, 65+
     String[] ageGroupLabels = {"Below 18","18-24","25-34","35-44","45-54","55-64","65+"};
     int[] ageCounts = new int[ageGroupLabels.length];
-    LocalDate today = LocalDate.now(zone);
+    LocalDate today = LocalDate.now(zone);  
 
     for (Customer c : allCustomer) {
         Date dob = c.getDateOfBirth();
