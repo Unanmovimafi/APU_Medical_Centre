@@ -23,19 +23,20 @@ import model.medicine.MedicineFacade;
  *
  * @author khong
  */
-@WebServlet(name = "StaffMedicineList", urlPatterns = {"/staff/medicine/list"})
+@WebServlet(name = "StaffMedicineList", urlPatterns = { "/staff/medicine/list" })
 public class StaffMedicineList extends HttpServlet {
 
     @EJB
     MedicineFacade medicineFacade;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -54,14 +55,15 @@ public class StaffMedicineList extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -69,6 +71,7 @@ public class StaffMedicineList extends HttpServlet {
         try {
             String column = request.getParameter("column");
             String keywordRaw = request.getParameter("keyword");
+            String successMessage = request.getParameter("success");
 
             List<Medicine> medicineList = medicineFacade.findAll(); // Assume this gets all medicines
 
@@ -84,7 +87,8 @@ public class StaffMedicineList extends HttpServlet {
                             return med.getCreateBy() != null && med.getCreateBy().toLowerCase().contains(keyword);
                         }
                         case "lastUpdateBy" -> {
-                            return med.getLastUpdateBy() != null && med.getLastUpdateBy().toLowerCase().contains(keyword);
+                            return med.getLastUpdateBy() != null
+                                    && med.getLastUpdateBy().toLowerCase().contains(keyword);
                         }
                         default -> {
                             return true;
@@ -97,6 +101,12 @@ public class StaffMedicineList extends HttpServlet {
             medicineList.sort(Comparator.comparing(Medicine::getLastUpdateDatetime).reversed());
 
             request.setAttribute("medicineList", medicineList);
+
+            // Handle success message from redirect
+            if (successMessage != null && !successMessage.trim().isEmpty()) {
+                request.setAttribute("modalMessage", successMessage);
+            }
+
             request.setAttribute("pageContent", "/WEB-INF/views/staff/medicine-list.jsp");
 
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/layout/layout.jsp");
@@ -112,15 +122,15 @@ public class StaffMedicineList extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
     }
 
     /**

@@ -62,19 +62,7 @@ public class StaffCustomerDelete extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            Integer id = Integer.valueOf(request.getParameter("id"));
-            Customer customer = customerFacade.find(id);
-
-            if (customer != null) {
-                customerFacade.remove(customer);
-            }
-
-            response.sendRedirect(request.getContextPath() + "/staff/customer/list");
-
-        } catch (IOException | NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid customer ID");
-        }
+        
     }
 
     /**
@@ -88,7 +76,23 @@ public class StaffCustomerDelete extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            Integer id = Integer.valueOf(request.getParameter("id"));
+            Customer customer = customerFacade.find(id);
+
+            if (customer != null) {
+                String customerName = customer.getName(); // Get name before deletion
+                customerFacade.remove(customer);
+                request.getSession().setAttribute("modalMessage",
+                    "<strong>" + customer.getName() + "</strong> has been successfully deleted.");
+            } else {
+                request.getSession().setAttribute("modalMessage", "Customer not found.");
+            }
+            response.sendRedirect(request.getContextPath() + "/staff/customer/list");
+
+        } catch (IOException | NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid customer ID");
+        }
     }
 
     /**

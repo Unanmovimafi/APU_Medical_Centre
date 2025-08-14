@@ -142,3 +142,208 @@ footer {
   border-top: 1px solid #ccc;
   margin-top: auto;
 }
+
+/* ===== LAYOUT STYLES ===== */
+.layout {
+  display: flex;
+}
+
+main {
+  margin-left: 280px; /* Default sidebar width */
+  flex: 1;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  main {
+    margin-left: 40px; /* Just space for toggle button on mobile */
+  }
+}
+
+/* ===== SIDEBAR STYLES ===== */
+#sidebar {
+  background: linear-gradient(135deg, var(--primary-aqua) 0%, var(--nav-dark) 100%);
+  color: white;
+  width: 280px;
+  min-height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+#sidebar.collapsed {
+  transform: translateX(-240px);
+}
+
+#sidebar.collapsed .toggle-btn {
+  right: -30px; /* Position button outside when collapsed */
+  background: var(--nav-dark);
+}
+
+.toggle-btn {
+  position: absolute;
+  right: 10px;  /* Inside the sidebar instead of outside */
+  top: 20px;
+  background: var(--primary-aqua);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  font-size: 18px;
+  z-index: 1001;
+}
+
+.toggle-btn:hover {
+  background: var(--nav-dark);
+  transform: scale(1.1);
+}
+
+.profile-section {
+  text-align: center;
+  padding: 30px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.profile-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid white;
+  margin-bottom: 15px;
+  object-fit: cover;
+}
+
+.profile-section h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.role-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.nav-menu {
+  padding: 20px 0;
+}
+
+.nav-item {
+  display: block;
+  padding: 12px 25px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  padding-left: 35px;
+  color: white;
+  text-decoration: none;
+}
+
+.nav-item i {
+  margin-right: 12px;
+  width: 20px;
+  text-align: center;
+}
+
+.nav-dropdown {
+  margin-bottom: 5px;
+}
+
+.nav-dropdown summary {
+  padding: 12px 25px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.nav-dropdown summary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  padding-left: 35px;
+}
+
+.nav-dropdown summary i {
+  margin-right: 12px;
+  width: 20px;
+  text-align: center;
+}
+
+.nav-dropdown summary::after {
+  content: "\f107";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.nav-dropdown[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown-content {
+  background: rgba(0, 0, 0, 0.1);
+  margin: 5px 0;
+}
+
+.nav-dropdown-content .nav-item {
+  padding: 10px 45px;
+  font-size: 14px;
+}
+
+.nav-dropdown-content .nav-item:hover {
+  padding-left: 55px;
+}
+
+.logout-btn {
+  position: absolute;
+  bottom: 20px;
+  left: 25px;
+  right: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  color: white;
+  text-decoration: none;
+}

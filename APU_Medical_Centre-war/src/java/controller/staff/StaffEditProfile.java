@@ -67,16 +67,16 @@ public class StaffEditProfile extends HttpServlet {
             throws ServletException, IOException {
         try {
             HttpSession session = request.getSession(false);
-            CounterStaff staff = (CounterStaff) session.getAttribute("counterStaffSession");
+            CounterStaff staffSession = (CounterStaff) session.getAttribute("counterStaffSession");
 
-            if (staff == null) {
+            if (staffSession == null) {
                 response.sendRedirect(request.getContextPath() + "/login.jsp");
                 return;
             }
 
             // Refresh from database
-            CounterStaff refreshed = counterStaffFacade.find(staff.getId());
-            request.setAttribute("user", refreshed);
+            CounterStaff staff = counterStaffFacade.find(staffSession.getId());
+            request.setAttribute("staff", staff);
             request.setAttribute("pageContent", "/WEB-INF/views/staff/edit-profile.jsp");
 
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/layout/layout.jsp");
@@ -100,28 +100,72 @@ public class StaffEditProfile extends HttpServlet {
             throws ServletException, IOException {
         try {
             HttpSession session = request.getSession(false);
-            CounterStaff sessionStaff = (CounterStaff) session.getAttribute("userSession");
+            CounterStaff sessionStaff = (CounterStaff) session.getAttribute("counterStaffSession");
 
             if (sessionStaff == null) {
-                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                response.sendRedirect(request.getContextPath() + "/login");
                 return;
             }
 
             CounterStaff staff = counterStaffFacade.find(sessionStaff.getId());
             if (staff == null) {
-                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                response.sendRedirect(request.getContextPath() + "/login");
                 return;
             }
 
-            staff.setName(request.getParameter("name"));
-            staff.setEmail(request.getParameter("email"));
-            staff.setPhoneNumber(request.getParameter("phoneNumber"));
+            // Get parameters
+            String newName = request.getParameter("name");
+            String newEmail = request.getParameter("email");
+            String newPhone = request.getParameter("phoneNumber");
+            String newPassword = request.getParameter("newPassword");
+            String oldPassword = request.getParameter("oldPassword");
+
+            boolean isPasswordChanged = false;
+            boolean isDetailChanged = false;
+
+            // Check if new password is entered
+            if (newPassword != null && !newPassword.trim().isEmpty()) {
+                if (oldPassword == null || !oldPassword.equals(staff.getPassword())) {
+                    request.setAttribute("errorMessage", "Old password is incorrect.");
+                    request.setAttribute("staff", staff);
+                    request.setAttribute("pageContent", "/WEB-INF/views/staff/edit-profile.jsp");
+                    request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
+                    return;
+                }
+                staff.setPassword(newPassword.trim());
+                isPasswordChanged = true;
+            }
+
+            // Check if any personal detail changed
+            if (!newName.equals(staff.getName()) || 
+                !newEmail.equals(staff.getEmail()) || 
+                !newPhone.equals(staff.getPhoneNumber())) {
+                isDetailChanged = true;
+            }
+
+            // Always set new values
+            staff.setName(newName);
+            staff.setEmail(newEmail);
+            staff.setPhoneNumber(newPhone);
             staff.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
             staff.setLastUpdateBy(staff.getUsername());
             staff.setVersionTime(staff.getVersionTime() + 1);
 
             counterStaffFacade.edit(staff);
-            session.setAttribute("userSession", staff); // update session object
+            session.setAttribute("staffSession", staff);
+
+            // Set success message
+            String successMessage = "";
+            if (isPasswordChanged && isDetailChanged) {
+                successMessage = "Your details and password have been updated.";
+            } else if (isPasswordChanged) {
+                successMessage = "Your password has been changed.";
+            } else if (isDetailChanged) {
+                successMessage = "Your details have been updated.";
+            }
+
+            session.setAttribute("successMessage", successMessage);
+
             response.sendRedirect(request.getContextPath() + "/staff/edit-profile");
 
         } catch (Exception e) {

@@ -102,6 +102,9 @@ public class CounterStaff implements Serializable {
     @Size(max = 255)
     @Column(name = "NAME")
     private String name;
+    @Size(max = 255)
+    @Column(name = "GENDER")
+    private String gender;
     @Column(name = "DATE_OF_BIRTH")
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
@@ -224,6 +227,14 @@ public class CounterStaff implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public Date getDateOfBirth() {

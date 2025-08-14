@@ -20,19 +20,20 @@ import model.medicine.MedicineFacade;
  *
  * @author khong
  */
-@WebServlet(name = "StaffMedicineDetail", urlPatterns = {"/staff/medicine/detail"})
+@WebServlet(name = "StaffMedicineDetail", urlPatterns = { "/staff/medicine/detail" })
 public class StaffMedicineDetail extends HttpServlet {
 
     @EJB
     MedicineFacade medicineFacade;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -51,14 +52,15 @@ public class StaffMedicineDetail extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -74,28 +76,43 @@ public class StaffMedicineDetail extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        Medicine med = medicineFacade.find(id);
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            Medicine med = medicineFacade.find(id);
 
-        if (med != null) {
-            med.setName(request.getParameter("name"));
-            med.setDescription(request.getParameter("description"));
-            med.setPrice(Long.valueOf(request.getParameter("price")));
-            med.setLastUpdateDatetime(new Date());
-            med.setLastUpdateBy("system"); // Or current user
+            if (med != null) {
+                med.setName(request.getParameter("name"));
+                med.setDescription(request.getParameter("description"));
+                med.setPrice(Long.valueOf(request.getParameter("price")));
+                med.setLastUpdateDatetime(new Date());
+                med.setLastUpdateBy("system"); // Or current user
 
-            medicineFacade.edit(med);
+                medicineFacade.edit(med);
+
+                // Set success message and forward to show modal
+                request.setAttribute("medicine", med);
+                request.setAttribute("success", "Medicine details have been updated successfully!");
+                request.setAttribute("pageContent", "/WEB-INF/views/staff/medicine-detail.jsp");
+                request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
+            } else {
+                request.setAttribute("error", "Medicine not found.");
+                request.setAttribute("pageContent", "/WEB-INF/views/staff/medicine-detail.jsp");
+                request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "An error occurred while updating the medicine.");
+            request.setAttribute("pageContent", "/WEB-INF/views/staff/medicine-detail.jsp");
+            request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
         }
-
-        response.sendRedirect(request.getContextPath() + "/staff/medicine/detail?id=" + id);
     }
 
     /**

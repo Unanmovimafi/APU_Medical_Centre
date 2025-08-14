@@ -19,19 +19,20 @@ import model.counterstaff.CounterStaffFacade;
  *
  * @author khong
  */
-@WebServlet(name = "StaffStaffDetail", urlPatterns = {"/staff/staff/detail"})
+@WebServlet(name = "StaffStaffDetail", urlPatterns = { "/staff/staff/detail" })
 public class StaffStaffDetail extends HttpServlet {
 
     @EJB
     private CounterStaffFacade staffFacade;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -50,14 +51,15 @@ public class StaffStaffDetail extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -68,6 +70,13 @@ public class StaffStaffDetail extends HttpServlet {
             if (staff == null) {
                 response.sendRedirect(request.getContextPath() + "/staff/employee/list");
                 return;
+            }
+
+            // Check if there's a success message from session (after redirect from POST)
+            String successMessage = (String) request.getSession().getAttribute("successMessage");
+            if (successMessage != null) {
+                request.setAttribute("successMessage", successMessage);
+                request.getSession().removeAttribute("successMessage"); // Clear after using
             }
 
             request.setAttribute("staff", staff);
@@ -83,10 +92,10 @@ public class StaffStaffDetail extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -110,12 +119,16 @@ public class StaffStaffDetail extends HttpServlet {
             staff.setName(request.getParameter("name"));
             staff.setEmail(request.getParameter("email"));
             staff.setPhoneNumber(request.getParameter("phoneNumber"));
+            staff.setGender(request.getParameter("gender"));
             staff.setUsername(newUsername);
             staff.setStatus(request.getParameter("status"));
             staff.setLastUpdateDatetime(new java.util.Date());
 
             staffFacade.edit(staff);
-            response.sendRedirect(request.getContextPath() + "/staff/employee/list");
+
+            // Set success message in session for display after redirect
+            request.getSession().setAttribute("successMessage", "Staff details updated successfully!");
+            response.sendRedirect(request.getContextPath() + "/staff/staff/detail?id=" + id);
 
         } catch (Exception e) {
             e.printStackTrace();

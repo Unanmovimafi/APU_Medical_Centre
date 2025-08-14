@@ -20,20 +20,20 @@ import model.counterstaff.CounterStaffFacade;
  *
  * @author khong
  */
-@WebServlet(name = "StaffCreateStaff", urlPatterns = {"/staff/staff/new"})
+@WebServlet(name = "StaffCreateStaff", urlPatterns = { "/staff/staff/new" })
 public class StaffCreateStaff extends HttpServlet {
 
     @EJB
     private CounterStaffFacade counterStaffFacade;
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -52,14 +52,15 @@ public class StaffCreateStaff extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -71,10 +72,10 @@ public class StaffCreateStaff extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -93,6 +94,7 @@ public class StaffCreateStaff extends HttpServlet {
             staff.setName(request.getParameter("name"));
             staff.setEmail(request.getParameter("email"));
             staff.setPhoneNumber(request.getParameter("phoneNumber"));
+            staff.setGender(request.getParameter("gender"));
             staff.setUsername(username);
             staff.setStatus(request.getParameter("status"));
             staff.setPassword("default"); // replace with real hash
@@ -104,6 +106,9 @@ public class StaffCreateStaff extends HttpServlet {
 
             counterStaffFacade.create(staff);
 
+            // Set success message with staff name
+            request.getSession().setAttribute("modalMessage",
+                    "<strong>" + staff.getName() + "</strong> has been successfully added as new counter staff.");
             response.sendRedirect(request.getContextPath() + "/staff/employee/list");
 
         } catch (Exception e) {

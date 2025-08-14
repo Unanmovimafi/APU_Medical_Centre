@@ -20,20 +20,20 @@ import model.doctor.DoctorFacade;
  *
  * @author khong
  */
-@WebServlet(name = "StaffCreateDoctor", urlPatterns = {"/staff/doctor/new"})
+@WebServlet(name = "StaffCreateDoctor", urlPatterns = { "/staff/doctor/new" })
 public class StaffCreateDoctor extends HttpServlet {
 
     @EJB
     private DoctorFacade doctorFacade;
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -52,14 +52,15 @@ public class StaffCreateDoctor extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -71,10 +72,10 @@ public class StaffCreateDoctor extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -93,6 +94,7 @@ public class StaffCreateDoctor extends HttpServlet {
             doctor.setName(request.getParameter("name"));
             doctor.setEmail(request.getParameter("email"));
             doctor.setPhoneNumber(request.getParameter("phoneNumber"));
+            doctor.setGender(request.getParameter("gender"));
             doctor.setUsername(username);
             doctor.setStatus(request.getParameter("status"));
             doctor.setPassword("default"); // replace with real hash
@@ -104,6 +106,9 @@ public class StaffCreateDoctor extends HttpServlet {
 
             doctorFacade.create(doctor);
 
+            // Set success message with doctor name
+            request.getSession().setAttribute("modalMessage",
+                    "<strong>" + doctor.getName() + "</strong> has been successfully added as new doctor.");
             response.sendRedirect(request.getContextPath() + "/staff/employee/list");
 
         } catch (Exception e) {

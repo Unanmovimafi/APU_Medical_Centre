@@ -21,19 +21,20 @@ import model.customer.CustomerFacade;
  *
  * @author khong
  */
-@WebServlet(name = "StaffCustomerDetail", urlPatterns = {"/staff/customer/detail"})
+@WebServlet(name = "StaffCustomerDetail", urlPatterns = { "/staff/customer/detail" })
 public class StaffCustomerDetail extends HttpServlet {
 
     @EJB
     CustomerFacade customerFacade;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -52,14 +53,15 @@ public class StaffCustomerDetail extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -78,6 +80,13 @@ public class StaffCustomerDetail extends HttpServlet {
                 return;
             }
 
+            // Check if there's a success message from session (after redirect from POST)
+            String successMessage = (String) request.getSession().getAttribute("successMessage");
+            if (successMessage != null) {
+                request.setAttribute("successMessage", successMessage);
+                request.getSession().removeAttribute("successMessage"); // Clear after using
+            }
+
             request.setAttribute("customer", customer);
             request.setAttribute("pageContent", "/WEB-INF/views/staff/customer-detail.jsp");
             request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
@@ -90,10 +99,10 @@ public class StaffCustomerDetail extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -107,6 +116,7 @@ public class StaffCustomerDetail extends HttpServlet {
             String phoneNumber = request.getParameter("phoneNumber");
             String dateOfBirthStr = request.getParameter("dateOfBirth");
             String username = request.getParameter("username");
+            String gender = request.getParameter("gender");
             String bloodType = request.getParameter("bloodType");
             String allergic = request.getParameter("allergic");
             String status = request.getParameter("status");
@@ -123,6 +133,7 @@ public class StaffCustomerDetail extends HttpServlet {
             customer.setEmail(email);
             customer.setPhoneNumber(phoneNumber);
             customer.setUsername(username);
+            customer.setGender(gender);
             customer.setBloodType(bloodType);
             customer.setAllergic(allergic);
             customer.setStatus(status);
@@ -136,6 +147,9 @@ public class StaffCustomerDetail extends HttpServlet {
             customer.setLastUpdateBy("System"); // You may replace this with the current user
 
             customerFacade.edit(customer);
+
+            // Set success message in session for the modal
+            request.getSession().setAttribute("successMessage", "Customer details have been successfully updated.");
 
             // ✅ Redirect to the GET detail page to show the updated data
             response.sendRedirect(request.getContextPath() + "/staff/customer/detail?id=" + id);

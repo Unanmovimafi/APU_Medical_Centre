@@ -13,6 +13,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import model.medicine.Medicine;
 import model.medicine.MedicineFacade;
@@ -21,19 +23,20 @@ import model.medicine.MedicineFacade;
  *
  * @author khong
  */
-@WebServlet(name = "StaffCreateMedicine", urlPatterns = {"/staff/medicine/new"})
+@WebServlet(name = "StaffCreateMedicine", urlPatterns = { "/staff/medicine/new" })
 public class StaffCreateMedicine extends HttpServlet {
 
     @EJB
     MedicineFacade medicineFacade;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -52,14 +55,15 @@ public class StaffCreateMedicine extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -78,10 +82,10 @@ public class StaffCreateMedicine extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -89,25 +93,47 @@ public class StaffCreateMedicine extends HttpServlet {
         String action = request.getServletPath();
 
         if ("/staff/medicine/new".equals(action)) {
-            String name = request.getParameter("name");
-            String description = request.getParameter("description");
-            String priceStr = request.getParameter("price");
+            try {
+                String name = request.getParameter("name");
+                String description = request.getParameter("description");
+                String priceStr = request.getParameter("price");
 
-            Medicine med = new Medicine();
-            med.setName(name);
-            med.setDescription(description);
-            med.setPrice(Long.valueOf(priceStr));
+                // Basic validation
+                if (name == null || name.trim().isEmpty()) {
+                    request.setAttribute("error", "Medicine name is required.");
+                    request.setAttribute("pageContent", "/WEB-INF/views/staff/create-medicine.jsp");
+                    request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
+                    return;
+                }
 
-            med.setVersionTime(1);
-            Date now = new Date();
-            med.setCreationDatetime(now);
-            med.setCreateBy("admin"); // Replace with session user if available
-            med.setLastUpdateDatetime(now);
-            med.setLastUpdateBy("admin");
+                Medicine med = new Medicine();
+                med.setName(name.trim());
+                med.setDescription(description != null ? description.trim() : "");
+                med.setPrice(Long.valueOf(priceStr));
 
-            medicineFacade.create(med); // Persist via facade
+                med.setVersionTime(1);
+                Date now = new Date();
+                med.setCreationDatetime(now);
+                med.setCreateBy("admin"); // Replace with session user if available
+                med.setLastUpdateDatetime(now);
+                med.setLastUpdateBy("admin");
 
-            response.sendRedirect(request.getContextPath() + "/staff/medicine/list");
+                medicineFacade.create(med); // Persist via facade
+
+                // Redirect with URL-encoded success message
+                String successMessage = URLEncoder.encode("Medicine created successfully!", StandardCharsets.UTF_8);
+                response.sendRedirect(request.getContextPath() + "/staff/medicine/list?success=" + successMessage);
+
+            } catch (NumberFormatException e) {
+                request.setAttribute("error", "Invalid price format. Please enter a valid number.");
+                request.setAttribute("pageContent", "/WEB-INF/views/staff/create-medicine.jsp");
+                request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", "An error occurred while creating the medicine: " + e.getMessage());
+                request.setAttribute("pageContent", "/WEB-INF/views/staff/create-medicine.jsp");
+                request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
+            }
         }
     }
 

@@ -27,22 +27,23 @@ import model.doctor.DoctorFacade;
  *
  * @author khong
  */
-@WebServlet(name = "StaffEmployeeList", urlPatterns = {"/staff/employee/list"})
+@WebServlet(name = "StaffEmployeeList", urlPatterns = { "/staff/employee/list" })
 public class StaffEmployeeList extends HttpServlet {
 
     @EJB
     CounterStaffFacade counterStaffFacade;
-    
+
     @EJB
     DoctorFacade doctorFacade;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -61,14 +62,15 @@ public class StaffEmployeeList extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -87,6 +89,7 @@ public class StaffEmployeeList extends HttpServlet {
             map.put("name", doctor.getName());
             map.put("username", doctor.getUsername());
             map.put("email", doctor.getEmail());
+            map.put("gender", doctor.getGender());
             map.put("phoneNumber", doctor.getPhoneNumber());
             map.put("status", doctor.getStatus());
             map.put("lastUpdateDatetime", doctor.getLastUpdateDatetime());
@@ -100,6 +103,7 @@ public class StaffEmployeeList extends HttpServlet {
             map.put("name", staff.getName());
             map.put("username", staff.getUsername());
             map.put("email", staff.getEmail());
+            map.put("gender", staff.getGender());
             map.put("phoneNumber", staff.getPhoneNumber());
             map.put("status", staff.getStatus());
             map.put("lastUpdateDatetime", staff.getLastUpdateDatetime());
@@ -109,22 +113,22 @@ public class StaffEmployeeList extends HttpServlet {
         // Filtering
         if (keyword != null && column != null && !keyword.isEmpty()) {
             combined = combined.stream()
-                .filter(emp -> {
-                    String value = emp.get(column) != null ? emp.get(column).toString().toLowerCase() : "";
-                    return value.contains(keyword.toLowerCase());
-                }).collect(Collectors.toList());
+                    .filter(emp -> {
+                        String value = emp.get(column) != null ? emp.get(column).toString().toLowerCase() : "";
+                        return value.contains(keyword.toLowerCase());
+                    }).collect(Collectors.toList());
         }
 
         if (statusFilter != null && !statusFilter.isEmpty()) {
             combined = combined.stream()
-                .filter(emp -> statusFilter.equalsIgnoreCase((String) emp.get("status")))
-                .collect(Collectors.toList());
+                    .filter(emp -> statusFilter.equalsIgnoreCase((String) emp.get("status")))
+                    .collect(Collectors.toList());
         }
 
         if (roleFilter != null && !roleFilter.isEmpty()) {
             combined = combined.stream()
-                .filter(emp -> roleFilter.equalsIgnoreCase((String) emp.get("role")))
-                .collect(Collectors.toList());
+                    .filter(emp -> roleFilter.equalsIgnoreCase((String) emp.get("role")))
+                    .collect(Collectors.toList());
         }
 
         // Sort by latest updated at (descending)
@@ -134,6 +138,12 @@ public class StaffEmployeeList extends HttpServlet {
             return d2.compareTo(d1);
         });
 
+        Object modalMessage = request.getSession().getAttribute("modalMessage");
+        if (modalMessage != null) {
+            request.setAttribute("modalMessage", modalMessage);
+            request.getSession().removeAttribute("modalMessage"); // Clear flag after using it
+        }
+
         request.setAttribute("employeeList", combined);
         request.setAttribute("pageContent", "/WEB-INF/views/staff/employee-list.jsp");
         request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
@@ -142,15 +152,15 @@ public class StaffEmployeeList extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
     }
 
     /**

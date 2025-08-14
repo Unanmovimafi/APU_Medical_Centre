@@ -12,29 +12,32 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.counterstaff.CounterStaff;
 import model.counterstaff.CounterStaffFacade;
+import model.doctor.Doctor;
 import model.doctor.DoctorFacade;
 
 /**
  *
  * @author khong
  */
-@WebServlet(name = "StaffEmployeeDelete", urlPatterns = {"/staff/employee/delete"})
+@WebServlet(name = "StaffEmployeeDelete", urlPatterns = { "/staff/employee/delete" })
 public class StaffEmployeeDelete extends HttpServlet {
 
     @EJB
     CounterStaffFacade counterStaffFacade;
-    
+
     @EJB
     DoctorFacade doctorFacade;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -44,8 +47,10 @@ public class StaffEmployeeDelete extends HttpServlet {
 
             if ("Doctor".equals(role)) {
                 doctorFacade.remove(doctorFacade.find(id));
-            } else if ("CounterStaff".equals(role)) {
+                request.getSession().setAttribute("employeeDeletionCompleted", true);
+            } else if ("Counter Staff".equals(role)) {
                 counterStaffFacade.remove(counterStaffFacade.find(id));
+                request.getSession().setAttribute("employeeDeletionCompleted", true);
             }
 
         } catch (Exception e) {
@@ -54,33 +59,66 @@ public class StaffEmployeeDelete extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/staff/employee/list");
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        // For backward compatibility, redirect GET requests to use POST method
+        doPost(request, response);
     }
 
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            Integer id = Integer.valueOf(request.getParameter("id"));
+            String role = request.getParameter("role");
+
+            if ("Doctor".equals(role)) {
+                Doctor doctor = doctorFacade.find(id);
+                if (doctor != null) {
+                    String name = doctor.getName();
+                    doctorFacade.remove(doctor);
+                    request.getSession().setAttribute("modalMessage",
+                            "<strong>" + name + "</strong> has been successfully deleted.");
+                } else {
+                    request.getSession().setAttribute("modalMessage", "Doctor not found.");
+                }
+            } else if ("Counter Staff".equals(role)) {
+                CounterStaff staff = counterStaffFacade.find(id);
+                if (staff != null) {
+                    String name = staff.getName();
+                    counterStaffFacade.remove(staff);
+                    request.getSession().setAttribute("modalMessage",
+                            "<strong>" + name + "</strong> has been successfully deleted.");
+                } else {
+                    request.getSession().setAttribute("modalMessage", "Counter Staff not found.");
+                }
+            } else {
+                request.getSession().setAttribute("modalMessage", "Invalid employee role.");
+            }
+            response.sendRedirect(request.getContextPath() + "/staff/employee/list");
+
+        } catch (IOException | NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid employee ID or role");
+        }
     }
 
     /**

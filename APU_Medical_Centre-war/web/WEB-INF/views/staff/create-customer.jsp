@@ -1,40 +1,193 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<h2>Create New Customer</h2>
+<style>
+    body {
+        background-color: #E0F7FA;
+        font-family: Arial, sans-serif;
+    }
 
-<form method="post" action="${pageContext.request.contextPath}/staff/customer/new">
-    <label>Name:</label>
-    <input type="text" name="name" required /><br/>
+    h2 {
+        color: #00BFFF;
+        padding-bottom: 25px;
+        justify-self: center;
+    }
 
-    <label>Email:</label>
-    <input type="email" name="email" /><br/>
+    .mainbody {
+        padding: 40px;
+    }
 
-    <label>Phone Number:</label>
-    <input type="text" name="phoneNumber" /><br/>
+    .form-section {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
 
-    <label>Date of Birth:</label>
-    <input type="date" name="dateOfBirth" /><br/>
+    .form-table {
+        width: 100%;
+    }
 
-    <label>Username:</label>
-    <input type="text" name="username" required /><br/>
+    .form-table td {
+        padding: 10px 8px;
+        vertical-align: middle;
+    }
 
-    <label>Blood Type:</label>
-    <input type="text" name="bloodType" /><br/>
+    .form-table td:first-child {
+        width: 150px;
+        white-space: nowrap;
+        font-weight: bold;
+    }
 
-    <label>Allergic Info:</label>
-    <textarea name="allergic"></textarea><br/>
+    input[type="text"], input[type="email"], input[type="date"], input[type="tel"], select, textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-size: 15px;
+    }
 
-    <label>Status:</label>
-    <select name="status">
-        <option value="ACTIVE">ACTIVE</option>
-        <option value="INACTIVE">INACTIVE</option>
-    </select><br/>
+    input:focus, select:focus, textarea:focus {
+        border-color: #00BFFF;
+        background-color: #F0FFFF;
+        outline: none;
+    }
 
-    <br/>
-    <button type="submit">Create</button>
-    <a href="${pageContext.request.contextPath}/staff/customer/list">Cancel</a>
-</form>
-<c:if test="${not empty error}">
-    <div style="color: red;">${error}</div>
-</c:if>
+    textarea {
+        min-height: 80px;
+        resize: vertical;
+    }
+
+    .button-footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        width: 100%;
+        margin-top: 30px;
+    }
+
+    .button-footer button,
+    .button-footer .btn {
+        padding: 12px 24px;
+        font-size: 14px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        text-decoration: none;
+        text-align: center;
+        min-width: 120px;
+    }
+
+    .create-btn {
+        background-color: #28A745;
+        color: white;
+    }
+
+    .create-btn:hover {
+        background-color: #218838;
+    }
+
+    .cancel-btn {
+        background-color: #6C757D;
+        color: white;
+    }
+
+    .cancel-btn:hover {
+        background-color: #5A6268;
+    }
+
+    .error-message {
+        color: #DC3545;
+        background-color: #F8D7DA;
+        border: 1px solid #F5C6CB;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+
+    input:required:invalid {
+        border-color: #DC3545;
+        background-color: #fff5f5;
+    }
+</style>
+
+<div class="mainbody">
+    <h2>Create New Customer</h2>
+    
+    <div class="form-section">
+        <c:if test="${not empty error}">
+            <div class="error-message">${error}</div>
+        </c:if>
+        
+        <form method="post" action="${pageContext.request.contextPath}/staff/customer/new">
+            <table class="form-table">
+                <tr>
+                    <td><strong>Name :</strong></td>
+                    <td><input type="text" name="name" value="${param.name}" required /></td>
+                </tr>
+                <tr>
+                    <td><strong>Email :</strong></td>
+                    <td><input type="email" name="email" value="${param.email}" /></td>
+                </tr>
+                <tr>
+                    <td><strong>Phone Number :</strong></td>
+                    <td><input type="tel" name="phoneNumber" value="${param.phoneNumber}" pattern="[0-9]+" title="Please enter numbers only" oninput="this.value = this.value.replace(/[^0-9]/g, '')" /></td>
+                </tr>
+                <tr>
+                    <td><strong>Gender :</strong></td>
+                    <td>
+                        <select name="gender">
+                            <option value="">-- Select Gender --</option>
+                            <option value="Male" ${param.gender == 'Male' ? 'selected' : ''}>Male</option>
+                            <option value="Female" ${param.gender == 'Female' ? 'selected' : ''}>Female</option>
+                            <option value="Other" ${param.gender == 'Other' ? 'selected' : ''}>Other</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Date of Birth :</strong></td>
+                    <td><input type="date" name="dateOfBirth" value="${param.dateOfBirth}" /></td>
+                </tr>
+                <tr>
+                    <td><strong>Username :</strong></td>
+                    <td><input type="text" name="username" value="${param.username}" required /></td>
+                </tr>
+                <tr>
+                    <td><strong>Blood Type :</strong></td>
+                    <td>
+                        <select name="bloodType">
+                            <option value="">-- Select Blood Type --</option>
+                            <option value="A" ${param.bloodType == 'A' ? 'selected' : ''}>A</option>
+                            <option value="B" ${param.bloodType == 'B' ? 'selected' : ''}>B</option>
+                            <option value="AB" ${param.bloodType == 'AB' ? 'selected' : ''}>AB</option>
+                            <option value="O" ${param.bloodType == 'O' ? 'selected' : ''}>O</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Allergic Info :</strong></td>
+                    <td><textarea name="allergic" placeholder="Any known allergies...">${param.allergic}</textarea></td>
+                </tr>
+                <tr>
+                    <td><strong>Status :</strong></td>
+                    <td>
+                        <select name="status">
+                            <option value="ACTIVE" ${param.status == 'ACTIVE' ? 'selected' : ''}>ACTIVE</option>
+                            <option value="INACTIVE" ${param.status == 'INACTIVE' ? 'selected' : ''}>INACTIVE</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="button-footer">
+                <button type="submit" class="create-btn">Create Customer</button>
+                <a href="${pageContext.request.contextPath}/staff/customer/list" class="btn cancel-btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
