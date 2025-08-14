@@ -94,7 +94,11 @@ displayName = doctorSession.getName(); } %>
       <i class="fas fa-user-cog"></i>Edit Profile
     </a>
     <details class="nav-dropdown">
-      <summary><i class="fas fa-users"></i>User Management</summary>
+      <summary>
+        <span class="summary-content">
+          <i class="fas fa-users"></i>User Management
+        </span>
+      </summary>
       <div class="nav-dropdown-content">
         <a
           href="${pageContext.request.contextPath}/staff/customer/list"
@@ -111,7 +115,11 @@ displayName = doctorSession.getName(); } %>
       </div>
     </details>
     <details class="nav-dropdown">
-      <summary><i class="fas fa-calendar-check"></i>Appointments</summary>
+      <summary>
+        <span class="summary-content">
+          <i class="fas fa-calendar-check"></i>Appointments
+        </span>
+      </summary>
       <div class="nav-dropdown-content">
         <a
           href="${pageContext.request.contextPath}/staff/appointment/new"
@@ -139,23 +147,12 @@ displayName = doctorSession.getName(); } %>
         </a>
       </div>
     </details>
-    <details class="nav-dropdown">
-      <summary><i class="fas fa-pills"></i>Medicine</summary>
-      <div class="nav-dropdown-content">
-        <a
-          href="${pageContext.request.contextPath}/staff/medicine/new"
-          class="nav-item"
-        >
-          <i class="fas fa-plus-square"></i>Add Medicine
-        </a>
-        <a
-          href="${pageContext.request.contextPath}/staff/medicine/list"
-          class="nav-item"
-        >
-          <i class="fas fa-list-ul"></i>Medicine List
-        </a>
-      </div>
-    </details>
+    <a
+      href="${pageContext.request.contextPath}/staff/medicine/list"
+      class="nav-item"
+    >
+      <i class="fas fa-pills"></i>Medicine List
+    </a>
 
     <% } else if ("DOCTOR".equalsIgnoreCase(role)) { %>
 
