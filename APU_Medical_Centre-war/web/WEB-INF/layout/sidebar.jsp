@@ -45,16 +45,13 @@ displayName = doctorSession.getName(); } %>
       <i class="fas fa-tachometer-alt"></i>Dashboard
     </a>
     <details class="nav-dropdown">
-      <summary><i class="fas fa-users"></i>Staff Management</summary>
+      <summary><i class="fas fa-users"></i>User Management</summary>
       <div class="nav-dropdown-content">
-        <a href="../manager/staffList.jsp" class="nav-item">
-          <i class="fas fa-list"></i>Staff List
-        </a>
-        <a href="../manager/registerStaff.jsp" class="nav-item">
-          <i class="fas fa-user-plus"></i>Register New Staff
-        </a>
-        <a href="../manager/modifyStaff.jsp" class="nav-item">
-          <i class="fas fa-user-edit"></i>Modify Staff
+        <a
+          href="${pageContext.request.contextPath}/manager/employee/list"
+          class="nav-item"
+        >
+          <i class="fas fa-id-badge"></i>Employee List
         </a>
       </div>
     </details>
