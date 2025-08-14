@@ -35,7 +35,7 @@ import model.doctor.DoctorFacade;
  *
  * @author khong
  */
-@WebServlet(name = "StaffCreateAppointment", urlPatterns = {"/staff/appointment/new"})
+@WebServlet(name = "StaffCreateAppointment", urlPatterns = { "/staff/appointment/new" })
 public class StaffCreateAppointment extends HttpServlet {
 
     @EJB
@@ -84,14 +84,14 @@ public class StaffCreateAppointment extends HttpServlet {
             // ✅ Split into start & end time
             String[] timeParts = timeStr.split("-");
             String startTimeOnly = timeParts[0].trim(); // e.g. "09:00"
-            String endTimeOnly   = timeParts[1].trim(); // e.g. "09:30"
+            String endTimeOnly = timeParts[1].trim(); // e.g. "09:30"
 
             // ✅ Combine with date
             LocalDateTime startLdt = LocalDateTime.parse(dateStr + "T" + startTimeOnly);
-            LocalDateTime endLdt   = LocalDateTime.parse(dateStr + "T" + endTimeOnly);
+            LocalDateTime endLdt = LocalDateTime.parse(dateStr + "T" + endTimeOnly);
 
             Date startDate = Date.from(startLdt.atZone(ZoneId.systemDefault()).toInstant());
-            Date endDate   = Date.from(endLdt.atZone(ZoneId.systemDefault()).toInstant());
+            Date endDate = Date.from(endLdt.atZone(ZoneId.systemDefault()).toInstant());
 
             // ✅ Fetch doctor & customer
             Doctor doctor = doctorFacade.find(doctorId);
@@ -122,8 +122,9 @@ public class StaffCreateAppointment extends HttpServlet {
 
             appointmentFacade.create(appointment);
 
-            request.setAttribute("successMessage", "Appointment created successfully!");
-            doGet(request, response);
+            // Redirect to appointment list with success message
+            request.getSession().setAttribute("successMessage", "Appointment created successfully!");
+            response.sendRedirect(request.getContextPath() + "/staff/appointment/list");
 
         } catch (EJBTransactionRolledbackException txEx) {
             request.setAttribute("errorMessage", "❌ DB Transaction rolled back: " + txEx.getMessage());

@@ -29,9 +29,9 @@ import model.appointment.AppointmentFacade;
  *
  * @author khong
  */
-@WebServlet(name = "StaffAppointmentPayList", urlPatterns = {"/staff/appointment/payment"})
+@WebServlet(name = "StaffAppointmentPayList", urlPatterns = { "/staff/appointment/payment" })
 public class StaffAppointmentPayList extends HttpServlet {
-    
+
     @EJB
     private AppointmentFacade appointmentFacade;
 
@@ -39,10 +39,10 @@ public class StaffAppointmentPayList extends HttpServlet {
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -61,23 +61,38 @@ public class StaffAppointmentPayList extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            // Handle success/error messages from session
+            String successMessage = (String) request.getSession().getAttribute("successMessage");
+            String errorMessage = (String) request.getSession().getAttribute("errorMessage");
+
+            if (successMessage != null) {
+                request.setAttribute("modalMessage", successMessage);
+                request.getSession().removeAttribute("successMessage");
+            }
+            if (errorMessage != null) {
+                request.setAttribute("errorMessage", errorMessage);
+                request.getSession().removeAttribute("errorMessage");
+            }
+
             String column = request.getParameter("column");
             String keywordRaw = request.getParameter("keyword");
 
-            List<Appointment> pendingAppointments = appointmentFacade.findByStatuses(Arrays.asList("WAITING PAYMENT", "PAID"));
+            List<Appointment> pendingAppointments = appointmentFacade
+                    .findByStatuses(Arrays.asList("WAITING PAYMENT", "PAID"));
 
             if (column != null && keywordRaw != null && !keywordRaw.trim().isEmpty()) {
                 final String keyword = keywordRaw.trim().toLowerCase(); // ✅ final or effectively final
@@ -102,7 +117,7 @@ public class StaffAppointmentPayList extends HttpServlet {
                         }
                         case "status" -> {
                             return appt.getStatus() != null &&
-                                appt.getStatus().toLowerCase().contains(keyword);
+                                    appt.getStatus().toLowerCase().contains(keyword);
                         }
                         default -> {
                             return true;
@@ -129,10 +144,10 @@ public class StaffAppointmentPayList extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -164,7 +179,7 @@ public class StaffAppointmentPayList extends HttpServlet {
             request.getSession().setAttribute("errorMessage", "Error processing payment action: " + e.getMessage());
         }
 
-        response.sendRedirect(request.getContextPath() + "/staff/appointment/payments");
+        response.sendRedirect(request.getContextPath() + "/staff/appointment/payment");
     }
 
     /**

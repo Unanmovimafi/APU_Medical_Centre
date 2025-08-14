@@ -1,4 +1,4 @@
 <header>
   <h1>APU Medical Centre</h1>
-  <div>Welcome, John Doe</div>
+  <div>Welcome, <%= displayName %></div>
 </header>

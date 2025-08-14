@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -27,9 +28,9 @@ import model.appointment.AppointmentFacade;
  *
  * @author khong
  */
-@WebServlet(name = "StaffAppointmentReqList", urlPatterns = {"/staff/appointment/request"})
+@WebServlet(name = "StaffAppointmentReqList", urlPatterns = { "/staff/appointment/request" })
 public class StaffAppointmentReqList extends HttpServlet {
-    
+
     @EJB
     private AppointmentFacade appointmentFacade;
 
@@ -37,10 +38,10 @@ public class StaffAppointmentReqList extends HttpServlet {
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -59,25 +60,41 @@ public class StaffAppointmentReqList extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            // Handle success/error messages from session
+            String successMessage = (String) request.getSession().getAttribute("successMessage");
+            String errorMessage = (String) request.getSession().getAttribute("errorMessage");
+
+            if (successMessage != null) {
+                request.setAttribute("modalMessage", successMessage);
+                request.getSession().removeAttribute("successMessage");
+            }
+            if (errorMessage != null) {
+                request.setAttribute("errorMessage", errorMessage);
+                request.getSession().removeAttribute("errorMessage");
+            }
+
             String column = request.getParameter("column");
             String keywordRaw = request.getParameter("keyword");
             String appointmentDate = request.getParameter("appointmentDate");
             String status = request.getParameter("status");
 
-            List<Appointment> appointments = appointmentFacade.findAll();
+            // Get appointments with PENDING status only
+            List<Appointment> appointments = appointmentFacade
+                    .findByStatuses(Arrays.asList("PENDING"));
 
             if (column != null && keywordRaw != null && !keywordRaw.trim().isEmpty()) {
                 final String keyword = keywordRaw.trim().toLowerCase();
@@ -109,12 +126,6 @@ public class StaffAppointmentReqList extends HttpServlet {
                 }).collect(Collectors.toList());
             }
 
-            if (status != null && !status.trim().isEmpty()) {
-                appointments = appointments.stream().filter(appt -> 
-                    status.equalsIgnoreCase(appt.getStatus())
-                ).collect(Collectors.toList());
-            }
-
             appointments.sort(Comparator.comparing(Appointment::getAppointmentStartDatetime));
 
             request.setAttribute("appointmentList", appointments);
@@ -136,10 +147,10 @@ public class StaffAppointmentReqList extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -179,7 +190,7 @@ public class StaffAppointmentReqList extends HttpServlet {
             request.getSession().setAttribute("errorMessage", "Error updating appointment: " + e.getMessage());
         }
 
-        response.sendRedirect(request.getContextPath() + "/staff/appointment/list");
+        response.sendRedirect(request.getContextPath() + "/staff/appointment/request");
     }
 
     /**

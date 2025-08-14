@@ -1,8 +1,7 @@
-<%@ page import="model.manager.Manager" %> 
-<%@ page import="model.counterstaff.CounterStaff" %> 
-<%@ page import="model.customer.Customer" %> 
-<%@ page import="model.doctor.Doctor" %> 
-<% Manager managerSession = (Manager) session.getAttribute("managerSession");
+<%@ page import="model.manager.Manager" %> <%@ page
+import="model.counterstaff.CounterStaff" %> <%@ page
+import="model.customer.Customer" %> <%@ page import="model.doctor.Doctor" %> <%
+Manager managerSession = (Manager) session.getAttribute("managerSession");
 CounterStaff staffSession = (CounterStaff)
 session.getAttribute("counterStaffSession"); Customer customerSession =
 (Customer) session.getAttribute("customerSession"); Doctor doctorSession =
@@ -45,7 +44,11 @@ displayName = doctorSession.getName(); } %>
       <i class="fas fa-tachometer-alt"></i>Dashboard
     </a>
     <details class="nav-dropdown">
-      <summary><i class="fas fa-users"></i>User Management</summary>
+      <summary>
+        <span class="summary-content">
+          <i class="fas fa-users"></i>User Management
+        </span>
+      </summary>
       <div class="nav-dropdown-content">
         <a
           href="${pageContext.request.contextPath}/manager/employee/list"
@@ -56,7 +59,11 @@ displayName = doctorSession.getName(); } %>
       </div>
     </details>
     <details class="nav-dropdown">
-      <summary><i class="fas fa-calendar-check"></i>Appointments</summary>
+      <summary>
+        <span class="summary-content">
+          <i class="fas fa-calendar-check"></i>Appointments
+        </span>
+      </summary>
       <div class="nav-dropdown-content">
         <a href="../appointments/calendar.jsp" class="nav-item">
           <i class="fas fa-calendar"></i>Calendar
@@ -69,10 +76,19 @@ displayName = doctorSession.getName(); } %>
         </a>
       </div>
     </details>
-    <details>
-      <summary><i class="fas fa-chart-bar"></i>Reports</summary>
-      <div style="margin-left: 10px;">
-        <a href="${pageContext.request.contextPath}/manager/customer/report">Customer Report</a>
+    <details class="nav-dropdown">
+      <summary>
+        <span class="summary-content">
+          <i class="fas fa-chart-bar"></i>Reports
+        </span>
+      </summary>
+      <div class="nav-dropdown-content">
+        <a
+          href="${pageContext.request.contextPath}/manager/customer/report"
+          class="nav-item"
+        >
+          <i class="fas fa-chart-line"></i>Customer Report
+        </a>
       </div>
     </details>
 
@@ -90,27 +106,12 @@ displayName = doctorSession.getName(); } %>
     >
       <i class="fas fa-user-cog"></i>Edit Profile
     </a>
-    <details class="nav-dropdown">
-      <summary>
-        <span class="summary-content">
-          <i class="fas fa-users"></i>User Management
-        </span>
-      </summary>
-      <div class="nav-dropdown-content">
-        <a
-          href="${pageContext.request.contextPath}/staff/customer/list"
-          class="nav-item"
-        >
-          <i class="fas fa-user-friends"></i>Customer List
-        </a>
-        <a
-          href="${pageContext.request.contextPath}/staff/employee/list"
-          class="nav-item"
-        >
-          <i class="fas fa-id-badge"></i>Employee List
-        </a>
-      </div>
-    </details>
+    <a
+      href="${pageContext.request.contextPath}/staff/customer/list"
+      class="nav-item"
+    >
+      <i class="fas fa-user-friends"></i>Customer
+    </a>
     <details class="nav-dropdown">
       <summary>
         <span class="summary-content">
@@ -148,7 +149,7 @@ displayName = doctorSession.getName(); } %>
       href="${pageContext.request.contextPath}/staff/medicine/list"
       class="nav-item"
     >
-      <i class="fas fa-pills"></i>Medicine List
+      <i class="fas fa-pills"></i>Medicine
     </a>
 
     <% } else if ("DOCTOR".equalsIgnoreCase(role)) { %>
@@ -160,7 +161,11 @@ displayName = doctorSession.getName(); } %>
       <i class="fas fa-tachometer-alt"></i>Dashboard
     </a>
     <details class="nav-dropdown">
-      <summary><i class="fas fa-calendar-check"></i>Appointments</summary>
+      <summary>
+        <span class="summary-content">
+          <i class="fas fa-calendar-check"></i>Appointments
+        </span>
+      </summary>
       <div class="nav-dropdown-content">
         <a
           href="${pageContext.request.contextPath}/doctor/appointment/list"
@@ -195,7 +200,11 @@ displayName = doctorSession.getName(); } %>
       </div>
     </details>
     <details class="nav-dropdown">
-      <summary><i class="fas fa-user-injured"></i>Patients</summary>
+      <summary>
+        <span class="summary-content">
+          <i class="fas fa-user-injured"></i>Patients
+        </span>
+      </summary>
       <div class="nav-dropdown-content">
         <a
           href="${pageContext.request.contextPath}/doctor/customer/list"
@@ -218,7 +227,11 @@ displayName = doctorSession.getName(); } %>
       <i class="fas fa-tachometer-alt"></i>Dashboard
     </a>
     <details class="nav-dropdown">
-      <summary><i class="fas fa-calendar-check"></i>My Appointments</summary>
+      <summary>
+        <span class="summary-content">
+          <i class="fas fa-calendar-check"></i>My Appointments
+        </span>
+      </summary>
       <div class="nav-dropdown-content">
         <a href="../appointments/request.jsp" class="nav-item">
           <i class="fas fa-plus-circle"></i>Request Appointment
@@ -232,10 +245,17 @@ displayName = doctorSession.getName(); } %>
       </div>
     </details>
     <details class="nav-dropdown">
-      <summary><i class="fas fa-comments"></i>Feedback</summary>
+      <summary>
+        <span class="summary-content">
+          <i class="fas fa-comments"></i>Feedback
+        </span>
+      </summary>
       <div class="nav-dropdown-content">
-        <a href="${pageContext.request.contextPath}/customer/create-comment" class="nav-item">
-          <i class="fas fa-comment-dots"></i>Comment to Staff/Doctor
+        <a
+          href="${pageContext.request.contextPath}/customer/create-comment"
+          class="nav-item"
+        >
+          <i class="fas fa-comment-dots" style="margin-right:10px;"></i>Comment to Staff/Doctor
         </a>
       </div>
     </details>

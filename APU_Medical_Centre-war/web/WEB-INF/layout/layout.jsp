@@ -48,7 +48,6 @@
           <jsp:include page="${pageContent}" />
         </div>
 
-        <%@ include file="footer.jsp" %>
       </main>
     </div>
   </body>
