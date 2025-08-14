@@ -69,8 +69,9 @@ public class Login extends HttpServlet {
                         session.setAttribute("customerSession", customer);
                         customer.setLastLoginDatetime(DateTimeHelper.getCurrentDateTime());
                         customerFacade.edit(customer);
-                        request.getRequestDispatcher("/WEB-INF/views/customer/create_comment.jsp")
-                                .forward(request, response);
+                        response.sendRedirect("customer/dashboard");
+//                        request.getRequestDispatcher("/WEB-INF/views/customer/create_comment.jsp")
+//                                .forward(request, response);
                     } else {
                         out.println("Login Unsuccessfully");
                     }

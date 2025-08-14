@@ -125,7 +125,7 @@
     <details>
       <summary>Comments</summary>
       <div style="margin-left: 10px;">
-        <a href="../comments/comment.jsp">Comment to Staff/Doctor</a>
+        <a href="${pageContext.request.contextPath}/customer/create-comment">Comment to Staff/Doctor</a>
       </div>
     </details>
     <details>
