@@ -101,7 +101,7 @@ content {
 
 #sidebar a,
 #sidebar summary {
-  display: block;
+  display: flex;
   padding: 8px 12px;
   margin-top: 6px;
   border-radius: 6px;
@@ -270,6 +270,7 @@ main {
   margin-right: 12px;
   width: 20px;
   text-align: center;
+  align-self: center;
 }
 
 .nav-dropdown {
@@ -284,11 +285,21 @@ main {
   list-style: none;
   display: flex;
   align-items: center;
+  width: 100%;
+  white-space: nowrap; /* Prevents wrapping */
 }
 
 .nav-dropdown summary:hover {
   background: rgba(255, 255, 255, 0.1);
   padding-left: 35px;
+}
+
+.nav-dropdown summary .summary-content {
+  display: flex;
+  align-items: center;
+  flex: 1; /* Takes up available space */
+  min-width: 0; /* Allows flex item to shrink below content size */
+  overflow: hidden; /* Hides overflow */
 }
 
 .nav-dropdown summary i {
@@ -301,8 +312,11 @@ main {
   content: "\f107";
   font-family: "Font Awesome 6 Free";
   font-weight: 900;
-  margin-left: auto;
+  margin-left: auto; /* Push to the right */
   transition: transform 0.3s ease;
+  flex-shrink: 0; /* Prevents the arrow from shrinking */
+  width: 16px; /* Fixed width for arrow */
+  text-align: center;
 }
 
 .nav-dropdown[open] summary::after {
