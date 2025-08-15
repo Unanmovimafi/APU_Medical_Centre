@@ -43,21 +43,13 @@ displayName = doctorSession.getName(); } %>
     <a href="../manager/dashboard.jsp" class="nav-item">
       <i class="fas fa-tachometer-alt"></i>Dashboard
     </a>
-    <details class="nav-dropdown">
-      <summary>
-        <span class="summary-content">
-          <i class="fas fa-users"></i>User Management
-        </span>
-      </summary>
-      <div class="nav-dropdown-content">
-        <a
-          href="${pageContext.request.contextPath}/manager/employee/list"
-          class="nav-item"
-        >
-          <i class="fas fa-id-badge"></i>Employee List
-        </a>
-      </div>
-    </details>
+    
+    <a
+      href="${pageContext.request.contextPath}/manager/employee/list"
+      class="nav-item"
+    >
+      <i class="fas fa-id-badge"></i>Employee List
+    </a>
     <details class="nav-dropdown">
       <summary>
         <span class="summary-content">
@@ -177,12 +169,6 @@ displayName = doctorSession.getName(); } %>
           href="${pageContext.request.contextPath}/doctor/appointment/list"
           class="nav-item"
         >
-          <i class="fas fa-list"></i>Appointment List
-        </a>
-        <a
-          href="${pageContext.request.contextPath}/doctor/appointment/calendar"
-          class="nav-item"
-        >
           <i class="fas fa-calendar"></i>Appointment Calendar
         </a>
         <a
@@ -191,41 +177,15 @@ displayName = doctorSession.getName(); } %>
         >
           <i class="fas fa-clock"></i>Current Appointment
         </a>
-        <a
-          href="${pageContext.request.contextPath}/doctor/appointment/list"
-          class="nav-item"
-        >
-          <i class="fas fa-star"></i>Feedback
-        </a>
-        <a
-          href="${pageContext.request.contextPath}/doctor/appointment/list"
-          class="nav-item"
-        >
-          <i class="fas fa-dollar-sign"></i>Charge
-        </a>
       </div>
     </details>
-    <details class="nav-dropdown">
-      <summary>
-        <span class="summary-content">
-          <i class="fas fa-user-injured"></i>Patients
-        </span>
-      </summary>
-      <div class="nav-dropdown-content">
-        <a
-          href="${pageContext.request.contextPath}/doctor/customer/list"
-          class="nav-item"
-        >
-          <i class="fas fa-users"></i>Patient List
-        </a>
-        <a
-          href="${pageContext.request.contextPath}/doctor/customer/list/today"
-          class="nav-item"
-        >
-          <i class="fas fa-receipt"></i>Patient Today
-        </a>
-      </div>
-    </details>
+    
+    <a
+      href="${pageContext.request.contextPath}/doctor/customer/list"
+      class="nav-item"
+    >
+      <i class="fas fa-user-injured"></i>Patient
+    </a>
 
     <% } else if ("CUSTOMER".equalsIgnoreCase(role)) { %>
 
