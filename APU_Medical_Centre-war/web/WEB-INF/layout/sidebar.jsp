@@ -29,7 +29,7 @@ displayName = doctorSession.getName(); } %>
 
   <div class="profile-section">
     <img
-      src="../assets/img/default-profile.png"
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png"
       alt="Profile"
       class="profile-img"
     />
@@ -65,12 +65,12 @@ displayName = doctorSession.getName(); } %>
         </span>
       </summary>
       <div class="nav-dropdown-content">
-        <a href="../appointments/calendar.jsp" class="nav-item">
+        <a href="${pageContext.request.contextPath}/manager/appointment/list" class="nav-item">
           <i class="fas fa-calendar"></i>Calendar
         </a>
-        <a href="../appointments/requestList.jsp" class="nav-item">
+<!--        <a href="../appointments/requestList.jsp" class="nav-item">
           <i class="fas fa-clock"></i>Request List
-        </a>
+        </a>-->
         <a href="../appointments/comments.jsp" class="nav-item">
           <i class="fas fa-comments"></i>Comments
         </a>
