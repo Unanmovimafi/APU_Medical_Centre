@@ -86,6 +86,7 @@
     <body>
         <button id="btnPrint" class="print-btn no-print" type="button" title="Print this report">Print</button>
         <div id="report">
+            <h1>Customer Analytics Report</h1>
             <div class="grid">
                 <!-- Gender (Pie) -->
                 <div class="card" role="group" aria-label="Gender chart for customers">

@@ -226,6 +226,12 @@ displayName = doctorSession.getName(); } %>
     <a href="../customer/dashboard.jsp" class="nav-item">
       <i class="fas fa-tachometer-alt"></i>Dashboard
     </a>
+        <a
+      href="${pageContext.request.contextPath}/staff/edit-profile"
+      class="nav-item"
+    >
+      <i class="fas fa-user-cog"></i>Edit Profile
+    </a>
     <details class="nav-dropdown">
       <summary>
         <span class="summary-content">
@@ -251,14 +257,16 @@ displayName = doctorSession.getName(); } %>
         </span>
       </summary>
       <div class="nav-dropdown-content">
+      </div>
+    </details
+    <a href="../customer/dashboard.jsp" class="nav-item">
         <a
           href="${pageContext.request.contextPath}/customer/create-comment"
           class="nav-item"
         >
           <i class="fas fa-comment-dots" style="margin-right:10px;"></i>Comment to Staff/Doctor
         </a>
-      </div>
-    </details>
+    </a>
 
     <% } else { %>
     <!-- No session (guest) -->
