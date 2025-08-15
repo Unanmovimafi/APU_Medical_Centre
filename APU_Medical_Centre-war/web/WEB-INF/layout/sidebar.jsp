@@ -177,10 +177,10 @@ displayName = doctorSession.getName(); } %>
           <i class="fas fa-calendar"></i>Appointment Calendar
         </a>
         <a
-          href="${pageContext.request.contextPath}/doctor/appointment/list"
+          href="${pageContext.request.contextPath}/doctor/appointment/comment"
           class="nav-item"
         >
-          <i class="fas fa-clock"></i>Current Appointment
+          <i class="fas fa-clock"></i>Comment
         </a>
       </div>
     </details>

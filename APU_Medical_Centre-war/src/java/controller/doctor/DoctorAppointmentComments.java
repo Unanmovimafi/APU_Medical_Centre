@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.staff;
+package controller.doctor;
 
 import controller.manager.*;
 import jakarta.ejb.EJB;
@@ -17,14 +17,14 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.comment.Comment;
 import model.comment.CommentFacade;
-import model.counterstaff.CounterStaff;
+import model.doctor.Doctor;
 
 /**
  *
  * @author khong
  */
-@WebServlet(name = "StaffAppointmentComments", urlPatterns = { "/staff/appointment/comment" })
-public class StaffAppointmentComments extends HttpServlet {
+@WebServlet(name = "DoctorAppointmentComments", urlPatterns = { "/doctor/appointment/comment" })
+public class DoctorAppointmentComments extends HttpServlet {
 
     @EJB
     private CommentFacade commentFacade;
@@ -69,12 +69,12 @@ public class StaffAppointmentComments extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Get counter staff from session
+        // Get doctor from session
         HttpSession session = request.getSession();
-        CounterStaff counterStaff = (CounterStaff) session.getAttribute("counterStaffSession");
+        Doctor doctor = (Doctor) session.getAttribute("doctorSession");
 
-        if (counterStaff == null) {
-            response.sendRedirect(request.getContextPath() + "/staff/login");
+        if (doctor == null) {
+            response.sendRedirect(request.getContextPath() + "/doctor/login");
             return;
         }
 
@@ -87,30 +87,30 @@ public class StaffAppointmentComments extends HttpServlet {
 
             // Check if this is a search request
             if (keyword != null && !keyword.trim().isEmpty() && column != null) {
-                // Search all comments then filter for this staff member
+                // Search all comments then filter for this doctor
                 List<Comment> allComments = commentFacade.searchAllCommentsAndKeyword(column, keyword);
                 commentList = allComments.stream()
-                        .filter(comment -> comment.getCounterStaff() != null
-                                && comment.getCounterStaff().getId().equals(counterStaff.getId()))
+                        .filter(comment -> comment.getDoctor() != null
+                                && comment.getDoctor().getId().equals(doctor.getId()))
                         .collect(java.util.stream.Collectors.toList());
             } else {
-                // Get all comments then filter for this staff member only
+                // Get all comments then filter for this doctor only
                 List<Comment> allComments = commentFacade.findAllComments();
                 commentList = allComments.stream()
-                        .filter(comment -> comment.getCounterStaff() != null
-                                && comment.getCounterStaff().getId().equals(counterStaff.getId()))
+                        .filter(comment -> comment.getDoctor() != null
+                                && comment.getDoctor().getId().equals(doctor.getId()))
                         .collect(java.util.stream.Collectors.toList());
             }
 
             request.setAttribute("commentList", commentList);
-            request.setAttribute("counterStaff", counterStaff);
-            request.setAttribute("pageContent", "/WEB-INF/views/staff/appointment-comment-list.jsp");
+            request.setAttribute("doctor", doctor);
+            request.setAttribute("pageContent", "/WEB-INF/views/doctor/appointment-comment-list.jsp");
             request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Error loading comments: " + e.getMessage());
-            request.setAttribute("pageContent", "/WEB-INF/views/staff/appointment-comment-list.jsp");
+            request.setAttribute("pageContent", "/WEB-INF/views/doctor/appointment-comment-list.jsp");
             request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
         }
     }
