@@ -175,6 +175,134 @@
     .modal-footer button:hover {
         background-color: #00ACC1;
     }
+
+    .medical-history-section {
+        width: 100%;
+        max-width: 800px;
+        margin: 40px auto 0 auto;
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .medical-history-title {
+        color: #00BFFF;
+        font-size: 20px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 10px;
+    }
+
+    .history-item {
+        display: flex;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .history-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .history-datetime {
+        flex-shrink: 0;
+        width: 200px;
+        padding-right: 20px;
+    }
+
+    .history-date {
+        font-weight: bold;
+        color: #495057;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .history-time {
+        color: #6c757d;
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+
+    .history-status {
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .status-completed {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .status-cancelled {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .status-paid {
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+
+    .history-feedback {
+        flex: 1;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border-left: 4px solid #00BFFF;
+    }
+
+    .feedback-text {
+        color: #495057;
+        line-height: 1.5;
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .no-feedback {
+        color: #adb5bd;
+        font-style: italic;
+    }
+
+    .no-history {
+        text-align: center;
+        color: #6c757d;
+        font-style: italic;
+        padding: 40px 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border: 2px dashed #dee2e6;
+    }
+
+    .profile-picture {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 3px solid #00BFFF;
+        object-fit: cover;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .profile-picture-header {
+        text-align: center;
+        padding: 20px 0;
+        border-bottom: 2px solid #e9ecef;
+        margin-bottom: 20px;
+    }
 </style>
 
 <div class="mainbody">
@@ -184,6 +312,20 @@
         <c:if test="${not empty error}">
             <div class="error-message">${error}</div>
         </c:if>
+        
+        <!-- Profile Picture Header -->
+        <div class="profile-picture-header">
+            <c:choose>
+                <c:when test="${not empty customer.profilePicture}">
+                    <img src="${pageContext.request.contextPath}/assets/profile/${customer.profilePicture}" 
+                         alt="Profile Picture" class="profile-picture" />
+                </c:when>
+                <c:otherwise>
+                    <img src="${pageContext.request.contextPath}/assets/images/default-avatar.png" 
+                         alt="Default Profile" class="profile-picture" />
+                </c:otherwise>
+            </c:choose>
+        </div>
         
         <form method="post" action="${pageContext.request.contextPath}/staff/customer/detail" id="customerForm">
             <input type="hidden" name="id" value="${customer.id}" />
@@ -254,6 +396,71 @@
                 <button type="button" id="cancelBtn" class="cancel-btn" style="display: none;" onclick="disableEdit()">Cancel</button>
             </div>
         </form>
+    </div>
+
+    <!-- Medical History Section -->
+    <div class="medical-history-section">
+        <h3 class="medical-history-title">Medical History</h3>
+        
+        <c:choose>
+            <c:when test="${not empty appointmentList}">
+                <c:forEach var="appointment" items="${appointmentList}">
+                    <div class="history-item">
+                        <div class="history-datetime">
+                            <div class="history-date">
+                                <fmt:formatDate value="${appointment.appointmentStartDatetime}" pattern="dd/MM/yyyy"/>
+                            </div>
+                            <div class="history-time">
+                                <fmt:formatDate value="${appointment.appointmentStartDatetime}" pattern="HH:mm" /> - 
+                                <fmt:formatDate value="${appointment.appointmentEndDatetime}" pattern="HH:mm" />
+                            </div>
+                            <span class="history-status 
+                                <c:choose>
+                                    <c:when test="${appointment.status == 'COMPLETED'}">status-completed</c:when>
+                                    <c:when test="${appointment.status == 'PAID'}">status-paid</c:when>
+                                    <c:when test="${appointment.status == 'PENDING'}">status-pending</c:when>
+                                    <c:when test="${appointment.status == 'CANCELLED'}">status-cancelled</c:when>
+                                    <c:otherwise>status-pending</c:otherwise>
+                                </c:choose>">
+                                ${appointment.status}
+                            </span>
+                        </div>
+                        <div class="history-feedback">
+                            <c:set var="feedback" value="${feedbackMap[appointment.id]}" />
+                            <c:choose>
+                                <c:when test="${not empty feedback}">
+                                    <p class="feedback-text">
+                                        <strong>Doctor:</strong> Dr. ${appointment.doctor.name}<br/>
+                                        <strong>Diagnosis:</strong> ${feedback.diagnosis}<br/>
+                                        <strong>Treatment:</strong> ${feedback.treatment}<br/>
+                                        <c:if test="${not empty feedback.doctorNotes}">
+                                            <strong>Notes:</strong> ${feedback.doctorNotes}<br/>
+                                        </c:if>
+                                        <c:if test="${not empty feedback.appointmentMedicineCollection}">
+                                            <strong>Medicine:</strong> 
+                                            <c:forEach var="medicine" items="${feedback.appointmentMedicineCollection}" varStatus="status">
+                                                ${medicine.medicine.name} (Qty: ${medicine.quantity})<c:if test="${!status.last}">, </c:if>
+                                            </c:forEach>
+                                        </c:if>
+                                    </p>
+                                </c:when>
+                                <c:otherwise>
+                                    <p class="feedback-text">
+                                        <strong>Doctor:</strong> Dr. ${appointment.doctor.name}<br/>
+                                        <span class="no-feedback">No diagnosis recorded</span>
+                                    </p>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <div class="no-history">
+                    <p>No medical history available for this customer.</p>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 </div>
 

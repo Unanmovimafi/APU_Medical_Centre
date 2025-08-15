@@ -251,7 +251,7 @@ displayName = doctorSession.getName(); } %>
 
   <% if (!"GUEST".equalsIgnoreCase(role)) { %>
   <a href="${pageContext.request.contextPath}/logout" class="logout-btn">
-    <i class="fas fa-sign-out-alt"></i>Logout
+    <i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i>Logout
   </a>
   <% } %>
 </aside>

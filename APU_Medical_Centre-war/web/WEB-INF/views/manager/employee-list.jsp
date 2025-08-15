@@ -240,7 +240,7 @@
 <div class="mainbody">
 <h2>Employee List</h2>
 
-<form method="get" action="${pageContext.request.contextPath}/staff/employee/list">
+<form method="get" action="${pageContext.request.contextPath}/manager/employee/list">
     <div class="search-controls">
         <label>Keyword:</label>
         <input type="text" name="keyword" value="${param.keyword}" placeholder="Search..." />
@@ -269,13 +269,13 @@
         </select>
 
         <button type="submit">Search</button>
-        <a href="${pageContext.request.contextPath}/staff/employee/list" class="btn">Reset</a>
+        <a href="${pageContext.request.contextPath}/manager/employee/list" class="btn">Reset</a>
     </div>
     <div class="dropdown create-btn">
         <button class="btn" type="button">Create New Employee</button>
         <div class="dropdown-content">
-            <a href="${pageContext.request.contextPath}/staff/staff/new">Add Counter Staff</a>
-            <a href="${pageContext.request.contextPath}/staff/doctor/new">Add Doctor</a>
+            <a href="${pageContext.request.contextPath}/manager/staff/new">Add Counter Staff</a>
+            <a href="${pageContext.request.contextPath}/manager/doctor/new">Add Doctor</a>
         </div>
     </div>
 </form>
@@ -317,12 +317,12 @@
                 <td>
                     <c:choose>
                         <c:when test="${emp.role == 'Counter Staff'}">
-                            <a href="${pageContext.request.contextPath}/staff/staff/detail?id=${emp.id}" class="action-link" title="View Details">
+                            <a href="${pageContext.request.contextPath}/manager/staff/detail?id=${emp.id}" class="action-link" title="View Details">
                                 <span class="material-icons icon-action">visibility</span>
                             </a>
                         </c:when>
                         <c:otherwise>
-                            <a href="${pageContext.request.contextPath}/staff/doctor/detail?id=${emp.id}" class="action-link" title="View Details">
+                            <a href="${pageContext.request.contextPath}/manager/doctor/detail?id=${emp.id}" class="action-link" title="View Details">
                                 <span class="material-icons icon-action">visibility</span>
                             </a>
                         </c:otherwise>
@@ -386,7 +386,7 @@
             const form = document.getElementById('deleteForm');
             
             msg.innerHTML = `Are you sure you want to delete <strong>`+name+`</strong>?`;
-            form.action = `${pageContext.request.contextPath}/staff/employee/delete?id=`+ id + `&role=` + role;
+            form.action = `${pageContext.request.contextPath}/manager/employee/delete?id=`+ id + `&role=` + role;
             modal.style.display = 'block';
         });
     });

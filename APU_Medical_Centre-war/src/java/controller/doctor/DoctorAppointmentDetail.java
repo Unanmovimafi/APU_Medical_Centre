@@ -1,87 +1,139 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller.doctor;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import jakarta.ejb.EJB;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-/**
- *
- * @author khong
- */
-@WebServlet(name = "DoctorAppointmentDetail", urlPatterns = {"/doctor/appointment/detail"})
+import java.io.IOException;
+import java.util.Date;
+
+import model.appointment.Appointment;
+import model.appointment.AppointmentFacade;
+import model.doctor.Doctor;
+
+@WebServlet(name = "DoctorAppointmentDetail", urlPatterns = { "/doctor/appointment/detail" })
 public class DoctorAppointmentDetail extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet DoctorAppointmentDetail</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet DoctorAppointmentDetail at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
+    @EJB
+    private AppointmentFacade appointmentFacade;
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        HttpSession session = request.getSession(false);
+        Doctor loggedDoctor = (Doctor) session.getAttribute("doctorSession");
+
+        if (loggedDoctor == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        String idParam = request.getParameter("id");
+        if (idParam == null || idParam.trim().isEmpty()) {
+            request.getSession().setAttribute("errorMessage", "Appointment ID is required.");
+            response.sendRedirect(request.getContextPath() + "/doctor/appointment/list");
+            return;
+        }
+
+        try {
+            Integer appointmentId = Integer.parseInt(idParam);
+            Appointment appointment = appointmentFacade.find(appointmentId);
+
+            if (appointment == null) {
+                request.getSession().setAttribute("errorMessage", "Appointment not found.");
+                response.sendRedirect(request.getContextPath() + "/doctor/appointment/list");
+                return;
+            }
+
+            // Check if appointment belongs to logged doctor
+            if (!appointment.getDoctor().getId().equals(loggedDoctor.getId())) {
+                request.getSession().setAttribute("errorMessage", "You can only view your own appointments.");
+                response.sendRedirect(request.getContextPath() + "/doctor/appointment/list");
+                return;
+            }
+
+            request.setAttribute("appointment", appointment);
+            request.setAttribute("pageContent", "/WEB-INF/views/doctor/appointment-detail.jsp");
+            request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
+
+        } catch (NumberFormatException e) {
+            request.getSession().setAttribute("errorMessage", "Invalid appointment ID format.");
+            response.sendRedirect(request.getContextPath() + "/doctor/appointment/list");
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Failed to load appointment details: " + e.getMessage());
+            request.setAttribute("pageContent", "/WEB-INF/views/doctor/appointment-detail.jsp");
+            request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
+        }
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        HttpSession session = request.getSession(false);
+        Doctor loggedDoctor = (Doctor) session.getAttribute("doctorSession");
+
+        if (loggedDoctor == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        String idParam = request.getParameter("id");
+        if (idParam == null || idParam.trim().isEmpty()) {
+            request.getSession().setAttribute("errorMessage", "Appointment ID is required.");
+            response.sendRedirect(request.getContextPath() + "/doctor/appointment/list");
+            return;
+        }
+
+        try {
+            Integer appointmentId = Integer.parseInt(idParam);
+            Appointment appointment = appointmentFacade.find(appointmentId);
+
+            if (appointment == null) {
+                request.getSession().setAttribute("errorMessage", "Appointment not found.");
+                response.sendRedirect(request.getContextPath() + "/doctor/appointment/list");
+                return;
+            }
+
+            // Check if appointment belongs to logged doctor
+            if (!appointment.getDoctor().getId().equals(loggedDoctor.getId())) {
+                request.getSession().setAttribute("errorMessage", "You can only manage your own appointments.");
+                response.sendRedirect(request.getContextPath() + "/doctor/appointment/list");
+                return;
+            }
+
+            String action = request.getParameter("action");
+            String currentStatus = appointment.getStatus();
+
+            if ("addDiagnosis".equals(action) && "APPROVED".equals(currentStatus)) {
+                // Redirect to diagnosis form
+                response.sendRedirect(request.getContextPath() + "/doctor/appointment/diagnosis?id=" + appointmentId);
+                return;
+
+            } else {
+                request.getSession().setAttribute("errorMessage", "Invalid action for current appointment status.");
+            }
+
+            response.sendRedirect(request.getContextPath() + "/doctor/appointment/detail?id=" + appointmentId);
+
+        } catch (NumberFormatException e) {
+            request.getSession().setAttribute("errorMessage", "Invalid appointment ID format.");
+            response.sendRedirect(request.getContextPath() + "/doctor/appointment/list");
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.getSession().setAttribute("errorMessage", "Failed to update appointment: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/doctor/appointment/detail?id=" + idParam);
+        }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Servlet for doctor appointment details and diagnosis";
+    }
 }

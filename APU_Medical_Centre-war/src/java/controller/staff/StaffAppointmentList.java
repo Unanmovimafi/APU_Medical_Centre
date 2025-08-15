@@ -42,14 +42,6 @@ public class StaffAppointmentList extends HttpServlet {
                 request.getSession().removeAttribute("errorMessage");
             }
 
-            // Check if this is a list view request
-            String view = request.getParameter("view");
-            if ("list".equals(view)) {
-                // Handle original list view logic
-                handleListView(request, response);
-                return;
-            }
-
             // Calendar view logic
             handleCalendarView(request, response);
 
@@ -111,48 +103,6 @@ public class StaffAppointmentList extends HttpServlet {
         request.setAttribute("targetMonth", targetMonth);
         request.setAttribute("appointmentList", appointmentList);
         request.setAttribute("pageContent", "/WEB-INF/views/staff/appointment-list.jsp");
-        request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
-    }
-
-    private void handleListView(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        List<Appointment> appointmentList = appointmentFacade.findAll();
-
-        String column = request.getParameter("column");
-        String keyword = request.getParameter("keyword");
-        String date = request.getParameter("date");
-        String status = request.getParameter("status");
-
-        if (column != null && keyword != null && !keyword.trim().isEmpty()) {
-            String keywordLower = keyword.trim().toLowerCase();
-            appointmentList = appointmentList.stream().filter(appt -> {
-                if ("doctor".equals(column) && appt.getDoctor() != null) {
-                    return appt.getDoctor().getName().toLowerCase().contains(keywordLower);
-                } else if ("customer".equals(column) && appt.getCustomer() != null) {
-                    return appt.getCustomer().getName().toLowerCase().contains(keywordLower);
-                }
-                return false;
-            }).collect(Collectors.toList());
-        }
-
-        if (date != null && !date.isEmpty()) {
-            appointmentList = appointmentList.stream().filter(appt -> {
-                if (appt.getAppointmentStartDatetime() != null) {
-                    return new SimpleDateFormat("yyyy-MM-dd").format(appt.getAppointmentStartDatetime())
-                            .equals(date);
-                }
-                return false;
-            }).collect(Collectors.toList());
-        }
-
-        if (status != null && !status.isEmpty()) {
-            appointmentList = appointmentList.stream().filter(appt -> status.equalsIgnoreCase(appt.getStatus()))
-                    .collect(Collectors.toList());
-        }
-
-        request.setAttribute("appointmentList", appointmentList);
-        request.setAttribute("pageContent", "/WEB-INF/views/staff/appointment-list-table.jsp");
         request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
     }
 

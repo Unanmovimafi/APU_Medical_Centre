@@ -10,7 +10,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -21,6 +23,7 @@ import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
+import model.appointment.Appointment;
 
 /**
  *
@@ -30,13 +33,13 @@ import java.util.Date;
 @Table(name = "feedback")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Feedback.findAll", query = "SELECT f FROM Feedback f"),
-    @NamedQuery(name = "Feedback.findById", query = "SELECT f FROM Feedback f WHERE f.id = :id"),
-    @NamedQuery(name = "Feedback.findByVersionTime", query = "SELECT f FROM Feedback f WHERE f.versionTime = :versionTime"),
-    @NamedQuery(name = "Feedback.findByCreationDatetime", query = "SELECT f FROM Feedback f WHERE f.creationDatetime = :creationDatetime"),
-    @NamedQuery(name = "Feedback.findByCreateBy", query = "SELECT f FROM Feedback f WHERE f.createBy = :createBy"),
-    @NamedQuery(name = "Feedback.findByLastUpdateDatetime", query = "SELECT f FROM Feedback f WHERE f.lastUpdateDatetime = :lastUpdateDatetime"),
-    @NamedQuery(name = "Feedback.findByLastUpdateBy", query = "SELECT f FROM Feedback f WHERE f.lastUpdateBy = :lastUpdateBy")})
+        @NamedQuery(name = "Feedback.findAll", query = "SELECT f FROM Feedback f"),
+        @NamedQuery(name = "Feedback.findById", query = "SELECT f FROM Feedback f WHERE f.id = :id"),
+        @NamedQuery(name = "Feedback.findByVersionTime", query = "SELECT f FROM Feedback f WHERE f.versionTime = :versionTime"),
+        @NamedQuery(name = "Feedback.findByCreationDatetime", query = "SELECT f FROM Feedback f WHERE f.creationDatetime = :creationDatetime"),
+        @NamedQuery(name = "Feedback.findByCreateBy", query = "SELECT f FROM Feedback f WHERE f.createBy = :createBy"),
+        @NamedQuery(name = "Feedback.findByLastUpdateDatetime", query = "SELECT f FROM Feedback f WHERE f.lastUpdateDatetime = :lastUpdateDatetime"),
+        @NamedQuery(name = "Feedback.findByLastUpdateBy", query = "SELECT f FROM Feedback f WHERE f.lastUpdateBy = :lastUpdateBy") })
 public class Feedback implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -73,6 +76,12 @@ public class Feedback implements Serializable {
     @Size(max = 16777215)
     @Column(name = "CONTEXT")
     private String context;
+    @JoinColumn(name = "APPOINTMENT_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private Appointment appointment;
+    @Size(max = 255)
+    @Column(name = "STATUS")
+    private String status;
 
     public Feedback() {
     }
@@ -81,7 +90,8 @@ public class Feedback implements Serializable {
         this.id = id;
     }
 
-    public Feedback(Integer id, int versionTime, Date creationDatetime, String createBy, Date lastUpdateDatetime, String lastUpdateBy) {
+    public Feedback(Integer id, int versionTime, Date creationDatetime, String createBy, Date lastUpdateDatetime,
+            String lastUpdateBy) {
         this.id = id;
         this.versionTime = versionTime;
         this.creationDatetime = creationDatetime;
@@ -146,6 +156,31 @@ public class Feedback implements Serializable {
         this.context = context;
     }
 
+    // Convenience method for backward compatibility
+    public String getFeedback() {
+        return context;
+    }
+
+    public void setFeedback(String feedback) {
+        this.context = feedback;
+    }
+
+    public Appointment getAppointment() {
+        return appointment;
+    }
+
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -170,5 +205,5 @@ public class Feedback implements Serializable {
     public String toString() {
         return "model.feedback.Feedback[ id=" + id + " ]";
     }
-    
+
 }

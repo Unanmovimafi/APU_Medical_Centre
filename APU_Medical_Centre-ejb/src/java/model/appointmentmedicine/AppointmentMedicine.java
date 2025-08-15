@@ -10,6 +10,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -20,6 +22,8 @@ import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
+import model.appointment.Appointment;
+import model.medicine.Medicine;
 
 /**
  *
@@ -29,13 +33,13 @@ import java.util.Date;
 @Table(name = "appointment_medicine")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "AppointmentMedicine.findAll", query = "SELECT a FROM AppointmentMedicine a"),
-    @NamedQuery(name = "AppointmentMedicine.findById", query = "SELECT a FROM AppointmentMedicine a WHERE a.id = :id"),
-    @NamedQuery(name = "AppointmentMedicine.findByVersionTime", query = "SELECT a FROM AppointmentMedicine a WHERE a.versionTime = :versionTime"),
-    @NamedQuery(name = "AppointmentMedicine.findByCreationDatetime", query = "SELECT a FROM AppointmentMedicine a WHERE a.creationDatetime = :creationDatetime"),
-    @NamedQuery(name = "AppointmentMedicine.findByCreateBy", query = "SELECT a FROM AppointmentMedicine a WHERE a.createBy = :createBy"),
-    @NamedQuery(name = "AppointmentMedicine.findByLastUpdateDatetime", query = "SELECT a FROM AppointmentMedicine a WHERE a.lastUpdateDatetime = :lastUpdateDatetime"),
-    @NamedQuery(name = "AppointmentMedicine.findByLastUpdateBy", query = "SELECT a FROM AppointmentMedicine a WHERE a.lastUpdateBy = :lastUpdateBy")})
+        @NamedQuery(name = "AppointmentMedicine.findAll", query = "SELECT a FROM AppointmentMedicine a"),
+        @NamedQuery(name = "AppointmentMedicine.findById", query = "SELECT a FROM AppointmentMedicine a WHERE a.id = :id"),
+        @NamedQuery(name = "AppointmentMedicine.findByVersionTime", query = "SELECT a FROM AppointmentMedicine a WHERE a.versionTime = :versionTime"),
+        @NamedQuery(name = "AppointmentMedicine.findByCreationDatetime", query = "SELECT a FROM AppointmentMedicine a WHERE a.creationDatetime = :creationDatetime"),
+        @NamedQuery(name = "AppointmentMedicine.findByCreateBy", query = "SELECT a FROM AppointmentMedicine a WHERE a.createBy = :createBy"),
+        @NamedQuery(name = "AppointmentMedicine.findByLastUpdateDatetime", query = "SELECT a FROM AppointmentMedicine a WHERE a.lastUpdateDatetime = :lastUpdateDatetime"),
+        @NamedQuery(name = "AppointmentMedicine.findByLastUpdateBy", query = "SELECT a FROM AppointmentMedicine a WHERE a.lastUpdateBy = :lastUpdateBy") })
 public class AppointmentMedicine implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -69,6 +73,19 @@ public class AppointmentMedicine implements Serializable {
     @Column(name = "LAST_UPDATE_BY")
     private String lastUpdateBy;
 
+    @ManyToOne
+    @JoinColumn(name = "APPOINTMENT_ID")
+    private Appointment appointment;
+
+    @ManyToOne
+    @JoinColumn(name = "MEDICINE_ID")
+    private Medicine medicine;
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "QUANTITY")
+    private Integer quantity;
+
     public AppointmentMedicine() {
     }
 
@@ -76,13 +93,28 @@ public class AppointmentMedicine implements Serializable {
         this.id = id;
     }
 
-    public AppointmentMedicine(Integer id, int versionTime, Date creationDatetime, String createBy, Date lastUpdateDatetime, String lastUpdateBy) {
+    public AppointmentMedicine(Integer id, int versionTime, Date creationDatetime, String createBy,
+            Date lastUpdateDatetime, String lastUpdateBy) {
         this.id = id;
         this.versionTime = versionTime;
         this.creationDatetime = creationDatetime;
         this.createBy = createBy;
         this.lastUpdateDatetime = lastUpdateDatetime;
         this.lastUpdateBy = lastUpdateBy;
+    }
+
+    public AppointmentMedicine(Integer id, int versionTime, Date creationDatetime, String createBy,
+            Date lastUpdateDatetime, String lastUpdateBy, Appointment appointment, Medicine medicine,
+            Integer quantity) {
+        this.id = id;
+        this.versionTime = versionTime;
+        this.creationDatetime = creationDatetime;
+        this.createBy = createBy;
+        this.lastUpdateDatetime = lastUpdateDatetime;
+        this.lastUpdateBy = lastUpdateBy;
+        this.appointment = appointment;
+        this.medicine = medicine;
+        this.quantity = quantity;
     }
 
     public Integer getId() {
@@ -133,6 +165,30 @@ public class AppointmentMedicine implements Serializable {
         this.lastUpdateBy = lastUpdateBy;
     }
 
+    public Appointment getAppointment() {
+        return appointment;
+    }
+
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
+    }
+
+    public Medicine getMedicine() {
+        return medicine;
+    }
+
+    public void setMedicine(Medicine medicine) {
+        this.medicine = medicine;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -157,5 +213,5 @@ public class AppointmentMedicine implements Serializable {
     public String toString() {
         return "model.appointmentmedicine.AppointmentMedicine[ id=" + id + " ]";
     }
-    
+
 }

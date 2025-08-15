@@ -30,9 +30,9 @@ public class AppointmentMedicineFacade extends AbstractFacade<AppointmentMedicin
         super(AppointmentMedicine.class);
     }
 
-    public List<AppointmentMedicine> findByAppointmentId(Long appointmentId) {
+    public List<AppointmentMedicine> findByAppointmentId(Integer appointmentId) {
         TypedQuery<AppointmentMedicine> query = em.createQuery(
-                "SELECT am FROM AppointmentMedicine am WHERE am.appointmentId = :appointmentId",
+                "SELECT am FROM AppointmentMedicine am WHERE am.appointment.id = :appointmentId",
                 AppointmentMedicine.class);
         query.setParameter("appointmentId", appointmentId);
         return query.getResultList();

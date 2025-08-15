@@ -94,7 +94,7 @@ public class StaffAppointmentDetail extends HttpServlet {
             String currentStatus = appointment.getStatus();
 
             if ("approve".equals(action) && "PENDING".equals(currentStatus)) {
-                appointment.setStatus("CONFIRMED");
+                appointment.setStatus("APPROVED");
                 appointment.setLastUpdateDatetime(new Date());
                 appointmentFacade.edit(appointment);
                 request.getSession().setAttribute("successMessage", "Appointment approved successfully!");

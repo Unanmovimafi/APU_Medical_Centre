@@ -14,8 +14,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import model.appointment.Appointment;
+import model.appointment.AppointmentFacade;
 import model.customer.Customer;
 import model.customer.CustomerFacade;
+import model.feedback.Feedback;
+import model.feedback.FeedbackFacade;
 
 /**
  *
@@ -26,6 +33,12 @@ public class StaffCustomerDetail extends HttpServlet {
 
     @EJB
     CustomerFacade customerFacade;
+
+    @EJB
+    private AppointmentFacade appointmentFacade;
+
+    @EJB
+    private FeedbackFacade feedbackFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -87,7 +100,28 @@ public class StaffCustomerDetail extends HttpServlet {
                 request.getSession().removeAttribute("successMessage"); // Clear after using
             }
 
+            // Fetch appointments for medical history
+            List<Appointment> appointmentList = appointmentFacade.findByCustomer(customer);
+
+            // Fetch feedback for each appointment
+            Map<Integer, Feedback> feedbackMap = new HashMap<>();
+            if (appointmentList != null) {
+                for (Appointment appointment : appointmentList) {
+                    try {
+                        Feedback feedback = feedbackFacade.findByAppointment(appointment);
+                        if (feedback != null) {
+                            feedbackMap.put(appointment.getId(), feedback);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error fetching feedback for appointment " + appointment.getId() + ": "
+                                + e.getMessage());
+                    }
+                }
+            }
+
             request.setAttribute("customer", customer);
+            request.setAttribute("appointmentList", appointmentList);
+            request.setAttribute("feedbackMap", feedbackMap);
             request.setAttribute("pageContent", "/WEB-INF/views/staff/customer-detail.jsp");
             request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
 
