@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.manager;
+package controller.staff;
 
+import controller.manager.*;
 import jakarta.ejb.EJB;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,14 +17,14 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.comment.Comment;
 import model.comment.CommentFacade;
-import model.manager.Manager;
+import model.counterstaff.CounterStaff;
 
 /**
  *
  * @author khong
  */
-@WebServlet(name = "ManagerAppointmentComments", urlPatterns = { "/manager/appointment/comment" })
-public class ManagerAppointmentComments extends HttpServlet {
+@WebServlet(name = "StaffAppointmentComments", urlPatterns = { "/staff/appointment/comment" })
+public class StaffAppointmentComments extends HttpServlet {
 
     @EJB
     private CommentFacade commentFacade;
@@ -68,12 +69,12 @@ public class ManagerAppointmentComments extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Get manager from session
+        // Get counter staff from session
         HttpSession session = request.getSession();
-        Manager manager = (Manager) session.getAttribute("managerSession");
+        CounterStaff counterStaff = (CounterStaff) session.getAttribute("counterStaffSession");
 
-        if (manager == null) {
-            response.sendRedirect(request.getContextPath() + "/manager/login");
+        if (counterStaff == null) {
+            response.sendRedirect(request.getContextPath() + "/staff/login");
             return;
         }
 
@@ -93,14 +94,14 @@ public class ManagerAppointmentComments extends HttpServlet {
             }
 
             request.setAttribute("commentList", commentList);
-            request.setAttribute("manager", manager);
-            request.setAttribute("pageContent", "/WEB-INF/views/manager/appointment-comment-list.jsp");
+            request.setAttribute("counterStaff", counterStaff);
+            request.setAttribute("pageContent", "/WEB-INF/views/staff/appointment-comment-list.jsp");
             request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Error loading comments: " + e.getMessage());
-            request.setAttribute("pageContent", "/WEB-INF/views/doctor/appointment-comment-list.jsp");
+            request.setAttribute("pageContent", "/WEB-INF/views/staff/appointment-comment-list.jsp");
             request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
         }
     }

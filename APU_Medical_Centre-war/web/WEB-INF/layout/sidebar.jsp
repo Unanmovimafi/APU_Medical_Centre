@@ -65,9 +65,6 @@ displayName = doctorSession.getName(); } %>
         <a href="${pageContext.request.contextPath}/manager/appointment/list" class="nav-item">
           <i class="fas fa-calendar"></i>Calendar
         </a>
-<!--        <a href="../appointments/requestList.jsp" class="nav-item">
-          <i class="fas fa-clock"></i>Request List
-        </a>-->
         <a href="${pageContext.request.contextPath}/manager/appointment/comment" class="nav-item">
           <i class="fas fa-comments"></i>Comments
         </a>
@@ -139,6 +136,9 @@ displayName = doctorSession.getName(); } %>
           class="nav-item"
         >
           <i class="fas fa-credit-card"></i>Appointment Payment
+        </a>
+        <a href="${pageContext.request.contextPath}/staff/appointment/comment" class="nav-item">
+          <i class="fas fa-comments"></i>Comments
         </a>
       </div>
     </details>

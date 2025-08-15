@@ -158,7 +158,7 @@
 <div class="mainbody">
     <h2>Customer Comments</h2>
 
-    <form method="get" action="${pageContext.request.contextPath}/manager/appointment/comment">
+    <form method="get" action="${pageContext.request.contextPath}/staff/appointment/comment">
         <div class="search-controls">
             <label for="column">Search by:</label>
             <select name="column" id="column">
@@ -170,7 +170,7 @@
             </select>
             <input type="text" name="keyword" placeholder="Enter keyword" value="${param.keyword}" />
             <button type="submit">Search</button>
-            <a href="${pageContext.request.contextPath}/manager/appointment/comment" class="btn">Reset</a>
+            <a href="${pageContext.request.contextPath}/staff/appointment/comment" class="btn">Reset</a>
         </div>
     </form>
 
