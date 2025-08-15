@@ -160,6 +160,12 @@ displayName = doctorSession.getName(); } %>
     >
       <i class="fas fa-tachometer-alt"></i>Dashboard
     </a>
+    <a
+      href="${pageContext.request.contextPath}/doctor/edit-profile"
+      class="nav-item"
+    >
+      <i class="fas fa-user-cog"></i>Edit Profile
+    </a>
     <details class="nav-dropdown">
       <summary>
         <span class="summary-content">
@@ -213,10 +219,10 @@ displayName = doctorSession.getName(); } %>
           <i class="fas fa-users"></i>Patient List
         </a>
         <a
-          href="${pageContext.request.contextPath}/doctor/customer/medical-history"
+          href="${pageContext.request.contextPath}/doctor/customer/list/today"
           class="nav-item"
         >
-          <i class="fas fa-receipt"></i>Check Payments
+          <i class="fas fa-receipt"></i>Patient Today
         </a>
       </div>
     </details>
@@ -255,7 +261,8 @@ displayName = doctorSession.getName(); } %>
           href="${pageContext.request.contextPath}/customer/create-comment"
           class="nav-item"
         >
-          <i class="fas fa-comment-dots" style="margin-right:10px;"></i>Comment to Staff/Doctor
+          <i class="fas fa-comment-dots" style="margin-right: 10px"></i>Comment
+          to Staff/Doctor
         </a>
       </div>
     </details>
