@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.customer;
+package controller.manager;
 
 import helper.DateTimeHelper;
 import java.io.IOException;
@@ -14,18 +14,18 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.customer.Customer;
-import model.customer.CustomerFacade;
+import model.manager.Manager;
+import model.manager.ManagerFacade;
 
 /**
  *
  * @author System
  */
-@WebServlet(name = "CustomerEditProfile", urlPatterns = { "/customer/edit-profile" })
-public class CustomerEditProfile extends HttpServlet {
+@WebServlet(name = "ManagerEditProfile", urlPatterns = { "/manager/edit-profile" })
+public class ManagerEditProfile extends HttpServlet {
 
     @EJB
-    private CustomerFacade customerFacade;
+    private ManagerFacade managerFacade;
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -41,17 +41,17 @@ public class CustomerEditProfile extends HttpServlet {
 
         try {
             HttpSession session = request.getSession(false);
-            Customer loggedCustomer = (Customer) session.getAttribute("customerSession");
+            Manager loggedManager = (Manager) session.getAttribute("managerSession");
 
-            if (loggedCustomer == null) {
+            if (loggedManager == null) {
                 response.sendRedirect(request.getContextPath() + "/login.jsp");
                 return;
             }
 
             // Refresh from database
-            Customer customer = customerFacade.find(loggedCustomer.getId());
-            request.setAttribute("customer", customer);
-            request.setAttribute("pageContent", "/WEB-INF/views/customer/edit-profile.jsp");
+            Manager manager = managerFacade.find(loggedManager.getId());
+            request.setAttribute("manager", manager);
+            request.setAttribute("pageContent", "/WEB-INF/views/manager/edit-profile.jsp");
 
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/layout/layout.jsp");
             dispatcher.forward(request, response);
@@ -75,15 +75,15 @@ public class CustomerEditProfile extends HttpServlet {
 
         try {
             HttpSession session = request.getSession(false);
-            Customer loggedCustomer = (Customer) session.getAttribute("customerSession");
+            Manager loggedManager = (Manager) session.getAttribute("managerSession");
 
-            if (loggedCustomer == null) {
+            if (loggedManager == null) {
                 response.sendRedirect(request.getContextPath() + "/login.jsp");
                 return;
             }
 
-            Customer customer = customerFacade.find(loggedCustomer.getId());
-            if (customer == null) {
+            Manager manager = managerFacade.find(loggedManager.getId());
+            if (manager == null) {
                 response.sendRedirect(request.getContextPath() + "/login");
                 return;
             }
@@ -101,36 +101,36 @@ public class CustomerEditProfile extends HttpServlet {
 
             // Check if new password is entered
             if (newPassword != null && !newPassword.trim().isEmpty()) {
-                if (oldPassword == null || !oldPassword.equals(customer.getPassword())) {
+                if (oldPassword == null || !oldPassword.equals(manager.getPassword())) {
                     request.setAttribute("errorMessage", "Old password is incorrect.");
-                    request.setAttribute("customer", customer);
-                    request.setAttribute("pageContent", "/WEB-INF/views/customer/edit-profile.jsp");
+                    request.setAttribute("manager", manager);
+                    request.setAttribute("pageContent", "/WEB-INF/views/manager/edit-profile.jsp");
                     request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
                     return;
                 }
-                customer.setPassword(newPassword.trim());
+                manager.setPassword(newPassword.trim());
                 isPasswordChanged = true;
             }
 
             // Check if any personal detail changed
-            if (!newName.equals(customer.getName()) ||
-                    !newEmail.equals(customer.getEmail()) ||
-                    !newPhone.equals(customer.getPhoneNumber()) ||
-                    !newGender.equals(customer.getGender())) {
+            if (!newName.equals(manager.getName()) ||
+                    !newEmail.equals(manager.getEmail()) ||
+                    !newPhone.equals(manager.getPhoneNumber()) ||
+                    !newGender.equals(manager.getGender())) {
                 isDetailChanged = true;
             }
 
             // Always set new values
-            customer.setName(newName);
-            customer.setEmail(newEmail);
-            customer.setPhoneNumber(newPhone);
-            customer.setGender(newGender);
-            customer.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
-            customer.setLastUpdateBy(customer.getUsername());
-            customer.setVersionTime(customer.getVersionTime() + 1);
+            manager.setName(newName);
+            manager.setEmail(newEmail);
+            manager.setPhoneNumber(newPhone);
+            manager.setGender(newGender);
+            manager.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
+            manager.setLastUpdateBy(manager.getUsername());
+            manager.setVersionTime(manager.getVersionTime() + 1);
 
-            customerFacade.edit(customer);
-            session.setAttribute("customerSession", customer);
+            managerFacade.edit(manager);
+            session.setAttribute("managerSession", manager);
 
             // Set success message
             String successMessage = "";
@@ -144,11 +144,11 @@ public class CustomerEditProfile extends HttpServlet {
 
             session.setAttribute("successMessage", successMessage);
 
-            response.sendRedirect(request.getContextPath() + "/customer/edit-profile");
+            response.sendRedirect(request.getContextPath() + "/manager/edit-profile");
 
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error saving profile: " + e.getMessage());
-            request.setAttribute("pageContent", "/WEB-INF/views/customer/edit-profile.jsp");
+            request.setAttribute("pageContent", "/WEB-INF/views/manager/edit-profile.jsp");
             request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
         }
     }
@@ -159,6 +159,6 @@ public class CustomerEditProfile extends HttpServlet {
      * @return a String containing servlet description
      */
     public String getServletInfo() {
-        return "Customer Edit Profile Servlet";
+        return "Manager Edit Profile Servlet";
     }
 }

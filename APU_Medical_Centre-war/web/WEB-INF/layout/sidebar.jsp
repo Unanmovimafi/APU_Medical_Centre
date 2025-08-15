@@ -40,10 +40,15 @@ displayName = doctorSession.getName(); } %>
   <div class="nav-menu">
     <% if ("MANAGER".equalsIgnoreCase(role)) { %>
 
-    <a href="../manager/dashboard.jsp" class="nav-item">
+    <a href="../manager/dashboard" class="nav-item">
       <i class="fas fa-tachometer-alt"></i>Dashboard
     </a>
-    
+    <a
+      href="${pageContext.request.contextPath}/manager/edit-profile"
+      class="nav-item"
+    >
+      <i class="fas fa-user-cog"></i>Edit Profile
+    </a>
     <a
       href="${pageContext.request.contextPath}/manager/employee/list"
       class="nav-item"
@@ -192,8 +197,8 @@ displayName = doctorSession.getName(); } %>
     <a href="../customer/dashboard.jsp" class="nav-item">
       <i class="fas fa-tachometer-alt"></i>Dashboard
     </a>
-        <a
-      href="${pageContext.request.contextPath}/staff/edit-profile"
+    <a
+      href="${pageContext.request.contextPath}/customer/edit-profile"
       class="nav-item"
     >
       <i class="fas fa-user-cog"></i>Edit Profile

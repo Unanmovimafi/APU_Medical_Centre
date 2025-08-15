@@ -222,22 +222,22 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
   <div class="container">
     <div class="form-section">
       <form
-        action="${pageContext.request.contextPath}/customer/edit-profile"
+        action="${pageContext.request.contextPath}/manager/edit-profile"
         method="post"
         id="editProfileForm"
       >
-        <input type="hidden" name="id" value="${customer.id}" />
+        <input type="hidden" name="id" value="${manager.id}" />
 
         <table class="form-table">
           <tr>
             <td><strong>Name :</strong></td>
             <td>
               <div class="field-wrapper">
-                <span class="text-display">${customer.name}</span>
+                <span class="text-display">${manager.name}</span>
                 <input
                   type="text"
                   name="name"
-                  value="${customer.name}"
+                  value="${manager.name}"
                   class="editable"
                   required
                 />
@@ -248,11 +248,11 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
             <td><strong>Email :</strong></td>
             <td>
               <div class="field-wrapper">
-                <span class="text-display">${customer.email}</span>
+                <span class="text-display">${manager.email}</span>
                 <input
                   type="email"
                   name="email"
-                  value="${customer.email}"
+                  value="${manager.email}"
                   class="editable"
                   required
                 />
@@ -263,11 +263,11 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
             <td><strong>Phone Number :</strong></td>
             <td>
               <div class="field-wrapper">
-                <span class="text-display">${customer.phoneNumber}</span>
+                <span class="text-display">${manager.phoneNumber}</span>
                 <input
                   type="text"
                   name="phoneNumber"
-                  value="${customer.phoneNumber}"
+                  value="${manager.phoneNumber}"
                   class="editable"
                   required
                 />
@@ -280,18 +280,18 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
               <div class="field-wrapper">
                 <span class="text-display">
                   <c:choose>
-                    <c:when test="${customer.gender == 'Male'}">Male</c:when>
-                    <c:when test="${customer.gender == 'Female'}">Female</c:when>
-                    <c:when test="${customer.gender == 'Other'}">Other</c:when>
-                    <c:when test="${empty customer.gender}">Not specified</c:when>
-                    <c:otherwise>${customer.gender}</c:otherwise>
+                    <c:when test="${manager.gender == 'Male'}">Male</c:when>
+                    <c:when test="${manager.gender == 'Female'}">Female</c:when>
+                    <c:when test="${manager.gender == 'Other'}">Other</c:when>
+                    <c:when test="${empty manager.gender}">Not specified</c:when>
+                    <c:otherwise>${manager.gender}</c:otherwise>
                   </c:choose>
                 </span>
                 <select name="gender" class="editable" required>
                   <option value="">Select Gender</option>
-                  <option value="Male" ${customer.gender == 'Male' ? 'selected' : ''}>Male</option>
-                  <option value="Female" ${customer.gender == 'Female' ? 'selected' : ''}>Female</option>
-                  <option value="Other" ${customer.gender == 'Other' ? 'selected' : ''}>Other</option>
+                  <option value="Male" ${manager.gender == 'Male' ? 'selected' : ''}>Male</option>
+                  <option value="Female" ${manager.gender == 'Female' ? 'selected' : ''}>Female</option>
+                  <option value="Other" ${manager.gender == 'Other' ? 'selected' : ''}>Other</option>
                 </select>
               </div>
             </td>
@@ -336,7 +336,7 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
             Edit
           </button>
           <a
-            href="${pageContext.request.contextPath}/customer/dashboard"
+            href="${pageContext.request.contextPath}/manager/dashboard"
             class="btn"
             id="backBtn"
             >Back</a
@@ -355,8 +355,8 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <div class="picture-section">
       <h4>Profile Picture</h4>
       <c:choose>
-        <c:when test="${not empty customer.profilePicture}">
-          <img src="${customer.profilePicture}" alt="Profile Picture" />
+        <c:when test="${not empty manager.profilePicture}">
+          <img src="${manager.profilePicture}" alt="Profile Picture" />
         </c:when>
         <c:otherwise>
           <p>No picture uploaded</p>
@@ -365,11 +365,11 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
       <form
         method="post"
-        action="${pageContext.request.contextPath}/customer/edit-profile-picture"
+        action="${pageContext.request.contextPath}/manager/edit-profile-picture"
         enctype="multipart/form-data"
         style="margin-top: 15px"
       >
-        <input type="hidden" name="id" value="${customer.id}" />
+        <input type="hidden" name="id" value="${manager.id}" />
         <input type="file" name="profilePicture" accept="image/*" required />
         <button type="submit" style="background-color: #00bfff; color: white">
           Upload
