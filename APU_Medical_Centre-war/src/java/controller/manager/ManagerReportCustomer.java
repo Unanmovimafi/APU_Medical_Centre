@@ -40,18 +40,18 @@ public class ManagerReportCustomer extends HttpServlet {
     List<Customer> allCustomer = customerFacade.findAll();
 
         // inside doGet, after you load allCustomer
-        int male = 0, female = 0;
+        int maleCount = 0, femaleCount = 0;
         for (Customer c : allCustomer) {
             String g = (c.getGender() == null) ? "" : c.getGender().trim().toLowerCase();
             if ("male".equals(g)) {
-                male++;
+                maleCount++;
             } else if ("female".equals(g)) {
-                female++;
+                femaleCount++;
             }
         }
 // expose to JSP
-        request.setAttribute("maleCount", male);
-        request.setAttribute("femaleCount", female);
+        request.setAttribute("maleCount", maleCount);
+        request.setAttribute("femaleCount", femaleCount);
 
         // ===== 1) Customers per month (last 12 months) =====
     ZoneId zone = ZoneId.systemDefault();
