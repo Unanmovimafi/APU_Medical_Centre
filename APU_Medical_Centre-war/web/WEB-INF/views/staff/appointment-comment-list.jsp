@@ -180,8 +180,6 @@
                 <thead>
                     <tr>
                         <th>Customer Name</th>
-                        <th>Service Provider</th>
-                        <th>Role</th>
                         <th>Rating</th>
                         <th>Comment</th>
                         <th>Date</th>
@@ -197,47 +195,7 @@
                                     ${comment.customer.name}
                                 </a>
                             </td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${not empty comment.doctor}">
-                                        <a href="${pageContext.request.contextPath}/manager/doctor/detail?id=${comment.doctor.id}" 
-                                           title="View Doctor Details">
-                                            ${comment.doctor.name}
-                                        </a>
-                                    </c:when>
-                                    <c:when test="${not empty comment.counterStaff}">
-                                        <a href="${pageContext.request.contextPath}/manager/staff/detail?id=${comment.counterStaff.id}" 
-                                           title="View Staff Details">
-                                            ${comment.counterStaff.name}
-                                        </a>
-                                    </c:when>
-                                    <c:when test="${not empty comment.manager}">
-                                        <a href="${pageContext.request.contextPath}/manager/detail?id=${comment.manager.id}" 
-                                           title="View Manager Details">
-                                            ${comment.manager.name}
-                                        </a>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span style="color: #666;">Unknown</span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${not empty comment.doctor}">
-                                        <span style="color: #007bff; font-weight: bold;">Doctor</span>
-                                    </c:when>
-                                    <c:when test="${not empty comment.counterStaff}">
-                                        <span style="color: #28a745; font-weight: bold;">Counter Staff</span>
-                                    </c:when>
-                                    <c:when test="${not empty comment.manager}">
-                                        <span style="color: #dc3545; font-weight: bold;">Manager</span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span style="color: #666;">Unknown</span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </td>
+                            
                             <td>
                                 <div class="rating-stars">
                                     <c:forEach var="i" begin="1" end="${comment.rating}">
@@ -275,22 +233,10 @@
                                 <fmt:formatDate value="${comment.creationDatetime}" pattern="dd/MM/yyyy HH:mm" />
                             </td>
                             <td>
-                                <a href="${pageContext.request.contextPath}/manager/customer/detail?id=${comment.customer.id}" 
+                                <a href="${pageContext.request.contextPath}/staff/customer/detail?id=${comment.customer.id}" 
                                    class="action-link" title="View Patient Details">
                                     <span class="material-icons icon-action">person</span>
                                 </a>
-                                <c:if test="${not empty comment.doctor}">
-                                    <a href="${pageContext.request.contextPath}/manager/doctor/detail?id=${comment.doctor.id}" 
-                                       class="action-link" title="View Doctor Details" style="margin-left: 10px;">
-                                        <span class="material-icons icon-action">local_hospital</span>
-                                    </a>
-                                </c:if>
-                                <c:if test="${not empty comment.counterStaff}">
-                                    <a href="${pageContext.request.contextPath}/manager/staff/detail?id=${comment.counterStaff.id}" 
-                                       class="action-link" title="View Staff Details" style="margin-left: 10px;">
-                                        <span class="material-icons icon-action">badge</span>
-                                    </a>
-                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>
