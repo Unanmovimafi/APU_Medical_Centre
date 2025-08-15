@@ -66,7 +66,7 @@ public class ManagerCreateStaff extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute("pageContent", "/WEB-INF/views/staff/create-staff.jsp");
+        request.setAttribute("pageContent", "/WEB-INF/views/manager/create-staff.jsp");
         request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
     }
 
@@ -86,7 +86,7 @@ public class ManagerCreateStaff extends HttpServlet {
 
             if (counterStaffFacade.findCounterStaffByUsername(username) != null) {
                 request.setAttribute("error", "Username already exists.");
-                request.setAttribute("pageContent", "/WEB-INF/views/staff/create-staff.jsp");
+                request.setAttribute("pageContent", "/WEB-INF/views/manager/create-staff.jsp");
                 request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
                 return;
             }
