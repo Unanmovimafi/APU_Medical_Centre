@@ -88,6 +88,22 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     outline: none;
   }
 
+  .editable select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 15px;
+    background-color: white;
+  }
+
+  .editable select:focus {
+    border-color: #00bfff;
+    background-color: #f0ffff;
+    outline: none;
+  }
+
   button,
   .btn {
     padding: 10px 16px;
@@ -255,6 +271,28 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                   class="editable"
                   required
                 />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Gender :</strong></td>
+            <td>
+              <div class="field-wrapper">
+                <span class="text-display">
+                  <c:choose>
+                    <c:when test="${doctor.gender == 'Male'}">Male</c:when>
+                    <c:when test="${doctor.gender == 'Female'}">Female</c:when>
+                    <c:when test="${doctor.gender == 'Other'}">Other</c:when>
+                    <c:when test="${empty doctor.gender}">Not specified</c:when>
+                    <c:otherwise>${doctor.gender}</c:otherwise>
+                  </c:choose>
+                </span>
+                <select name="gender" class="editable" required>
+                  <option value="">Select Gender</option>
+                  <option value="Male" ${doctor.gender == 'Male' ? 'selected' : ''}>Male</option>
+                  <option value="Female" ${doctor.gender == 'Female' ? 'selected' : ''}>Female</option>
+                  <option value="Other" ${doctor.gender == 'Other' ? 'selected' : ''}>Other</option>
+                </select>
               </div>
             </td>
           </tr>

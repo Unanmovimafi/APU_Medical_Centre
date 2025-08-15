@@ -170,6 +170,112 @@
     .modal-footer button:hover {
         background-color: #00ACC1;
     }
+
+    .profile-picture {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 3px solid #00BFFF;
+        object-fit: cover;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .profile-picture-header {
+        text-align: center;
+        padding: 20px 0;
+        border-bottom: 2px solid #e9ecef;
+        margin-bottom: 20px;
+    }
+
+    .comments-section {
+        width: 100%;
+        max-width: 800px;
+        margin: 40px auto 0 auto;
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .comments-title {
+        color: #00BFFF;
+        font-size: 20px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 10px;
+    }
+
+    .comment-item {
+        display: flex;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .comment-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .comment-datetime {
+        flex-shrink: 0;
+        width: 200px;
+        padding-right: 20px;
+    }
+
+    .comment-date {
+        font-weight: bold;
+        color: #495057;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .comment-by {
+        color: #6c757d;
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+
+    .comment-rating {
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        color: #ffc107;
+    }
+
+    .star {
+        margin-right: 2px;
+    }
+
+    .comment-content {
+        flex: 1;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border-left: 4px solid #00BFFF;
+    }
+
+    .comment-text {
+        color: #495057;
+        line-height: 1.5;
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .no-comments {
+        text-align: center;
+        color: #6c757d;
+        font-style: italic;
+        padding: 40px 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border: 2px dashed #dee2e6;
+    }
 </style>
 
 <div class="mainbody">
@@ -182,6 +288,20 @@
         <c:if test="${not empty usernameError}">
             <div class="error-message">${usernameError}</div>
         </c:if>
+        
+        <!-- Profile Picture Header -->
+        <div class="profile-picture-header">
+            <c:choose>
+                <c:when test="${not empty doctor.profilePicture}">
+                    <img src="${pageContext.request.contextPath}/assets/profile/${doctor.profilePicture}" 
+                         alt="Profile Picture" class="profile-picture" />
+                </c:when>
+                <c:otherwise>
+                    <img src="${pageContext.request.contextPath}/assets/images/default-avatar.png" 
+                         alt="Default Profile" class="profile-picture" />
+                </c:otherwise>
+            </c:choose>
+        </div>
         
         <form method="post" action="${pageContext.request.contextPath}/staff/doctor/detail" id="employeeForm">
             <input type="hidden" name="id" value="${doctor.id}" />
@@ -232,6 +352,54 @@
                 <button type="button" id="cancelBtn" class="cancel-btn" style="display: none;" onclick="disableEdit()">Cancel</button>
             </div>
         </form>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+        <h3 class="comments-title">Comments & Reviews</h3>
+        
+        <c:choose>
+            <c:when test="${not empty commentList}">
+                <c:forEach var="comment" items="${commentList}">
+                    <div class="comment-item">
+                        <div class="comment-datetime">
+                            <div class="comment-date">
+                                <fmt:formatDate value="${comment.creationDatetime}" pattern="dd/MM/yyyy"/>
+                            </div>
+                            <div class="comment-by">
+                                By: ${comment.customer.name}
+                            </div>
+                            <div class="comment-rating">
+                                <c:forEach var="i" begin="1" end="${comment.rating}">
+                                    <span class="star">★</span>
+                                </c:forEach>
+                                <c:forEach var="i" begin="${comment.rating + 1}" end="5">
+                                    <span class="star" style="color: #ddd;">★</span>
+                                </c:forEach>
+                                <span style="color: #666; margin-left: 5px;">(${comment.rating}/5)</span>
+                            </div>
+                        </div>
+                        <div class="comment-content">
+                            <p class="comment-text">
+                                <c:choose>
+                                    <c:when test="${not empty comment.content}">
+                                        ${comment.content}
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span style="color: #adb5bd; font-style: italic;">No comment provided</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </p>
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <div class="no-comments">
+                    <p>No comments or reviews available for this doctor.</p>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 </div>
 

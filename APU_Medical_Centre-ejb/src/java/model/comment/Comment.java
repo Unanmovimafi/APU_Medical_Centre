@@ -36,14 +36,14 @@ import model.manager.Manager;
 @Table(name = "comment")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Comment.findAll", query = "SELECT c FROM Comment c"),
-    @NamedQuery(name = "Comment.findById", query = "SELECT c FROM Comment c WHERE c.id = :id"),
-    @NamedQuery(name = "Comment.findByVersionTime", query = "SELECT c FROM Comment c WHERE c.versionTime = :versionTime"),
-    @NamedQuery(name = "Comment.findByCreationDatetime", query = "SELECT c FROM Comment c WHERE c.creationDatetime = :creationDatetime"),
-    @NamedQuery(name = "Comment.findByCreateBy", query = "SELECT c FROM Comment c WHERE c.createBy = :createBy"),
-    @NamedQuery(name = "Comment.findByLastUpdateDatetime", query = "SELECT c FROM Comment c WHERE c.lastUpdateDatetime = :lastUpdateDatetime"),
-    @NamedQuery(name = "Comment.findByLastUpdateBy", query = "SELECT c FROM Comment c WHERE c.lastUpdateBy = :lastUpdateBy"),
-    @NamedQuery(name = "Comment.findByRating", query = "SELECT c FROM Comment c WHERE c.rating = :rating")})
+        @NamedQuery(name = "Comment.findAll", query = "SELECT c FROM Comment c"),
+        @NamedQuery(name = "Comment.findById", query = "SELECT c FROM Comment c WHERE c.id = :id"),
+        @NamedQuery(name = "Comment.findByVersionTime", query = "SELECT c FROM Comment c WHERE c.versionTime = :versionTime"),
+        @NamedQuery(name = "Comment.findByCreationDatetime", query = "SELECT c FROM Comment c WHERE c.creationDatetime = :creationDatetime"),
+        @NamedQuery(name = "Comment.findByCreateBy", query = "SELECT c FROM Comment c WHERE c.createBy = :createBy"),
+        @NamedQuery(name = "Comment.findByLastUpdateDatetime", query = "SELECT c FROM Comment c WHERE c.lastUpdateDatetime = :lastUpdateDatetime"),
+        @NamedQuery(name = "Comment.findByLastUpdateBy", query = "SELECT c FROM Comment c WHERE c.lastUpdateBy = :lastUpdateBy"),
+        @NamedQuery(name = "Comment.findByRating", query = "SELECT c FROM Comment c WHERE c.rating = :rating") })
 public class Comment implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -109,7 +109,8 @@ public class Comment implements Serializable {
         this.id = id;
     }
 
-    public Comment(Integer id, int versionTime, Date creationDatetime, String createBy, Date lastUpdateDatetime, String lastUpdateBy, int rating) {
+    public Comment(Integer id, int versionTime, Date creationDatetime, String createBy, Date lastUpdateDatetime,
+            String lastUpdateBy, int rating) {
         this.id = id;
         this.versionTime = versionTime;
         this.creationDatetime = creationDatetime;
@@ -183,7 +184,7 @@ public class Comment implements Serializable {
         this.content = content;
     }
 
-    public String status() {
+    public String getStatus() {
         return status;
     }
 
@@ -223,7 +224,6 @@ public class Comment implements Serializable {
         this.doctor = doctor;
     }
 
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -248,5 +248,5 @@ public class Comment implements Serializable {
     public String toString() {
         return "model.comment.Comment[ id=" + id + " ]";
     }
-    
+
 }

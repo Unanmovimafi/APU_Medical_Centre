@@ -13,6 +13,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+import model.comment.Comment;
+import model.comment.CommentFacade;
 import model.counterstaff.CounterStaff;
 import model.counterstaff.CounterStaffFacade;
 
@@ -25,6 +28,9 @@ public class ManagerStaffDetail extends HttpServlet {
 
     @EJB
     private CounterStaffFacade staffFacade;
+
+    @EJB
+    private CommentFacade commentFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -80,7 +86,11 @@ public class ManagerStaffDetail extends HttpServlet {
                 request.getSession().removeAttribute("successMessage"); // Clear after using
             }
 
+            // Fetch comments for this staff member
+            List<Comment> commentList = commentFacade.findByCounterStaff(staff);
+
             request.setAttribute("staff", staff);
+            request.setAttribute("commentList", commentList);
             request.setAttribute("pageContent", "/WEB-INF/views/manager/staff-detail.jsp");
             request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
 

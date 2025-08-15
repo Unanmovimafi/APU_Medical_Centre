@@ -63,7 +63,7 @@ displayName = doctorSession.getName(); } %>
 <!--        <a href="../appointments/requestList.jsp" class="nav-item">
           <i class="fas fa-clock"></i>Request List
         </a>-->
-        <a href="../appointments/comments.jsp" class="nav-item">
+        <a href="${pageContext.request.contextPath}/manager/appointment/comment" class="nav-item">
           <i class="fas fa-comments"></i>Comments
         </a>
       </div>

@@ -14,6 +14,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.List;
+import model.comment.Comment;
+import model.comment.CommentFacade;
 import model.doctor.Doctor;
 import model.doctor.DoctorFacade;
 
@@ -26,6 +29,9 @@ public class ManagerDoctorDetail extends HttpServlet {
 
     @EJB
     private DoctorFacade doctorFacade;
+
+    @EJB
+    private CommentFacade commentFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -81,8 +87,12 @@ public class ManagerDoctorDetail extends HttpServlet {
                 request.getSession().removeAttribute("successMessage"); // Clear after using
             }
 
+            // Fetch comments for this doctor
+            List<Comment> commentList = commentFacade.findByDoctor(doctor);
+
             request.setAttribute("doctor", doctor);
-            request.setAttribute("pageContent", "/WEB-INF/views/staff/doctor-detail.jsp");
+            request.setAttribute("commentList", commentList);
+            request.setAttribute("pageContent", "/WEB-INF/views/manager/doctor-detail.jsp");
             request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();

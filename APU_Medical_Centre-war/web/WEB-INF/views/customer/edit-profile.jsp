@@ -88,22 +88,6 @@
         outline: none;
     }
 
-    .editable select {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        box-sizing: border-box;
-        font-size: 15px;
-        background-color: white;
-    }
-
-    .editable select:focus {
-        border-color: #00BFFF;
-        background-color: #F0FFFF;
-        outline: none;
-    }
-
     button, .btn {
         padding: 10px 16px;
         margin: 10px 6px 0 0;
@@ -253,28 +237,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><strong>Gender :</strong></td>
-                        <td>
-                            <div class="field-wrapper">
-                                <span class="text-display">
-                                    <c:choose>
-                                        <c:when test="${staff.gender == 'Male'}">Male</c:when>
-                                        <c:when test="${staff.gender == 'Female'}">Female</c:when>
-                                        <c:when test="${staff.gender == 'Other'}">Other</c:when>
-                                        <c:when test="${empty staff.gender}">Not specified</c:when>
-                                        <c:otherwise>${staff.gender}</c:otherwise>
-                                    </c:choose>
-                                </span>
-                                <select name="gender" class="editable" required>
-                                    <option value="">Select Gender</option>
-                                    <option value="Male" ${staff.gender == 'Male' ? 'selected' : ''}>Male</option>
-                                    <option value="Female" ${staff.gender == 'Female' ? 'selected' : ''}>Female</option>
-                                    <option value="Other" ${staff.gender == 'Other' ? 'selected' : ''}>Other</option>
-                                </select>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
                         <td><strong>New Password :</strong></td>
                         <td>
                             <div class="field-wrapper">
@@ -342,10 +304,7 @@
 <c:if test="${not empty errorMessage}">
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            showCustomAlert(
-                '<c:out value="${errorMessage}" escapeXml="true" />',
-                "Password Error"
-            );
+            showCustomAlert("${errorMessage.replaceAll("\"", "\\\\\"")}", "Password Error");
         });
     </script>
 </c:if>
@@ -353,10 +312,7 @@
 <c:if test="${not empty sessionScope.successMessage}">
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            showCustomAlert(
-                '<c:out value="${sessionScope.successMessage}" escapeXml="true" />',
-                "Success"
-            );
+            showCustomAlert("${sessionScope.successMessage.replaceAll("\"", "\\\\\"")}", "Success");
         });
     </script>
     <c:remove var="successMessage" scope="session" />

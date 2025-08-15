@@ -22,19 +22,20 @@ import model.counterstaff.CounterStaffFacade;
  *
  * @author khong
  */
-@WebServlet(name = "StaffEditProfile", urlPatterns = {"/staff/edit-profile"})
+@WebServlet(name = "StaffEditProfile", urlPatterns = { "/staff/edit-profile" })
 public class StaffEditProfile extends HttpServlet {
 
     @EJB
     private CounterStaffFacade counterStaffFacade;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -53,14 +54,15 @@ public class StaffEditProfile extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -90,10 +92,10 @@ public class StaffEditProfile extends HttpServlet {
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -117,6 +119,7 @@ public class StaffEditProfile extends HttpServlet {
             String newName = request.getParameter("name");
             String newEmail = request.getParameter("email");
             String newPhone = request.getParameter("phoneNumber");
+            String newGender = request.getParameter("gender");
             String newPassword = request.getParameter("newPassword");
             String oldPassword = request.getParameter("oldPassword");
 
@@ -137,9 +140,10 @@ public class StaffEditProfile extends HttpServlet {
             }
 
             // Check if any personal detail changed
-            if (!newName.equals(staff.getName()) || 
-                !newEmail.equals(staff.getEmail()) || 
-                !newPhone.equals(staff.getPhoneNumber())) {
+            if (!newName.equals(staff.getName()) ||
+                    !newEmail.equals(staff.getEmail()) ||
+                    !newPhone.equals(staff.getPhoneNumber()) ||
+                    !newGender.equals(staff.getGender())) {
                 isDetailChanged = true;
             }
 
@@ -147,12 +151,13 @@ public class StaffEditProfile extends HttpServlet {
             staff.setName(newName);
             staff.setEmail(newEmail);
             staff.setPhoneNumber(newPhone);
+            staff.setGender(newGender);
             staff.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
             staff.setLastUpdateBy(staff.getUsername());
             staff.setVersionTime(staff.getVersionTime() + 1);
 
             counterStaffFacade.edit(staff);
-            session.setAttribute("staffSession", staff);
+            session.setAttribute("counterStaffSession", staff);
 
             // Set success message
             String successMessage = "";
