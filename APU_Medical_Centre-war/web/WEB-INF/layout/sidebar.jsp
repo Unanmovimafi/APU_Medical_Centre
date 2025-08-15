@@ -194,7 +194,7 @@ displayName = doctorSession.getName(); } %>
 
     <% } else if ("CUSTOMER".equalsIgnoreCase(role)) { %>
 
-    <a href="../customer/dashboard.jsp" class="nav-item">
+    <a href="${pageContext.request.contextPath}/customer/dashboard" class="nav-item">
       <i class="fas fa-tachometer-alt"></i>Dashboard
     </a>
     <a
@@ -210,34 +210,23 @@ displayName = doctorSession.getName(); } %>
         </span>
       </summary>
       <div class="nav-dropdown-content">
-        <a href="../appointments/request.jsp" class="nav-item">
+        <a href="${pageContext.request.contextPath}/customer/appointment/request" class="nav-item">
           <i class="fas fa-plus-circle"></i>Request Appointment
         </a>
-        <a href="../appointments/myAppointments.jsp" class="nav-item">
-          <i class="fas fa-calendar"></i>My Appointments
+        <a href="${pageContext.request.contextPath}/customer/appointment/calendar" class="nav-item">
+          <i class="fas fa-calendar"></i>Calendar
         </a>
-        <a href="../appointments/history.jsp" class="nav-item">
+        <a href="${pageContext.request.contextPath}/customer/appointment/list" class="nav-item">
           <i class="fas fa-history"></i>Appointment History
         </a>
       </div>
     </details>
-    <details class="nav-dropdown">
-      <summary>
-        <span class="summary-content">
-          <i class="fas fa-comments"></i>Feedback
-        </span>
-      </summary>
-      <div class="nav-dropdown-content">
-      </div>
-    </details
-    <a href="../customer/dashboard.jsp" class="nav-item">
-        <a
-          href="${pageContext.request.contextPath}/customer/create-comment"
-          class="nav-item"
-        >
-          <i class="fas fa-comment-dots" style="margin-right: 10px"></i>Comment
-          to Staff/Doctor
-        </a>
+    <a
+      href="${pageContext.request.contextPath}/customer/comment/new"
+      class="nav-item"
+    >
+      <i class="fas fa-comment-dots" style="margin-right: 10px"></i>Comment
+      to Staff/Doctor
     </a>
 
     <% } else { %>

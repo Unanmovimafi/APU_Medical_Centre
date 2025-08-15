@@ -27,7 +27,7 @@ import model.manager.ManagerFacade;
  *
  * @author zihao
  */
-@WebServlet(name = "CustomerCreateComment", urlPatterns = {"/customer/CustomerCreateComment"})
+@WebServlet(name = "CustomerCreateComment", urlPatterns = { "/customer/comment/new" })
 public class CustomerCreateComment extends HttpServlet {
 
     @EJB
@@ -46,55 +46,65 @@ public class CustomerCreateComment extends HttpServlet {
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-//        try (PrintWriter out = response.getWriter()) {
-//            /* TODO output your page here. You may use following sample code. */
-//            out.println("<!DOCTYPE html>");
-//            out.println("<html>");
-//            out.println("<head>");
-//            out.println("<title>Servlet CreateComment</title>");
-//            out.println("</head>");
-//            out.println("<body>");
-//            out.println("<h1>Servlet CreateComment at " + request.getContextPath() + "</h1>");
-//            out.println("</body>");
-//            out.println("</html>");
-//        }
+        // try (PrintWriter out = response.getWriter()) {
+        // /* TODO output your page here. You may use following sample code. */
+        // out.println("<!DOCTYPE html>");
+        // out.println("<html>");
+        // out.println("<head>");
+        // out.println("<title>Servlet CreateComment</title>");
+        // out.println("</head>");
+        // out.println("<body>");
+        // out.println("<h1>Servlet CreateComment at " + request.getContextPath() +
+        // "</h1>");
+        // out.println("</body>");
+        // out.println("</html>");
+        // }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        processRequest(request, response);
+        // Load all staff members for the selection modal
+        request.setAttribute("counterStaffList", counterStaffFacade.findAll());
+        request.setAttribute("managerList", managerFacade.findAll());
+        request.setAttribute("doctorList", doctorFacade.findAll());
+
+        // Forward to the create comment page
+        request.setAttribute("pageContent", "/WEB-INF/views/customer/create-comment.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/layout/layout.jsp");
+        dispatcher.forward(request, response);
     }
 
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        processRequest(request, response);
+        // processRequest(request, response);
         String targetStaffId = request.getParameter("selectedUserId");
         String targetStaffRole = request.getParameter("selectedStaffRole");
         String rating = request.getParameter("rating");
@@ -105,7 +115,7 @@ public class CustomerCreateComment extends HttpServlet {
         if (session != null && session.getAttribute("userSession") != null) {
             Comment comment = new Comment();
             Customer customerSession = (Customer) session.getAttribute("customerSession");
-            
+
             comment.setVersionTime(1);
             comment.setCreationDatetime(DateTimeHelper.getCurrentDateTime());
             comment.setCreateBy(customerSession.getUsername());
@@ -113,29 +123,26 @@ public class CustomerCreateComment extends HttpServlet {
             comment.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
 
             comment.setCustomer(customerSession);
-            if ("MANAGER".equals(targetStaffRole)){
+            if ("MANAGER".equals(targetStaffRole)) {
                 comment.setManager(managerFacade.find(targetStaffId));
-                
-            }
-            else if ("COUNTER_STAFF".equals(targetStaffRole)){
+
+            } else if ("COUNTER_STAFF".equals(targetStaffRole)) {
                 comment.setCounterStaff(counterStaffFacade.find(targetStaffId));
-            }
-            else if ("DOCTOR".equals(targetStaffRole)){
+            } else if ("DOCTOR".equals(targetStaffRole)) {
                 comment.setDoctor(doctorFacade.find(targetStaffId));
             }
-            
+
             comment.setRating(Integer.parseInt(rating));
             comment.setContent(content);
             comment.setStatus("ACTIVE");
-            
+
             commentFacade.create(comment);
         }
-        
+
         request.setAttribute("pageContent", "/WEB-INF/views/customer/dashboard.jsp");
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/layout/layout.jsp");
         dispatcher.forward(request, response);
 
-        
     }
 
     /**
