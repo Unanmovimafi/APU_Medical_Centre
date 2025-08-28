@@ -165,7 +165,7 @@
 
             <div class="button-footer">
                 <button type="submit" class="create-btn">Create Manager</button>
-                <a href="${pageContext.request.contextPath}/staff/employee/list" class="btn cancel-btn">Cancel</a>
+                <a href="${pageContext.request.contextPath}/manager/employee/list" class="btn cancel-btn">Cancel</a>
             </div>
         </form>
     </div>
