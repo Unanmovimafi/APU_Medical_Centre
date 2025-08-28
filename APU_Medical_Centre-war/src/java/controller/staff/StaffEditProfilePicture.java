@@ -1,20 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller.staff;
 
-import jakarta.ejb.EJB;
+import helper.DateTimeHelper;
 import java.io.IOException;
-import java.io.PrintWriter;
+import jakarta.ejb.EJB;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.InputStream;
-import java.util.Date;
 import model.counterstaff.CounterStaff;
 import model.counterstaff.CounterStaffFacade;
 
@@ -22,82 +20,105 @@ import model.counterstaff.CounterStaffFacade;
  *
  * @author khong
  */
-@WebServlet(name = "StaffEditProfilePicture", urlPatterns = {"/staff/edit-profile-picture"})
+@WebServlet(name = "StaffEditProfilePicture", urlPatterns = { "/staff/edit-profile-picture" })
+@MultipartConfig(maxFileSize = 1024 * 1024 * 5) // 5MB max file size
 public class StaffEditProfilePicture extends HttpServlet {
 
     @EJB
     private CounterStaffFacade counterStaffFacade;
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet StaffEditProfilePicture</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet StaffEditProfilePicture at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        try {
+            HttpSession session = request.getSession(false);
+            CounterStaff loggedStaff = (CounterStaff) session.getAttribute("counterStaffSession");
+
+            if (loggedStaff == null) {
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                return;
+            }
+
+            // Refresh from database
+            CounterStaff staff = counterStaffFacade.find(loggedStaff.getId());
+            request.setAttribute("staff", staff);
+            request.setAttribute("pageContent", "/WEB-INF/views/staff/edit-profile.jsp");
+
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/layout/layout.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("errorMessage", "Error loading profile: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
+        }
     }
 
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
+     * @param request  servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         try {
-            Integer id = Integer.valueOf(request.getParameter("id"));
-            CounterStaff staff = counterStaffFacade.find(id);
+            HttpSession session = request.getSession(false);
+            CounterStaff loggedStaff = (CounterStaff) session.getAttribute("counterStaffSession");
+
+            if (loggedStaff == null) {
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                return;
+            }
+
+            CounterStaff staff = counterStaffFacade.find(loggedStaff.getId());
+            if (staff == null) {
+                response.sendRedirect(request.getContextPath() + "/login");
+                return;
+            }
 
             Part filePart = request.getPart("profilePicture");
             if (filePart != null && filePart.getSize() > 0) {
+                // Validate file type
+                String contentType = filePart.getContentType();
+                if (!contentType.startsWith("image/")) {
+                    request.setAttribute("errorMessage", "Please upload a valid image file.");
+                    request.setAttribute("staff", staff);
+                    request.setAttribute("pageContent", "/WEB-INF/views/staff/edit-profile.jsp");
+                    request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
+                    return;
+                }
+
                 try (InputStream fileContent = filePart.getInputStream()) {
                     byte[] imageBytes = fileContent.readAllBytes();
-                    String base64Image = java.util.Base64.getEncoder().encodeToString(imageBytes);
+                    String base64Image = "data:" + contentType + ";base64,"
+                            + java.util.Base64.getEncoder().encodeToString(imageBytes);
 
                     staff.setProfilePicture(base64Image);
-                    staff.setLastUpdateDatetime(new Date());
-                    staff.setLastUpdateBy("STAFF");
+                    staff.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
+                    staff.setLastUpdateBy(staff.getUsername());
+                    staff.setVersionTime(staff.getVersionTime() + 1);
 
                     counterStaffFacade.edit(staff);
-                    request.setAttribute("successMessage", "Profile picture uploaded successfully.");
+                    session.setAttribute("counterStaffSession", staff);
+
+                    session.setAttribute("successMessage", "Profile picture updated successfully.");
+                    response.sendRedirect(request.getContextPath() + "/staff/edit-profile");
+                    return;
                 }
             } else {
-                request.setAttribute("errorMessage", "No file selected.");
+                request.setAttribute("errorMessage", "No file selected or file is empty.");
             }
 
             request.setAttribute("staff", staff);
@@ -106,6 +127,7 @@ public class StaffEditProfilePicture extends HttpServlet {
 
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Error uploading picture: " + e.getMessage());
+            request.setAttribute("pageContent", "/WEB-INF/views/staff/edit-profile.jsp");
             request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
         }
     }
@@ -117,7 +139,6 @@ public class StaffEditProfilePicture extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Counter Staff Edit Profile Picture Servlet";
+    }
 }

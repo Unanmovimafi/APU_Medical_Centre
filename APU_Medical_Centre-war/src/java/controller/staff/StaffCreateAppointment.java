@@ -106,6 +106,36 @@ public class StaffCreateAppointment extends HttpServlet {
                 return;
             }
 
+            // ✅ Check if customer already has an appointment at this time slot
+            boolean hasConflict = appointmentFacade.findAll().stream()
+                    .filter(appt -> appt != null && appt.getCustomer() != null
+                            && appt.getAppointmentStartDatetime() != null)
+                    .filter(appt -> appt.getCustomer().getId().equals(customer.getId()))
+                    .filter(appt -> !"REJECTED".equals(appt.getStatus()) && !"FINISHED".equals(appt.getStatus())) // Only
+                                                                                                                  // active
+                                                                                                                  // appointments
+                    .anyMatch(appt -> {
+                        // Check if appointment times overlap with the requested slot
+                        Date existingStart = appt.getAppointmentStartDatetime();
+                        Date existingEnd = appt.getAppointmentEndDatetime() != null ? appt.getAppointmentEndDatetime()
+                                : new Date(existingStart.getTime() + 30 * 60 * 1000); // Add 30 minutes if no end time
+
+                        // Check for overlap: startDate < existingEnd AND existingStart < endDate
+                        return startDate.before(existingEnd) && existingStart.before(endDate);
+                    });
+
+            if (hasConflict) {
+                request.setAttribute("errorMessage", "Customer '" + customer.getName()
+                        + "' already has an appointment scheduled during this time slot. Please select a different time.");
+                // Preserve form data for user convenience
+                request.setAttribute("selectedDate", dateStr);
+                request.setAttribute("selectedDoctorId", doctorIdStr);
+                request.setAttribute("selectedCustomerId", customerIdStr);
+                request.setAttribute("selectedTimeSlot", timeStr);
+                doGet(request, response);
+                return;
+            }
+
             // ✅ Create appointment
             Appointment appointment = new Appointment();
             appointment.setVersionTime(1);
@@ -126,14 +156,16 @@ public class StaffCreateAppointment extends HttpServlet {
             request.getSession().setAttribute("successMessage", "Appointment created successfully!");
             response.sendRedirect(request.getContextPath() + "/staff/appointment/list");
 
-        } catch (EJBTransactionRolledbackException txEx) {
-            request.setAttribute("errorMessage", "❌ DB Transaction rolled back: " + txEx.getMessage());
-            txEx.printStackTrace(); // Check GlassFish logs for details
-            doGet(request, response);
-        } catch (Exception e) {
-            request.setAttribute("errorMessage", "❌ Failed: " + e.getMessage());
-            e.printStackTrace();
-            doGet(request, response);
+        } catch (Exception txEx) {
+            if (txEx.getClass().getSimpleName().contains("EJBTransaction")) {
+                request.setAttribute("errorMessage", "❌ DB Transaction rolled back: " + txEx.getMessage());
+                txEx.printStackTrace(); // Check GlassFish logs for details
+                doGet(request, response);
+            } else {
+                request.setAttribute("errorMessage", "❌ Failed: " + txEx.getMessage());
+                txEx.printStackTrace();
+                doGet(request, response);
+            }
         }
     }
 }

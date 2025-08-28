@@ -131,7 +131,8 @@
             <table class="form-table">
                 <tr>
                     <td><strong>Appointment Date :</strong></td>
-                    <td><input type="date" id="appointmentDate" name="appointmentDate" value="${param.appointmentDate}" required /></td>
+                    <td><input type="date" id="appointmentDate" name="appointmentDate" 
+                               value="${selectedDate != null ? selectedDate : param.appointmentDate}" required /></td>
                 </tr>
                 <tr>
                     <td><strong>Select Doctor :</strong></td>
@@ -139,7 +140,11 @@
                         <select id="doctorId" name="doctorId" required>
                             <option value="">-- Select Doctor --</option>
                             <c:forEach var="doctor" items="${doctors}">
-                                <option value="${doctor.id}" ${param.doctorId == doctor.id ? 'selected' : ''}>${doctor.name} (${doctor.username})</option>
+                                <option value="${doctor.id}" 
+                                        ${(selectedDoctorId != null && selectedDoctorId == doctor.id.toString()) || 
+                                          (selectedDoctorId == null && param.doctorId == doctor.id) ? 'selected' : ''}>
+                                    ${doctor.name} (${doctor.username})
+                                </option>
                             </c:forEach>
                         </select>
                     </td>
@@ -149,6 +154,9 @@
                     <td>
                         <select id="appointmentTime" name="appointmentTime" required>
                             <option value="">-- Select Time --</option>
+                            <c:if test="${selectedTimeSlot != null}">
+                                <option value="${selectedTimeSlot}" selected>${selectedTimeSlot}</option>
+                            </c:if>
                             <!-- options will be filled by JS -->
                         </select>
                     </td>
@@ -159,7 +167,11 @@
                         <select id="customerId" name="customerId" required>
                             <option value="">-- Select Customer --</option>
                             <c:forEach var="customer" items="${customers}">
-                                <option value="${customer.id}" ${param.customerId == customer.id ? 'selected' : ''}>${customer.name} (${customer.username})</option>
+                                <option value="${customer.id}" 
+                                        ${(selectedCustomerId != null && selectedCustomerId == customer.id.toString()) || 
+                                          (selectedCustomerId == null && param.customerId == customer.id) ? 'selected' : ''}>
+                                    ${customer.name} (${customer.username})
+                                </option>
                             </c:forEach>
                         </select>
                     </td>
@@ -181,6 +193,10 @@
             var doctorSelect = document.getElementById("doctorId");
             var timeSlotSelect = document.getElementById("appointmentTime");
 
+            // Set minimum date to today
+            var today = new Date().toISOString().split('T')[0];
+            dateInput.setAttribute('min', today);
+
             function fetchTimeSlots() {
                 var date = dateInput.value;
                 var doctorId = doctorSelect.value;
@@ -189,19 +205,33 @@
                 console.log("Selected Doctor: ", doctorId);
 
                 if (date && doctorId) {
-                    fetch(`/APU_Medical_Centre-war/staff/get-available-slots?appointmentDate=2025-07-21&doctorId=1`)
-                        .then(response => response.json())
+                    var contextPath = "${pageContext.request.contextPath}";
+                    fetch(contextPath + "/staff/get-available-slots?appointmentDate=" + date + "&doctorId=" + doctorId)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
                         .then(data => {
+                            // Check if there was a previously selected time slot
+                            var selectedTimeSlot = "${selectedTimeSlot}";
+                            
                             timeSlotSelect.innerHTML = '<option value="">-- Select Time --</option>';
                             data.forEach(slot => {
                                 const option = document.createElement("option");
                                 option.value = slot;
                                 option.textContent = slot;
+                                // Re-select the previously selected slot if it's still available
+                                if (selectedTimeSlot && slot === selectedTimeSlot) {
+                                    option.selected = true;
+                                }
                                 timeSlotSelect.appendChild(option);
                             });
                         })
                         .catch(err => {
                             console.error("Failed to fetch time slots", err);
+                            timeSlotSelect.innerHTML = '<option value="">-- Error loading slots --</option>';
                         });
                 } else {
                     timeSlotSelect.innerHTML = '<option value="">-- Select Time --</option>';
@@ -210,6 +240,11 @@
 
             doctorSelect.addEventListener("change", fetchTimeSlots);
             dateInput.addEventListener("change", fetchTimeSlots);
+            
+            // If form data is pre-filled (after error), fetch time slots automatically
+            if (dateInput.value && doctorSelect.value) {
+                fetchTimeSlots();
+            }
         });
     </script>
 </content>
