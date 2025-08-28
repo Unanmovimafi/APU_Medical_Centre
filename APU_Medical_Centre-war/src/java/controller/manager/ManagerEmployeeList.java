@@ -115,19 +115,19 @@ public class ManagerEmployeeList extends HttpServlet {
             combined.add(map);
         }
         
-        for (Manager manager : managerFacade.findAll()) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", manager.getId());
-            map.put("role", "Manager");
-            map.put("name", manager.getName());
-            map.put("username", manager.getUsername());
-            map.put("email", manager.getEmail());
-            map.put("gender", manager.getGender());
-            map.put("phoneNumber", manager.getPhoneNumber());
-            map.put("status", manager.getStatus());
-            map.put("lastUpdateDatetime", manager.getLastUpdateDatetime());
-            combined.add(map);
-        }
+//        for (Manager manager : managerFacade.findAll()) {
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("id", manager.getId());
+//            map.put("role", "Manager");
+//            map.put("name", manager.getName());
+//            map.put("username", manager.getUsername());
+//            map.put("email", manager.getEmail());
+//            map.put("gender", manager.getGender());
+//            map.put("phoneNumber", manager.getPhoneNumber());
+//            map.put("status", manager.getStatus());
+//            map.put("lastUpdateDatetime", manager.getLastUpdateDatetime());
+//            combined.add(map);
+//        }
 
         // Filtering
         if (keyword != null && column != null && !keyword.isEmpty()) {

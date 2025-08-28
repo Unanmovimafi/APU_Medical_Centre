@@ -122,6 +122,9 @@ public class CounterStaff implements Serializable {
     private String status;
     @OneToMany(mappedBy = "counterStaff")
     private Collection<Comment> commentCollection;
+    @Size(max = 255)
+    @Column(name = "IC")
+    private String ic;
 
     public CounterStaff() {
     }
@@ -276,6 +279,14 @@ public class CounterStaff implements Serializable {
 
     public void setCommentCollection(Collection<Comment> commentCollection) {
         this.commentCollection = commentCollection;
+    }
+
+    public String getIc() {
+        return ic;
+    }
+
+    public void setIc(String ic) {
+        this.ic = ic;
     }
 
     @Override

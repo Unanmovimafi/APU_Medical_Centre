@@ -103,6 +103,7 @@ public class ManagerCreateManager extends HttpServlet {
             manager.setCreationDatetime(new Date());
             manager.setLastUpdateDatetime(new Date());
             manager.setVersionTime(1);
+            manager.setIc(request.getParameter("ic"));
 
             managerFacade.create(manager);
 

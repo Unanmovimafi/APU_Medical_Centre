@@ -101,6 +101,9 @@ public class Doctor implements Serializable {
     @Column(name = "EMAIL")
     private String email;
     @Size(max = 255)
+    @Column(name = "IC")
+    private String ic;
+    @Size(max = 255)
     @Column(name = "NAME")
     private String name;
     @Size(max = 255)
@@ -288,6 +291,14 @@ public class Doctor implements Serializable {
 
     public void setCommentCollection(Collection<Comment> commentCollection) {
         this.commentCollection = commentCollection;
+    }
+    
+    public String getIc() {
+        return ic;
+    }
+
+    public void setIc(String ic) {
+        this.ic = ic;
     }
 
     @Override

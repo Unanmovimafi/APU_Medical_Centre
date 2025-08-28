@@ -42,7 +42,7 @@
         font-weight: bold;
     }
 
-    input[type="text"], input[type="email"], input[type="tel"], select {
+    input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select {
         width: 100%;
         padding: 10px;
         border: 1px solid #ccc;
@@ -50,6 +50,7 @@
         box-sizing: border-box;
         font-size: 15px;
     }
+    
 
     input:focus, select:focus {
         border-color: #00BFFF;
@@ -130,8 +131,12 @@
                     <td><input type="email" name="email" value="${param.email}" /></td>
                 </tr>
                 <tr>
+                    <td><strong>IC :</strong></td>
+                    <td><input type="tel" name="ic" value="${param.ic}" pattern="^\d{12}$" title="Please enter a 12-digit number" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="12" /></td>
+                </tr>
+                <tr>
                     <td><strong>Phone Number :</strong></td>
-                    <td><input type="tel" value="01" name="phoneNumber" value="${param.phoneNumber}" pattern="^\d{10,11}$" title="Please enter numbers only" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="11" /></td>
+                    <td><input type="tel" value="01" name="phoneNumber" value="${param.phoneNumber}" pattern="^\d{10,11}$" title="Please enter 9 or 10 digit teplephone numbers only" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="11" /></td>
                 </tr>
                 <tr>
                     <td><strong>Gender :</strong></td>

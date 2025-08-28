@@ -122,6 +122,9 @@ public class Manager implements Serializable {
     private String status;
     @OneToMany(mappedBy = "manager")
     private Collection<Comment> commentCollection;
+    @Size(max = 255)
+    @Column(name = "IC")
+    private String ic;
 
     public Manager() {
     }
@@ -267,6 +270,14 @@ public class Manager implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getIc() {
+        return ic;
+    }
+
+    public void setIc(String ic) {
+        this.ic = ic;
     }
 
     @XmlTransient

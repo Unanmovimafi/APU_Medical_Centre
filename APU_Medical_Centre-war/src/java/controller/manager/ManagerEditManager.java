@@ -130,6 +130,7 @@ public class ManagerEditManager extends HttpServlet {
             m.setEmail(email);
             m.setPhoneNumber(phoneNumber);
             m.setDateOfBirth(dateOfBirth);
+            m.setIc(request.getParameter("ic"));
 
             m.setLastUpdateDatetime(DateTimeHelper.getCurrentDateTime());
             request.setAttribute("managerSession", m);

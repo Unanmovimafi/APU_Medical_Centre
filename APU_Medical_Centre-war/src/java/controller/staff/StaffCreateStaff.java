@@ -103,6 +103,7 @@ public class StaffCreateStaff extends HttpServlet {
             staff.setCreationDatetime(new Date());
             staff.setLastUpdateDatetime(new Date());
             staff.setVersionTime(1);
+            staff.setIc(request.getParameter("ic"));
 
             counterStaffFacade.create(staff);
 

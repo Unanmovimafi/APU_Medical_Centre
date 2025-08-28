@@ -104,6 +104,7 @@ public class ManagerCreateDoctor extends HttpServlet {
             doctor.setCreationDatetime(new Date());
             doctor.setLastUpdateDatetime(new Date());
             doctor.setVersionTime(1);
+            doctor.setIc(request.getParameter("ic"));
 
             doctorFacade.create(doctor);
 

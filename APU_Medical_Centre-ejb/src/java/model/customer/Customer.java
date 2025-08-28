@@ -134,6 +134,9 @@ public class Customer implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "STATUS")
     private String status;
+    @Size(max = 255)
+    @Column(name = "IC")
+    private String ic;
 
     public Customer() {
     }
@@ -287,6 +290,14 @@ public class Customer implements Serializable {
 
     public void setBloodType(String bloodType) {
         this.bloodType = bloodType;
+    }
+
+    public String getIc() {
+        return ic;
+    }
+
+    public void setIc(String ic) {
+        this.ic = ic;
     }
 
     @XmlTransient

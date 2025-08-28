@@ -340,6 +340,10 @@
                     <td><input type="email" name="email" value="${customer.email}" readonly /></td>
                 </tr>
                 <tr>
+                    <td><strong>IC :</strong></td>
+                    <td><input type="tel" name="ic" value="${customer.ic}" pattern="^\d{12}$" title="Please enter a 12-digit number" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="12" readonly/></td>
+                </tr>
+                <tr>
                     <td><strong>Phone Number :</strong></td>
                     <td><input type="tel" name="phoneNumber" value="${customer.phoneNumber}" pattern="[0-9]+" title="Please enter numbers only" oninput="this.value = this.value.replace(/[^0-9]/g, '')" readonly /></td>
                 </tr>

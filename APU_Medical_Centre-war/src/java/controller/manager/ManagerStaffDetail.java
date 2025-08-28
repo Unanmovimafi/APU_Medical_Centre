@@ -134,6 +134,7 @@ public class ManagerStaffDetail extends HttpServlet {
             staff.setUsername(newUsername);
             staff.setStatus(request.getParameter("status"));
             staff.setLastUpdateDatetime(new java.util.Date());
+            staff.setIc(request.getParameter("ic"));
 
             staffFacade.edit(staff);
 

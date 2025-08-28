@@ -109,6 +109,7 @@ public class StaffCreateCustomer extends HttpServlet {
             customer.setLastUpdateBy("admin");
             customer.setCreationDatetime(new Date());
             customer.setLastUpdateDatetime(new Date());
+            customer.setIc(request.getParameter("ic"));
 
             String dobStr = request.getParameter("dateOfBirth");
             if (dobStr != null && !dobStr.isEmpty()) {

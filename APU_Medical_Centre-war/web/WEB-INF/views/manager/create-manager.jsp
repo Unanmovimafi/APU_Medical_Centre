@@ -42,7 +42,7 @@
         font-weight: bold;
     }
 
-    input[type="text"], input[type="email"], input[type="tel"], select {
+    input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select {
         width: 100%;
         padding: 10px;
         border: 1px solid #ccc;
@@ -128,6 +128,10 @@
                 <tr>
                     <td><strong>Email :</strong></td>
                     <td><input type="email" name="email" value="${param.email}" /></td>
+                </tr>
+                <tr>
+                    <td><strong>IC :</strong></td>
+                    <td><input type="tel" name="ic" value="${param.ic}" pattern="^\d{12}$" title="Please enter a 12-digit number" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="12"/></td>
                 </tr>
                 <tr>
                     <td><strong>Phone Number :</strong></td>

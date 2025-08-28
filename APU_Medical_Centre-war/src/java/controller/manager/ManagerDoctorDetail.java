@@ -132,6 +132,7 @@ public class ManagerDoctorDetail extends HttpServlet {
             doctor.setUsername(newUsername);
             doctor.setStatus(request.getParameter("status"));
             doctor.setLastUpdateDatetime(new Date());
+            doctor.setIc(request.getParameter("ic"));
 
             doctorFacade.edit(doctor);
 
