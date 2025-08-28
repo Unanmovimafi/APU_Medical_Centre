@@ -131,7 +131,7 @@
                 </tr>
                 <tr>
                     <td><strong>Phone Number :</strong></td>
-                    <td><input type="tel" name="phoneNumber" value="${param.phoneNumber}" pattern="[0-9]+" title="Please enter numbers only" oninput="this.value = this.value.replace(/[^0-9]/g, '')" /></td>
+                    <td><input type="tel" value="01" name="phoneNumber" value="${param.phoneNumber}" pattern="^\d{10,11}$" title="Please enter numbers only" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="11" /></td>
                 </tr>
                 <tr>
                     <td><strong>Gender :</strong></td>

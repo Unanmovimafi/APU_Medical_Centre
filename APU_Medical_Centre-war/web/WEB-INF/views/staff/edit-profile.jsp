@@ -248,7 +248,8 @@
                         <td>
                             <div class="field-wrapper">
                                 <span class="text-display">${staff.phoneNumber}</span>
-                                <input type="text" name="phoneNumber" value="${staff.phoneNumber}" class="editable" required/>
+<!--                                <input type="text" name="phoneNumber" value="${staff.phoneNumber}" class="editable" required-->
+                                       <input class="editable" type="tel" name="phoneNumber" value="${staff.phoneNumber}" pattern="^\d{10,11}$" title="Please enter numbers only" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="11" required/>
                             </div>
                         </td>
                     </tr>

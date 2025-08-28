@@ -264,13 +264,16 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
             <td>
               <div class="field-wrapper">
                 <span class="text-display">${customer.phoneNumber}</span>
-                <input
+<!--                <input
                   type="text"
                   name="phoneNumber"
                   value="${customer.phoneNumber}"
                   class="editable"
                   required
-                />
+                />-->
+                
+                                <input class="editable" type="tel" name="phoneNumber" value="${customer.phoneNumber}" pattern="^\d{10,11}$" title="Please enter numbers only" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="11" required/>
+
               </div>
             </td>
           </tr>
