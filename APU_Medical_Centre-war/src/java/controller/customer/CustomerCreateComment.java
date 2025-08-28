@@ -139,9 +139,7 @@ public class CustomerCreateComment extends HttpServlet {
             commentFacade.create(comment);
         }
 
-        request.setAttribute("pageContent", "/WEB-INF/views/customer/dashboard.jsp");
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/layout/layout.jsp");
-        dispatcher.forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/customer/dashboard");
 
     }
 

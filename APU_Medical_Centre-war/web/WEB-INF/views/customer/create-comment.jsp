@@ -127,6 +127,7 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
+    overflow-y: scroll;
   }
 
   .modal-content {
@@ -302,7 +303,6 @@
             <thead>
                 <tr>
                     <th>Select</th>
-                    <th>ID</th>
                     <th>Name</th>
                     <th>Role</th>
                 </tr>

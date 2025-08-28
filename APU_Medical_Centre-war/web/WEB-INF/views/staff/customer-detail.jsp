@@ -435,23 +435,13 @@
                                 <c:when test="${not empty feedback}">
                                     <p class="feedback-text">
                                         <strong>Doctor:</strong> Dr. ${appointment.doctor.name}<br/>
-                                        <strong>Diagnosis:</strong> ${feedback.diagnosis}<br/>
-                                        <strong>Treatment:</strong> ${feedback.treatment}<br/>
-                                        <c:if test="${not empty feedback.doctorNotes}">
-                                            <strong>Notes:</strong> ${feedback.doctorNotes}<br/>
-                                        </c:if>
-                                        <c:if test="${not empty feedback.appointmentMedicineCollection}">
-                                            <strong>Medicine:</strong> 
-                                            <c:forEach var="medicine" items="${feedback.appointmentMedicineCollection}" varStatus="status">
-                                                ${medicine.medicine.name} (Qty: ${medicine.quantity})<c:if test="${!status.last}">, </c:if>
-                                            </c:forEach>
-                                        </c:if>
+                                        <strong>Medical Notes:</strong> ${feedback.context}
                                     </p>
                                 </c:when>
                                 <c:otherwise>
                                     <p class="feedback-text">
                                         <strong>Doctor:</strong> Dr. ${appointment.doctor.name}<br/>
-                                        <span class="no-feedback">No diagnosis recorded</span>
+                                        <span class="no-feedback">No medical notes recorded</span>
                                     </p>
                                 </c:otherwise>
                             </c:choose>

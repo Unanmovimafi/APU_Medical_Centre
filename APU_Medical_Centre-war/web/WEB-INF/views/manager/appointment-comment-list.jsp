@@ -275,10 +275,10 @@
                                 <fmt:formatDate value="${comment.creationDatetime}" pattern="dd/MM/yyyy HH:mm" />
                             </td>
                             <td>
-                                <a href="${pageContext.request.contextPath}/manager/customer/detail?id=${comment.customer.id}" 
+<!--                                <a href="${pageContext.request.contextPath}/manager/customer/detail?id=${comment.customer.id}" 
                                    class="action-link" title="View Patient Details">
                                     <span class="material-icons icon-action">person</span>
-                                </a>
+                                </a>-->
                                 <c:if test="${not empty comment.doctor}">
                                     <a href="${pageContext.request.contextPath}/manager/doctor/detail?id=${comment.doctor.id}" 
                                        class="action-link" title="View Doctor Details" style="margin-left: 10px;">
