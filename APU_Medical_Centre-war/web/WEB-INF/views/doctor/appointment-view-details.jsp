@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %> <%@ taglib
 prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ taglib prefix="fmt"
-uri="http://java.sun.com/jsp/jstl/fmt" %>
+uri="http://java.sun.com/jsp/jstl/fmt" %> <%@ taglib prefix="fn"
+uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <style>
   body {
@@ -363,12 +364,14 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     <div class="right-panel">
       <div class="form-section">
         <div class="section-title">Patient Medical History</div>
+
         <c:choose>
           <c:when test="${not empty patientHistory}">
             <table class="history-table">
               <thead>
                 <tr>
                   <th>Date & Time</th>
+                  <th>Status</th>
                   <th>Feedback</th>
                   <th>Medicine</th>
                   <th>Charge</th>
@@ -385,6 +388,12 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                           value="${historyApt.appointmentStartDatetime}"
                           pattern="dd/MM/yyyy HH:mm"
                         />
+                      </td>
+                      <td>
+                        <span
+                          class="status-badge status-${fn:toLowerCase(historyApt.status)}"
+                          >${historyApt.status}</span
+                        >
                       </td>
                       <td>
                         <c:choose>
