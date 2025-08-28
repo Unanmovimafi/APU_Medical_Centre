@@ -488,7 +488,7 @@ uri="http://java.sun.com/jsp/jstl/functions" %>
       const newDate = new Date(currentYear, currentMonth, 1);
       const year = newDate.getFullYear();
       const month = String(newDate.getMonth() + 1).padStart(2, '0');
-      window.location.href = '${pageContext.request.contextPath}/staff/appointment/list?year=' + year + '&month=' + month;
+      window.location.href = '${pageContext.request.contextPath}/manager/appointment/list?year=' + year + '&month=' + month;
   }
 
   function showDayDetails(dateStr, dayAppointments) {
@@ -528,7 +528,7 @@ uri="http://java.sun.com/jsp/jstl/functions" %>
                   '<td>' + (appt.customer === false ? 'N/A' : (appt.customer || 'N/A')) + '</td>' +
                   '<td><span class="appointment-item ' + statusClass + '">' + (appt.status === false ? 'N/A' : (appt.status || 'N/A')) + '</span></td>' +
                   '<td>' + (showCharge ? '$' + (appt.charge === false ? '0' : (appt.charge || '0')) : '-') + '</td>' +
-                  '<td><a href="${pageContext.request.contextPath}/staff/appointment/detail?id=' + appt.id + '" style="color: #00BFFF; text-decoration: none;">View Details</a></td>' +
+                  '<td><a href="${pageContext.request.contextPath}/manager/appointment/detail?id=' + appt.id + '" style="color: #00BFFF; text-decoration: none;">View Details</a></td>' +
                   '</tr>';
           });          tableHTML += '</tbody></table>';
           dayAppointmentsDiv.innerHTML = tableHTML;

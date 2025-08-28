@@ -66,7 +66,7 @@ public class ManagerCreateDoctor extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute("pageContent", "/WEB-INF/views/staff/create-doctor.jsp");
+        request.setAttribute("pageContent", "/WEB-INF/views/manager/create-doctor.jsp");
         request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
     }
 

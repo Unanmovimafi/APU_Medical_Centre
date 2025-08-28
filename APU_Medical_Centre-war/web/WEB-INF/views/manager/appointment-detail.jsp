@@ -275,32 +275,10 @@
             </table>
 
             <div class="button-footer">
-                <c:choose>
-                    <c:when test="${appointment.status == 'PENDING'}">
-                        <form action="${pageContext.request.contextPath}/staff/appointment/detail" method="post" style="display: inline;">
-                            <input type="hidden" name="id" value="${appointment.id}">
-                            <input type="hidden" name="action" value="approve">
-                            <button type="submit" class="approve-btn">Approve</button>
-                        </form>
-                        <form action="${pageContext.request.contextPath}/staff/appointment/detail" method="post" style="display: inline;">
-                            <input type="hidden" name="id" value="${appointment.id}">
-                            <input type="hidden" name="action" value="reject">
-                            <button type="submit" class="reject-btn" onclick="return confirm('Are you sure you want to reject this appointment?')">Reject</button>
-                        </form>
-                    </c:when>
-                    <c:when test="${appointment.status == 'WAITING PAYMENT'}">
-                        <form action="${pageContext.request.contextPath}/staff/appointment/detail" method="post" style="display: inline;">
-                            <input type="hidden" name="id" value="${appointment.id}">
-                            <input type="hidden" name="action" value="makePayment">
-                            <button type="submit" class="payment-btn">Process Payment</button>
-                        </form>
-                        <a href="${pageContext.request.contextPath}/staff/appointment/list" class="btn back-btn">Back to Calendar</a>
-                    </c:when>
-                    <c:otherwise>
-                        <div style="flex: 1;"></div>
-                        <a href="${pageContext.request.contextPath}/staff/appointment/list" class="btn back-btn">Back to Calendar</a>
-                    </c:otherwise>
-                </c:choose>
+                
+                <div style="flex: 1;"></div>
+                <a href="${pageContext.request.contextPath}/manager/appointment/list" class="btn back-btn">Back to Calendar</a>
+
             </div>
         </c:if>
         

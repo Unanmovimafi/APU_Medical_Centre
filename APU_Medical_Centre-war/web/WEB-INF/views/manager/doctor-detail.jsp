@@ -248,6 +248,20 @@
         color: #ffc107;
     }
 
+    .rating-stars {
+        display: flex;
+        align-items: center;
+    }
+
+    .rating-stars span {
+        color: #ffc107;
+        margin-right: 2px;
+    }
+
+    .rating-stars .empty-star {
+        color: #ddd;
+    }
+
     .star {
         margin-right: 2px;
     }
@@ -297,13 +311,13 @@
                          alt="Profile Picture" class="profile-picture" />
                 </c:when>
                 <c:otherwise>
-                    <img src="${pageContext.request.contextPath}/assets/images/default-avatar.png" 
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png" 
                          alt="Default Profile" class="profile-picture" />
                 </c:otherwise>
             </c:choose>
         </div>
         
-        <form method="post" action="${pageContext.request.contextPath}/staff/doctor/detail" id="employeeForm">
+        <form method="post" action="${pageContext.request.contextPath}/manager/doctor/detail" id="employeeForm">
             <input type="hidden" name="id" value="${doctor.id}" />
 
             <table class="form-table">
@@ -348,7 +362,7 @@
             <div class="button-footer">
                 <button type="button" id="modifyBtn" class="modify-btn" onclick="enableEdit()">Modify</button>
                 <button type="submit" id="saveBtn" class="save-btn" style="display: none;">Save</button>
-                <a href="${pageContext.request.contextPath}/staff/employee/list" class="btn back-btn" id="backBtn">Back</a>
+                <a href="${pageContext.request.contextPath}/manager/employee/list" class="btn back-btn" id="backBtn">Back</a>
                 <button type="button" id="cancelBtn" class="cancel-btn" style="display: none;" onclick="disableEdit()">Cancel</button>
             </div>
         </form>
@@ -370,13 +384,15 @@
                                 By: ${comment.customer.name}
                             </div>
                             <div class="comment-rating">
-                                <c:forEach var="i" begin="1" end="${comment.rating}">
-                                    <span class="star">★</span>
-                                </c:forEach>
-                                <c:forEach var="i" begin="${comment.rating + 1}" end="5">
-                                    <span class="star" style="color: #ddd;">★</span>
-                                </c:forEach>
-                                <span style="color: #666; margin-left: 5px;">(${comment.rating}/5)</span>
+                                <div class="rating-stars">
+                                    <c:forEach var="i" begin="1" end="${comment.rating}">
+                                        <span>&#9733;</span>
+                                    </c:forEach>
+                                    <c:forEach var="i" begin="${comment.rating + 1}" end="10">
+                                        <span class="empty-star">&#9733;</span>
+                                    </c:forEach>
+                                    <span style="color: #666; margin-left: 5px;">(${comment.rating}/10)</span>
+                                </div>
                             </div>
                         </div>
                         <div class="comment-content">

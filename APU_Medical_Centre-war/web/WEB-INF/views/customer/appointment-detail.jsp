@@ -259,55 +259,7 @@
             </table>
 
             <div class="button-footer">
-                <c:choose>
-                    <c:when test="${appointment.status == 'PENDING' || appointment.status == 'APPROVED'}">
-                        <!-- Show Cancel button for pending and approved appointments -->
-                        <form action="${pageContext.request.contextPath}/customer/appointment/detail" method="post" style="display: inline;"
-                              onsubmit="return confirm('Are you sure you want to cancel this appointment?');">
-                            <input type="hidden" name="id" value="${appointment.id}">
-                            <input type="hidden" name="action" value="cancelAppointment">
-                            <c:if test="${not empty fromSource}">
-                                <input type="hidden" name="from" value="${fromSource}">
-                            </c:if>
-                            <button type="submit" class="cancel-btn">Cancel Appointment</button>
-                        </form>
-                        <!-- Dynamic back button based on source -->
-                        <c:choose>
-                            <c:when test="${fromSource == 'list'}">
-                                <a href="${pageContext.request.contextPath}/customer/appointment/list" class="btn back-btn">Back to Appointment List</a>
-                            </c:when>
-                            <c:otherwise>
-                                <a href="${pageContext.request.contextPath}/customer/appointment/calendar" class="btn back-btn">Back to Calendar</a>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:when>
-                    <c:when test="${appointment.status == 'WAITING PAYMENT' || appointment.status == 'PAID' || appointment.status == 'COMPLETED'}">
-                        <!-- Show View Details button for appointments with feedback/details -->
-                        <a href="${pageContext.request.contextPath}/customer/appointment/view-details?id=${appointment.id}<c:if test='${not empty fromSource}'>&from=${fromSource}</c:if>" class="btn view-details-btn">View Details</a>
-                        <!-- Dynamic back button based on source -->
-                        <c:choose>
-                            <c:when test="${fromSource == 'list'}">
-                                <a href="${pageContext.request.contextPath}/customer/appointment/list" class="btn back-btn">Back to Appointment List</a>
-                            </c:when>
-                            <c:otherwise>
-                                <a href="${pageContext.request.contextPath}/customer/appointment/calendar" class="btn back-btn">Back to Calendar</a>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:when>
-                    <c:otherwise>
-                        <!-- For cancelled/rejected appointments, only show back button -->
-                        <div style="flex: 1;"></div>
-                        <!-- Dynamic back button based on source -->
-                        <c:choose>
-                            <c:when test="${fromSource == 'list'}">
-                                <a href="${pageContext.request.contextPath}/customer/appointment/list" class="btn back-btn">Back to Appointment List</a>
-                            </c:when>
-                            <c:otherwise>
-                                <a href="${pageContext.request.contextPath}/customer/appointment/calendar" class="btn back-btn">Back to Calendar</a>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:otherwise>
-                </c:choose>
+                <a href="${pageContext.request.contextPath}/customer/appointment/calendar" class="btn back-btn">Back to Calendar</a>
             </div>
         </c:if>
         
@@ -317,16 +269,7 @@
                 <p>The requested appointment could not be found. Please check the appointment ID and try again.</p>
             </div>
             <div class="button-footer">
-                <div style="flex: 1;"></div>
-                <!-- Dynamic back button based on source -->
-                <c:choose>
-                    <c:when test="${fromSource == 'list'}">
-                        <a href="${pageContext.request.contextPath}/customer/appointment/list" class="btn back-btn">Back to Appointment List</a>
-                    </c:when>
-                    <c:otherwise>
-                        <a href="${pageContext.request.contextPath}/customer/appointment/calendar" class="btn back-btn">Back to Calendar</a>
-                    </c:otherwise>
-                </c:choose>
+                <a href="${pageContext.request.contextPath}/customer/appointment/calendar" class="btn back-btn">Back to Calendar</a>
             </div>
         </c:if>
     </div>

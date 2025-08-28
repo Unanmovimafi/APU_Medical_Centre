@@ -94,8 +94,35 @@ content {
 }
 
 #sidebar.collapsed h3,
-#sidebar.collapsed a,
-#sidebar.collapsed details > summary {
+#sidebar.collapsed .role-badge,
+#sidebar.collapsed .profile-section {
+  display: none;
+}
+
+#sidebar.collapsed .nav-item span,
+#sidebar.collapsed .nav-dropdown summary span,
+#sidebar.collapsed .logout-btn span {
+  display: none;
+}
+
+#sidebar.collapsed .nav-item,
+#sidebar.collapsed .nav-dropdown summary,
+#sidebar.collapsed .logout-btn {
+  justify-content: center;
+  padding: 12px;
+}
+
+#sidebar.collapsed .nav-menu {
+  margin-top: 100px;
+}
+
+#sidebar.collapsed .nav-item i,
+#sidebar.collapsed .nav-dropdown summary i,
+#sidebar.collapsed .logout-btn i {
+  margin-right: 0;
+}
+
+#sidebar.collapsed .nav-dropdown-content {
   display: none;
 }
 
@@ -158,7 +185,7 @@ main {
 /* Mobile responsive */
 @media (max-width: 768px) {
   main {
-    margin-left: 40px; /* Just space for toggle button on mobile */
+    margin-left: 60px; /* Space for collapsed sidebar on mobile */
   }
 }
 
@@ -178,12 +205,13 @@ main {
 }
 
 #sidebar.collapsed {
-  transform: translateX(-240px);
+  width: 60px; /* Keep narrow but visible */
+  overflow: hidden;
 }
 
 #sidebar.collapsed .toggle-btn {
-  right: -30px; /* Position button outside when collapsed */
-  background: var(--nav-dark);
+  right: 10px; /* Keep inside the narrow sidebar */
+  left: auto;
 }
 
 .toggle-btn {
