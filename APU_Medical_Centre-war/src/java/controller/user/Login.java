@@ -65,7 +65,6 @@ public class Login extends HttpServlet {
                     if (customer != null && username.equals(customer.getUsername()) && password.equals(customer.getPassword())) {
                         HttpSession session = request.getSession(true);
                         session.setAttribute("customerSession", customer);
-                        session.setAttribute("customerSession", customer);
                         customer.setLastLoginDatetime(DateTimeHelper.getCurrentDateTime());
                         customerFacade.edit(customer);
                         response.sendRedirect("customer/dashboard");
