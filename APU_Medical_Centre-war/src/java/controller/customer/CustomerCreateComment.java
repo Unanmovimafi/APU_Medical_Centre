@@ -112,7 +112,7 @@ public class CustomerCreateComment extends HttpServlet {
 
         HttpSession session = request.getSession(false);
 
-        if (session != null && session.getAttribute("userSession") != null) {
+        if (session != null && session.getAttribute("customerSession") != null) {
             Comment comment = new Comment();
             Customer customerSession = (Customer) session.getAttribute("customerSession");
 
@@ -124,12 +124,12 @@ public class CustomerCreateComment extends HttpServlet {
 
             comment.setCustomer(customerSession);
             if ("MANAGER".equals(targetStaffRole)) {
-                comment.setManager(managerFacade.find(targetStaffId));
+                comment.setManager(managerFacade.find(Integer.valueOf(targetStaffId)));
 
             } else if ("COUNTER_STAFF".equals(targetStaffRole)) {
-                comment.setCounterStaff(counterStaffFacade.find(targetStaffId));
+                comment.setCounterStaff(counterStaffFacade.find(Integer.valueOf(targetStaffId)));
             } else if ("DOCTOR".equals(targetStaffRole)) {
-                comment.setDoctor(doctorFacade.find(targetStaffId));
+                comment.setDoctor(doctorFacade.find(Integer.valueOf(targetStaffId)));
             }
 
             comment.setRating(Integer.parseInt(rating));
