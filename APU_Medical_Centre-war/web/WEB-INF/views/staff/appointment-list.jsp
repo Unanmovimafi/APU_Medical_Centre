@@ -139,6 +139,10 @@ uri="http://java.sun.com/jsp/jstl/functions" %>
     background-color: #007bff;
     color: white;
   }
+  .status-finished {
+    background-color: #007bff;
+    color: white;
+  }
   .status-cancelled {
     background-color: #6c757d;
     color: white;
@@ -310,7 +314,7 @@ uri="http://java.sun.com/jsp/jstl/functions" %>
     </div>
     <div class="legend-item">
       <div class="legend-color status-completed"></div>
-      <span>Completed</span>
+      <span>Finished</span>
     </div>
     <div class="legend-item">
       <div class="legend-color status-rejected"></div>
@@ -520,7 +524,7 @@ uri="http://java.sun.com/jsp/jstl/functions" %>
 
           dayAppointments.forEach(appt => {
               const statusClass = 'status-' + (appt.status ? appt.status.toLowerCase().replace(' ', '-') : 'unknown');
-              const showCharge = appt.status === 'WAITING PAYMENT' || appt.status === 'PAID' || appt.status === 'COMPLETED';
+              const showCharge = appt.status === 'WAITING PAYMENT' || appt.status === 'PAID' || appt.status === 'FINISHED';
 
               tableHTML += '<tr>' +
                   '<td>' + (appt.timeStart && appt.timeEnd ? appt.timeStart + ' - ' + appt.timeEnd : 'N/A') + '</td>' +

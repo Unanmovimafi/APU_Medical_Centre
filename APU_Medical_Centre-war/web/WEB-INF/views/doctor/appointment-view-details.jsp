@@ -377,7 +377,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               <tbody>
                 <c:forEach var="historyApt" items="${patientHistory}">
                   <c:if
-                    test="${historyApt.status == 'WAITING PAYMENT' || historyApt.status == 'PAID' || historyApt.status == 'COMPLETED'}"
+                    test="${historyApt.status == 'WAITING PAYMENT' || historyApt.status == 'PAID' || historyApt.status == 'FINISHED'}"
                   >
                     <tr>
                       <td>

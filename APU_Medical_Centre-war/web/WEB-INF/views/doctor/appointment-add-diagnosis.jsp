@@ -228,6 +228,11 @@
         color: #155724;
     }
 
+    .status-finished {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
     .status-pending {
         background-color: #fff3cd;
         color: #856404;
@@ -393,7 +398,7 @@
                                         <div style="margin-top: 5px;">
                                             <span class="history-status 
                                                 <c:choose>
-                                                    <c:when test="${historyAppt.status == 'COMPLETED'}">status-completed</c:when>
+                                                    <c:when test="${historyAppt.status == 'FINISHED'}">status-completed</c:when>
                                                     <c:when test="${historyAppt.status == 'PAID'}">status-paid</c:when>
                                                     <c:when test="${historyAppt.status == 'PENDING'}">status-pending</c:when>
                                                     <c:when test="${historyAppt.status == 'CANCELLED'}">status-cancelled</c:when>

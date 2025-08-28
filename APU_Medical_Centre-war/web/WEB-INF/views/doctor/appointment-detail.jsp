@@ -216,8 +216,8 @@
                             <c:when test="${appointment.status == 'PAID'}">
                                 <span class="badge badge-success">Paid</span>
                             </c:when>
-                            <c:when test="${appointment.status == 'COMPLETED'}">
-                                <span class="badge badge-success">Completed</span>
+                            <c:when test="${appointment.status == 'FINISHED'}">
+                                <span class="badge badge-success">Finished</span>
                             </c:when>
                             <c:when test="${appointment.status == 'CANCELLED'}">
                                 <span class="badge badge-danger">Cancelled</span>
