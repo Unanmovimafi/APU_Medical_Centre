@@ -321,7 +321,7 @@
                          alt="Profile Picture" class="profile-picture" />
                 </c:when>
                 <c:otherwise>
-                    <img src="${pageContext.request.contextPath}/assets/images/default-avatar.png" 
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png" 
                          alt="Default Profile" class="profile-picture" />
                 </c:otherwise>
             </c:choose>
