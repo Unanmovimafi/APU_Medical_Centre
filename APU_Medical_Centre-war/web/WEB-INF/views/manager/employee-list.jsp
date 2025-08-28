@@ -266,6 +266,7 @@
             <option value="">-- All --</option>
             <option value="Doctor" ${param.role == 'Doctor' ? 'selected' : ''}>Doctor</option>
             <option value="Counter Staff" ${param.role == 'Counter Staff' ? 'selected' : ''}>Counter Staff</option>
+            <option value="Manager" ${param.role == 'Manager' ? 'selected' : ''}>Manager</option>
         </select>
 
         <button type="submit">Search</button>
@@ -276,6 +277,7 @@
         <div class="dropdown-content">
             <a href="${pageContext.request.contextPath}/manager/staff/new">Add Counter Staff</a>
             <a href="${pageContext.request.contextPath}/manager/doctor/new">Add Doctor</a>
+            <a href="${pageContext.request.contextPath}/manager/manager/new">Add Manager</a>
         </div>
     </div>
 </form>

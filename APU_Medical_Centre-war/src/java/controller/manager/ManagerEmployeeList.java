@@ -4,7 +4,6 @@
  */
 package controller.manager;
 
-import controller.staff.*;
 import jakarta.ejb.EJB;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,6 +22,8 @@ import model.counterstaff.CounterStaff;
 import model.counterstaff.CounterStaffFacade;
 import model.doctor.Doctor;
 import model.doctor.DoctorFacade;
+import model.manager.Manager;
+import model.manager.ManagerFacade;
 
 /**
  *
@@ -36,6 +37,9 @@ public class ManagerEmployeeList extends HttpServlet {
 
     @EJB
     DoctorFacade doctorFacade;
+    
+    @EJB
+    ManagerFacade managerFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -108,6 +112,20 @@ public class ManagerEmployeeList extends HttpServlet {
             map.put("phoneNumber", staff.getPhoneNumber());
             map.put("status", staff.getStatus());
             map.put("lastUpdateDatetime", staff.getLastUpdateDatetime());
+            combined.add(map);
+        }
+        
+        for (Manager manager : managerFacade.findAll()) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", manager.getId());
+            map.put("role", "Manager");
+            map.put("name", manager.getName());
+            map.put("username", manager.getUsername());
+            map.put("email", manager.getEmail());
+            map.put("gender", manager.getGender());
+            map.put("phoneNumber", manager.getPhoneNumber());
+            map.put("status", manager.getStatus());
+            map.put("lastUpdateDatetime", manager.getLastUpdateDatetime());
             combined.add(map);
         }
 
