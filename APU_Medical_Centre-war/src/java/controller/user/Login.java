@@ -27,10 +27,9 @@ import model.manager.ManagerFacade;
  *
  * @author zihao
  */
-
 //@WebServlet(name = "Login", urlPatterns = {"/login"})
 public class Login extends HttpServlet {
-    
+
     @EJB
     private CustomerFacade customerFacade;
 
@@ -39,7 +38,7 @@ public class Login extends HttpServlet {
 
     @EJB
     private CounterStaffFacade counterStaffFacade;
-    
+
     @EJB
     private DoctorFacade doctorFacade;
 
@@ -56,7 +55,7 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            
+
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             String role = request.getParameter("role");
@@ -73,10 +72,12 @@ public class Login extends HttpServlet {
 //                        request.getRequestDispatcher("/WEB-INF/views/customer/create_comment.jsp")
 //                                .forward(request, response);
                     } else {
-                        out.println("Login Unsuccessfully");
+                        request.setAttribute("errorMessage", "Login Unsuccessful: Cannot find this user.");
+                        request.getRequestDispatcher("").include(request, response);
                     }
+                    break;
                 case "MANAGER":
-                Manager manager = managerFacade.findManagerByUsername(username);
+                    Manager manager = managerFacade.findManagerByUsername(username);
                     if (manager != null && username.equals(manager.getUsername()) && password.equals(manager.getPassword())) {
                         HttpSession session = request.getSession(true);
                         session.setAttribute("managerSession", manager);
@@ -87,8 +88,12 @@ public class Login extends HttpServlet {
 //                        request.getRequestDispatcher("/WEB-INF/views/customer/create_comment.jsp")
 //                                .forward(request, response);
                     } else {
-                        out.println("Login Unsuccessfully");
+                        request.setAttribute("errorMessage", "Login Unsuccessful: Cannot find this user.");
+                        request.getRequestDispatcher("").include(request, response);
+
                     }
+                    break;
+
                 case "COUNTER_STAFF":
                     CounterStaff counterStaff = counterStaffFacade.findCounterStaffByUsername(username);
                     if (counterStaff != null && username.equals(counterStaff.getUsername()) && password.equals(counterStaff.getPassword())) {
@@ -100,8 +105,10 @@ public class Login extends HttpServlet {
 //                        request.getRequestDispatcher("/WEB-INF/views/staff/dashboard.jsp")
 //                                .forward(request, response);
                     } else {
-                        out.println("Login Unsuccessfully");
+                        request.setAttribute("errorMessage", "Login Unsuccessful: Cannot find this user.");
                     }
+                    break;
+
                 case "DOCTOR":
                     Doctor doctor = doctorFacade.findDoctorByUsername(username);
                     if (doctor != null && username.equals(doctor.getUsername()) && password.equals(doctor.getPassword())) {
@@ -111,32 +118,13 @@ public class Login extends HttpServlet {
                         doctorFacade.edit(doctor);
                         response.sendRedirect("doctor/dashboard");
                     } else {
-                        out.println("Login Unsuccessfully");
+                        request.setAttribute("errorMessage", "Login Unsuccessful: Cannot find this user.");
+                        request.getRequestDispatcher("").include(request, response);
+
                     }
+                    break;
             }
         }
-
-            
-//            User user = userFacade.findUserByUsername(username);
-//            
-//            if (user != null && username.equals(user.getUsername()) && password.equals(user.getPassword())) {
-//                String role = user.getRole().getCode();
-//                
-//                // Store user information in session
-//                HttpSession session = request.getSession(true);
-//                session.setAttribute("userSession", user);
-//                user.setLastLoginDatetime(DateTimeHelper.getCurrentDateTime());
-//                switch (role) {
-//                    case "MANAGER":
-//                    case "COUNTER_STAFF":
-//                        response.sendRedirect("ListUser");
-//                    case "CUSTOMER":
-//                        response.sendRedirect("GetStaffList");
-//                }
-//            } else {
-//                out.println("Login Unsuccessfully");
-//            }
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

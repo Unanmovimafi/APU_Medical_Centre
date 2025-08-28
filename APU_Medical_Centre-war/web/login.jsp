@@ -90,6 +90,12 @@
         .login-box button:hover {
             background-color: #20C997;
         }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -107,6 +113,14 @@
             </select>
             <button type="submit">Login</button>
         </form>
+
+        <!-- Display error message if exists -->
+        <c:if test="${not empty errorMessage}">
+            <div class="error-message">
+                ${errorMessage}
+            </div>
+        </c:if>
+            
     </div>
 </body>
 </html>
