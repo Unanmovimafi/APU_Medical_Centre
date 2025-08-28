@@ -16,7 +16,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import model.appointment.Appointment;
@@ -133,15 +135,71 @@ public class CustomerAppointmentRequest extends HttpServlet {
                 return;
             }
 
+            // Parse the time slot - handle both formats: "HH:mm" and "HH:mm-HH:mm"
+            Date startDate, endDate;
+
+            if (appointmentTime.contains("-")) {
+                // Format: "09:00-09:30"
+                String[] timeParts = appointmentTime.split("-");
+                String startTimeOnly = timeParts[0].trim();
+                String endTimeOnly = timeParts[1].trim();
+
+                LocalDateTime startLdt = LocalDateTime.parse(appointmentDate + "T" + startTimeOnly);
+                LocalDateTime endLdt = LocalDateTime.parse(appointmentDate + "T" + endTimeOnly);
+
+                startDate = Date.from(startLdt.atZone(ZoneId.systemDefault()).toInstant());
+                endDate = Date.from(endLdt.atZone(ZoneId.systemDefault()).toInstant());
+            } else {
+                // Format: "09:00" - assume 30 minute slots
+                LocalDateTime startLdt = LocalDateTime.parse(appointmentDate + "T" + appointmentTime);
+                LocalDateTime endLdt = startLdt.plusMinutes(30);
+
+                startDate = Date.from(startLdt.atZone(ZoneId.systemDefault()).toInstant());
+                endDate = Date.from(endLdt.atZone(ZoneId.systemDefault()).toInstant());
+            }
+
+            // ✅ Check if customer already has an appointment at this time slot
+            boolean hasConflict = appointmentFacade.findAll().stream()
+                    .filter(appt -> appt != null && appt.getCustomer() != null
+                            && appt.getAppointmentStartDatetime() != null)
+                    .filter(appt -> appt.getCustomer().getId().equals(loggedCustomer.getId()))
+                    .filter(appt -> !"REJECTED".equals(appt.getStatus()) && !"FINISHED".equals(appt.getStatus())) // Only
+                                                                                                                  // active
+                                                                                                                  // appointments
+                    .anyMatch(appt -> {
+                        // Check if appointment times overlap with the requested slot
+                        Date existingStart = appt.getAppointmentStartDatetime();
+                        Date existingEnd = appt.getAppointmentEndDatetime() != null ? appt.getAppointmentEndDatetime()
+                                : new Date(existingStart.getTime() + 30 * 60 * 1000); // Add 30 minutes if no end time
+
+                        // Check for overlap: startDate < existingEnd AND existingStart < endDate
+                        return startDate.before(existingEnd) && existingStart.before(endDate);
+                    });
+
+            if (hasConflict) {
+                // Reload doctors for the form
+                List<Doctor> doctors = doctorFacade.findAll();
+                request.setAttribute("doctors", doctors);
+                request.setAttribute("customer", loggedCustomer);
+                request.setAttribute("errorMessage",
+                        "You already have an appointment scheduled during this time slot. Please select a different time.");
+                // Preserve form data for user convenience
+                request.setAttribute("selectedDate", appointmentDate);
+                request.setAttribute("selectedDoctorId", doctorIdStr);
+                request.setAttribute("selectedTimeSlot", appointmentTime);
+                request.setAttribute("pageContent", "/WEB-INF/views/customer/request-appointment.jsp");
+                request.getRequestDispatcher("/WEB-INF/layout/layout.jsp").forward(request, response);
+                return;
+            }
+
             // Create new appointment request
             Appointment appointment = new Appointment();
             appointment.setCustomer(loggedCustomer);
             appointment.setDoctor(selectedDoctor);
 
-            // Combine date and time into a single timestamp
-            String dateTimeStr = appointmentDate + " " + appointmentTime + ":00";
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            appointment.setAppointmentStartDatetime(sdf.parse(dateTimeStr));
+            // Set the parsed start and end dates
+            appointment.setAppointmentStartDatetime(startDate);
+            appointment.setAppointmentEndDatetime(endDate);
 
             appointment.setStatus("Pending"); // Set initial status as pending
 

@@ -156,7 +156,8 @@
                 </tr>
                 <tr>
                     <td><strong>Appointment Date :</strong></td>
-                    <td><input type="date" id="appointmentDate" name="appointmentDate" value="${param.appointmentDate}" required /></td>
+                    <td><input type="date" id="appointmentDate" name="appointmentDate" 
+                               value="${selectedDate != null ? selectedDate : param.appointmentDate}" required /></td>
                 </tr>
                 <tr>
                     <td><strong>Select Doctor :</strong></td>
@@ -164,29 +165,24 @@
                         <select id="doctorId" name="doctorId" required>
                             <option value="">-- Select Doctor --</option>
                             <c:forEach var="doctor" items="${doctors}">
-                                <option value="${doctor.id}" ${param.doctorId == doctor.id ? 'selected' : ''}>${doctor.name}</option>
+                                <option value="${doctor.id}" 
+                                        ${(selectedDoctorId != null && selectedDoctorId == doctor.id.toString()) || 
+                                          (selectedDoctorId == null && param.doctorId == doctor.id) ? 'selected' : ''}>
+                                    ${doctor.name} (${doctor.username})
+                                </option>
                             </c:forEach>
                         </select>
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Preferred Time :</strong></td>
+                    <td><strong>Time Slot :</strong></td>
                     <td>
                         <select id="appointmentTime" name="appointmentTime" required>
                             <option value="">-- Select Time --</option>
-                            <option value="09:00" ${param.appointmentTime == '09:00' ? 'selected' : ''}>09:00 AM</option>
-                            <option value="09:30" ${param.appointmentTime == '09:30' ? 'selected' : ''}>09:30 AM</option>
-                            <option value="10:00" ${param.appointmentTime == '10:00' ? 'selected' : ''}>10:00 AM</option>
-                            <option value="10:30" ${param.appointmentTime == '10:30' ? 'selected' : ''}>10:30 AM</option>
-                            <option value="11:00" ${param.appointmentTime == '11:00' ? 'selected' : ''}>11:00 AM</option>
-                            <option value="11:30" ${param.appointmentTime == '11:30' ? 'selected' : ''}>11:30 AM</option>
-                            <option value="14:00" ${param.appointmentTime == '14:00' ? 'selected' : ''}>02:00 PM</option>
-                            <option value="14:30" ${param.appointmentTime == '14:30' ? 'selected' : ''}>02:30 PM</option>
-                            <option value="15:00" ${param.appointmentTime == '15:00' ? 'selected' : ''}>03:00 PM</option>
-                            <option value="15:30" ${param.appointmentTime == '15:30' ? 'selected' : ''}>03:30 PM</option>
-                            <option value="16:00" ${param.appointmentTime == '16:00' ? 'selected' : ''}>04:00 PM</option>
-                            <option value="16:30" ${param.appointmentTime == '16:30' ? 'selected' : ''}>04:30 PM</option>
-                            <option value="17:00" ${param.appointmentTime == '17:00' ? 'selected' : ''}>05:00 PM</option>
+                            <c:if test="${selectedTimeSlot != null}">
+                                <option value="${selectedTimeSlot}" selected>${selectedTimeSlot}</option>
+                            </c:if>
+                            <!-- options will be filled by JS -->
                         </select>
                     </td>
                 </tr>
@@ -200,18 +196,64 @@
     </div>
 </div>
 
+<!-- AJAX Script for Time Slot Update -->
 <script>
-    // Set minimum date to today
     document.addEventListener("DOMContentLoaded", function () {
         var dateInput = document.getElementById("appointmentDate");
+        var doctorSelect = document.getElementById("doctorId");
+        var timeSlotSelect = document.getElementById("appointmentTime");
+
+        // Set minimum date to today
         var today = new Date().toISOString().split('T')[0];
-        dateInput.min = today;
+        dateInput.setAttribute('min', today);
+
+        function fetchTimeSlots() {
+            var date = dateInput.value;
+            var doctorId = doctorSelect.value;
+
+            console.log("Selected Date: ", date);
+            console.log("Selected Doctor: ", doctorId);
+
+            if (date && doctorId) {
+                var contextPath = "${pageContext.request.contextPath}";
+                fetch(contextPath + "/customer/get-available-slots?appointmentDate=" + date + "&doctorId=" + doctorId)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Check if there was a previously selected time slot
+                        var selectedTimeSlot = "${selectedTimeSlot}";
+                        
+                        timeSlotSelect.innerHTML = '<option value="">-- Select Time --</option>';
+                        data.forEach(slot => {
+                            const option = document.createElement("option");
+                            option.value = slot;
+                            option.textContent = slot;
+                            // Re-select the previously selected slot if it's still available
+                            if (selectedTimeSlot && slot === selectedTimeSlot) {
+                                option.selected = true;
+                            }
+                            timeSlotSelect.appendChild(option);
+                        });
+                    })
+                    .catch(err => {
+                        console.error("Failed to fetch time slots", err);
+                        timeSlotSelect.innerHTML = '<option value="">-- Error loading slots --</option>';
+                    });
+            } else {
+                timeSlotSelect.innerHTML = '<option value="">-- Select Time --</option>';
+            }
+        }
+
+        doctorSelect.addEventListener("change", fetchTimeSlots);
+        dateInput.addEventListener("change", fetchTimeSlots);
         
-        // Set default date to tomorrow if no date selected
-        if (!dateInput.value) {
-            var tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            dateInput.min = today;
+        // If form data is pre-filled (after error), fetch time slots automatically
+        if (dateInput.value && doctorSelect.value) {
+            fetchTimeSlots();
         }
     });
 </script>

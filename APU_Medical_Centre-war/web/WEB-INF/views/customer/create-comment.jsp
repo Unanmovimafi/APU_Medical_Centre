@@ -308,18 +308,9 @@
                 </tr>
             </thead>
             <tbody>
-                <c:forEach var="manager" items="${managerList}">
-                    <tr>
-                        <td><input type="radio" name="selectedUser" value="${manager.id}" data-role="MANAGER"></td>
-                        <td>${manager.id}</td>
-                        <td>${manager.name}</td>
-                        <td>Manager</td>
-                    </tr>
-                </c:forEach>
                 <c:forEach var="doctor" items="${doctorList}">
                     <tr>
                         <td><input type="radio" name="selectedUser" value="${doctor.id}" data-role="DOCTOR"></td>
-                        <td>${doctor.id}</td>
                         <td>${doctor.name}</td>
                         <td>Doctor</td>
                     </tr>
@@ -327,7 +318,6 @@
                 <c:forEach var="staff" items="${counterStaffList}">
                     <tr>
                         <td><input type="radio" name="selectedUser" value="${staff.id}" data-role="COUNTER_STAFF"></td>
-                        <td>${staff.id}</td>
                         <td>${staff.name}</td>
                         <td>Counter Staff</td>
                     </tr>
