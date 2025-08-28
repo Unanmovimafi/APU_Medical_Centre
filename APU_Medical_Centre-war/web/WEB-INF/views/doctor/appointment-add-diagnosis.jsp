@@ -451,13 +451,45 @@
         const quantityDiv = document.getElementById('qty_' + medicineId);
         const quantityInput = document.getElementById('quantity_' + medicineId);
         
+        console.log('toggleQuantityInput called for medicine:', medicineId, 'checked:', checkbox.checked);
+        
         if (checkbox.checked) {
             quantityDiv.style.display = 'block';
             quantityInput.required = true;
+            console.log('Medicine', medicineId, 'selected, quantity input shown');
         } else {
             quantityDiv.style.display = 'none';
             quantityInput.required = false;
             quantityInput.value = 1; // Reset to default
+            console.log('Medicine', medicineId, 'deselected, quantity input hidden');
         }
     }
+
+    // Add form submission debugging
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form[action*="/doctor/appointment/diagnosis"]');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                console.log('Form submission started...');
+                
+                // Log selected medicines
+                const selectedMedicines = document.querySelectorAll('input[name="medicines"]:checked');
+                console.log('Selected medicines count:', selectedMedicines.length);
+                
+                selectedMedicines.forEach(function(checkbox) {
+                    const medicineId = checkbox.value;
+                    const quantityInput = document.getElementById('quantity_' + medicineId);
+                    console.log('Medicine ID:', medicineId, 'Quantity:', quantityInput ? quantityInput.value : 'N/A');
+                });
+                
+                // Log charge
+                const chargeInput = document.querySelector('input[name="charge"]');
+                console.log('Charge:', chargeInput ? chargeInput.value : 'empty');
+                
+                // Log feedback
+                const feedbackInput = document.querySelector('textarea[name="feedback"]');
+                console.log('Feedback length:', feedbackInput ? feedbackInput.value.length : 0);
+            });
+        }
+    });
 </script>

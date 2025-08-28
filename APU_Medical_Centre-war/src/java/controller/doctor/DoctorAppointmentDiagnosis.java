@@ -244,29 +244,27 @@ public class DoctorAppointmentDiagnosis extends HttpServlet {
             newFeedback.setVersionTime(1);
             feedbackFacade.create(newFeedback);
 
-            // Update appointment
-            appointment.setStatus("WAITING PAYMENT");
+            // Set base charge first (consultation fee)
+            Long baseCharge = 50L; // Default consultation fee
             if (charge != null) {
-                appointment.setCharge(charge);
-            } else {
-                appointment.setCharge(50L); // Default consultation fee
+                baseCharge = charge;
             }
-            appointment.setLastUpdateDatetime(new Date());
-            appointment.setLastUpdateBy(loggedDoctor.getUsername());
-            appointmentFacade.edit(appointment);
+            System.out.println("DEBUG: Base charge (consultation): " + baseCharge);
 
-            // Handle selected medicines
+            // Calculate total medicine cost first
+            Long totalMedicineCost = 0L;
             if (selectedMedicines != null && selectedMedicines.length > 0) {
                 System.out.println("DEBUG: Processing " + selectedMedicines.length + " selected medicines");
-                try {
-                    for (String medicineIdStr : selectedMedicines) {
-                        System.out.println("DEBUG: Processing medicine ID: " + medicineIdStr);
+                for (String medicineIdStr : selectedMedicines) {
+                    System.out.println("DEBUG: Processing medicine ID: " + medicineIdStr);
+                    try {
                         Integer medicineId = Integer.parseInt(medicineIdStr);
                         Medicine medicine = medicineFacade.find(medicineId);
 
                         if (medicine != null) {
                             System.out.println(
                                     "DEBUG: Found medicine: " + medicine.getName() + ", Price: " + medicine.getPrice());
+
                             // Get quantity for this medicine
                             String quantityParam = request.getParameter("quantity_" + medicineId);
                             Integer quantity = 1; // Default quantity
@@ -287,43 +285,86 @@ public class DoctorAppointmentDiagnosis extends HttpServlet {
                             }
 
                             System.out.println("DEBUG: Final quantity: " + quantity);
-
-                            AppointmentMedicine appointmentMedicine = new AppointmentMedicine();
-                            appointmentMedicine.setAppointment(appointment);
-                            appointmentMedicine.setMedicine(medicine);
-                            appointmentMedicine.setQuantity(quantity);
-                            appointmentMedicine.setCreationDatetime(new Date());
-                            appointmentMedicine.setCreateBy(loggedDoctor.getUsername());
-                            appointmentMedicine.setLastUpdateDatetime(new Date());
-                            appointmentMedicine.setLastUpdateBy(loggedDoctor.getUsername());
-                            appointmentMedicine.setVersionTime(1);
-
-                            System.out.println("DEBUG: About to save AppointmentMedicine...");
-                            appointmentMedicineFacade.create(appointmentMedicine);
-                            System.out.println("DEBUG: AppointmentMedicine saved successfully");
-
-                            // Add medicine cost to appointment charge (price * quantity)
-                            Long currentCharge = appointment.getCharge();
-                            if (currentCharge == null)
-                                currentCharge = 0L;
                             Long medicineCost = medicine.getPrice() * quantity;
-                            appointment.setCharge(currentCharge + medicineCost);
-                            System.out.println("DEBUG: Added medicine cost: " + medicineCost + ", New total charge: "
-                                    + appointment.getCharge());
+                            totalMedicineCost += medicineCost;
+                            System.out.println(
+                                    "DEBUG: Medicine cost: " + medicineCost + ", Running total: " + totalMedicineCost);
                         } else {
                             System.out.println("DEBUG: Medicine not found for ID: " + medicineId);
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid medicine ID: " + medicineIdStr);
+                    }
+                }
+            } else {
+                System.out.println("DEBUG: No medicines selected");
+            }
+
+            // Set total charge (consultation + medicines)
+            Long totalCharge = baseCharge + totalMedicineCost;
+            System.out.println("DEBUG: Final total charge: " + totalCharge + " (Base: " + baseCharge + " + Medicine: "
+                    + totalMedicineCost + ")");
+
+            // Update appointment
+            appointment.setStatus("WAITING PAYMENT");
+            appointment.setCharge(totalCharge);
+            appointment.setLastUpdateDatetime(new Date());
+            appointment.setLastUpdateBy(loggedDoctor.getUsername());
+            appointmentFacade.edit(appointment);
+
+            // Now save selected medicines to database
+            if (selectedMedicines != null && selectedMedicines.length > 0) {
+                System.out.println("DEBUG: Saving " + selectedMedicines.length + " medicines to database");
+                try {
+                    for (String medicineIdStr : selectedMedicines) {
+                        try {
+                            Integer medicineId = Integer.parseInt(medicineIdStr);
+                            Medicine medicine = medicineFacade.find(medicineId);
+
+                            if (medicine != null) {
+                                // Get quantity for this medicine
+                                String quantityParam = request.getParameter("quantity_" + medicineId);
+                                Integer quantity = 1; // Default quantity
+
+                                if (quantityParam != null && !quantityParam.trim().isEmpty()) {
+                                    try {
+                                        quantity = Integer.parseInt(quantityParam);
+                                        if (quantity < 1)
+                                            quantity = 1;
+                                        if (quantity > 10)
+                                            quantity = 10;
+                                    } catch (NumberFormatException e) {
+                                        quantity = 1;
+                                    }
+                                }
+
+                                AppointmentMedicine appointmentMedicine = new AppointmentMedicine();
+                                appointmentMedicine.setAppointment(appointment);
+                                appointmentMedicine.setMedicine(medicine);
+                                appointmentMedicine.setQuantity(quantity);
+                                appointmentMedicine.setCreationDatetime(new Date());
+                                appointmentMedicine.setCreateBy(loggedDoctor.getUsername());
+                                appointmentMedicine.setLastUpdateDatetime(new Date());
+                                appointmentMedicine.setLastUpdateBy(loggedDoctor.getUsername());
+                                appointmentMedicine.setVersionTime(1);
+
+                                System.out.println("DEBUG: About to save AppointmentMedicine for medicine: "
+                                        + medicine.getName() + ", quantity: " + quantity);
+                                appointmentMedicineFacade.create(appointmentMedicine);
+                                System.out.println("DEBUG: AppointmentMedicine saved successfully");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Skipping invalid medicine ID: " + medicineIdStr);
+                        } catch (Exception e) {
+                            System.out.println("Error saving medicine " + medicineIdStr + ": " + e.getMessage());
+                            e.printStackTrace();
                         }
                     }
                 } catch (Exception e) {
                     System.out.println("Error handling selected medicines: " + e.getMessage());
                     e.printStackTrace();
                 }
-            } else {
-                System.out.println("DEBUG: No medicines selected");
             }
-
-            // Update appointment with final charge
-            appointmentFacade.edit(appointment);
 
             request.getSession().setAttribute("successMessage",
                     "Diagnosis completed successfully! Appointment moved to waiting payment.");
